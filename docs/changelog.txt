@@ -1,0 +1,23 @@
+<h5>0.87 Beta 1  [NOT RELEASED]</h5>  Dev: Xoops 2.5.9, PHP 7.2.3
+<hr>
+- namespaces, autoloading (mamba)
+WORK IN PROGRESS
+
+
+<h5>0.86 Beta (2012-07-30)</h5>
+<hr>
+- converted to XOOPS 2.5.5 Standard GUI by Michael Beck (Mamba)
+
+
+<h5>0.85 Beta (2005-06-14)</h5>
+<hr>
+- Addition of a Clip Formats management functionality including support for all major multimedia format as well as the possibility to add, edit or delete any format
+- Addition of check database table functionnality, including  a new dbUpdater class that performs the db upgrade
+- Addition of a counter for clips and folders
+- Addition of a recent clips block
+- The width and height of a clip can now be customize for each clip individually
+
+
+<h5>0.75 Beta (2005-04-16)</h5>
+<hr>
+- First Public release of the module

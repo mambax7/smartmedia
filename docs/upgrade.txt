@@ -1,0 +1,16 @@
+How to upgrade from a prior version of SmartMedia
+================================================
+
+In order to upgrade the module, you will need to :
+
+- Upload the new version in the modules/ folder of your site
+
+- Copy the complete /smartmedia folder into the /modules directory of your website
+
+- Then, log in to your site as administrator, go to System Admin > Modules, look for the SmartMedia icon in the list of installed modules and click in the update icon
+
+- Click on 'Check Tables' from the SmartMedia top menu
+
+That's it !
+
+Enjoy !

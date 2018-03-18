@@ -1,17 +1,27 @@
 <?php
+/*
+ * You may not change or alter any portion of this comment or credits
+ * of supporting developers from this source code or any supporting source code
+ * which is considered copyrighted (c) material of the original comment or credit authors.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ */
 
 /**
-* $Id: about.php,v 1.1 2005/05/13 18:21:55 malanciault Exp $
-* Module: SmartClient
-* Author: The SmartFactory <www.smartfactory.ca>
-* Licence: GNU
-*/
+ * @copyright    XOOPS Project https://xoops.org/
+ * @license      GNU GPL 2 or later (http://www.gnu.org/licenses/gpl-2.0.html)
+ * @package
+ * @since
+ * @author     XOOPS Development Team
+ */
 
+require_once __DIR__ . '/admin_header.php';
+xoops_cp_header();
 
-include_once("admin_header.php");
+$adminObject->displayNavigation(basename(__FILE__));
+$adminObject->setPaypal('xoopsfoundation@gmail.com');
+$adminObject->displayAbout(false);
 
-include_once(SMARTMEDIA_ROOT_PATH . "class/about.php");
-$aboutObj = new SmartmediaAbout(_AM_SMEDIA_ABOUT);
-$aboutObj->render();
-
-?>
+require_once __DIR__ . '/admin_footer.php';

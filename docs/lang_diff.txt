@@ -1,0 +1,21 @@
+LANGUAGE DIFFERENCES
+=====================
+
+Below are language differences from a version to next version.
+
+Legend :
++ Added
+- Removed
+* Modified
+x renamed
+
+---------------------------------------
+0.86 Beta 1  2012-07-30
+---------------------------------------
+
+__admin.php__
++ _AM_OLEDRION_ADD_ATTRIBUTE
++ _AM_OLEDRION_EDIT_ATTRIBUTE
+
+
+New file to translate :

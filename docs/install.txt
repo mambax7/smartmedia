@@ -1,0 +1,7 @@
+How to install SmartMedia
+===========================
+
+SmartMedia is installed as a regular XOOPS module, which means you should copy the complete /smartmedia folder into the /modules directory of your website.
+
+Then, log in to your site as administrator, go to System Admin > Modules, look for the SmartMedia icon in the list of uninstalled modules
+and click in the install icon. Follow the directions in the screen and you'll be ready to go.

@@ -1,0 +1,6 @@
+Credits
+===============
+
+Originally developed by marcan (aka mal aka Marc-André)
+
+Version 0.86 was updated to XOOPS 2.5.5 Standard GUI by Michael Beck (Mamba)

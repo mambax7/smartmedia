@@ -1,23 +1,37 @@
 <?php
+/*
+ * You may not change or alter any portion of this comment or credits
+ * of supporting developers from this source code or any supporting source code
+ * which is considered copyrighted (c) material of the original comment or credit authors.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ */
 
 /**
-* $Id: admin_header.php,v 1.1 2005/05/13 18:21:55 malanciault Exp $
-* Module: SmartMedia
-* Author: The SmartFactory <www.smartfactory.ca>
-* Licence: GNU
-*/
+ * @copyright    The XOOPS Project http://sourceforge.net/projects/xoops/
+ * @license      GNU GPL 2 or later (http://www.gnu.org/licenses/gpl-2.0.html)
+ * @package
+ * @since
+ * @author       XOOPS Development Team
+ * @version      $Id $
+ */
 
-include_once "../../../mainfile.php";
-include_once '../../../include/cp_header.php';
-include_once XOOPS_ROOT_PATH . "/class/xoopsmodule.php";
-include_once XOOPS_ROOT_PATH . "/class/xoopstree.php";
-include_once XOOPS_ROOT_PATH . "/class/xoopslists.php";
-include_once XOOPS_ROOT_PATH . '/class/pagenav.php';
-include_once XOOPS_ROOT_PATH . "/class/xoopsformloader.php";
-include_once XOOPS_ROOT_PATH . "/class/uploader.php";
+use XoopsModules\Smartmedia;
 
-include_once XOOPS_ROOT_PATH.'/modules/smartmedia/include/common.php';
+require_once __DIR__ . '/../../../include/cp_header.php';
+require_once __DIR__ . '/../include/common.php';
 
-$myts = &MyTextSanitizer::getInstance();
+$moduleDirName = basename(dirname(__DIR__));
+/** @var Smartmedia\Helper $helper */
+$helper = Smartmedia\Helper::getInstance();
 
-?>
+/** @var Xmf\Module\Admin $adminObject */
+$adminObject = \Xmf\Module\Admin::getInstance();
+
+// Load language files
+$helper->loadLanguage('admin');
+$helper->loadLanguage('modinfo');
+$helper->loadLanguage('main');
+
