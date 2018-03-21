@@ -18,7 +18,8 @@
  * @link            https://xoops.org XOOPS
  */
 
-use XoopsModules\xxxxx;
+use XoopsModules\Smartmedia;
+
 /**
  * Prepares system prior to attempting to uninstall module
  * @param XoopsModule $module {@link XoopsModule}
@@ -26,7 +27,7 @@ use XoopsModules\xxxxx;
  * @return bool true if ready to uninstall, false if not
  */
 
-function xoops_module_pre_uninstall_xxxx(\XoopsModule $module)
+function xoops_module_pre_uninstall_smartmedia(\XoopsModule $module)
 {
     // Do some synchronization if needed
     return true;
@@ -39,16 +40,16 @@ function xoops_module_pre_uninstall_xxxx(\XoopsModule $module)
  *
  * @return bool true if uninstallation successful, false if not
  */
-function xoops_module_uninstall_xxxx(\XoopsModule $module)
+function xoops_module_uninstall_smartmedia(\XoopsModule $module)
 {
     include __DIR__ . '/common.php';
     $moduleDirName = basename(dirname(__DIR__));
     $moduleDirNameUpper = strtoupper($moduleDirName);
 
-    /** @var xxxxx\Helper $helper */
-    $helper = xxxxx\Helper::getInstance();
-    $utility      = new xxxxx\Utility();
-//    $configurator = new xxxxx\Common\Configurator();
+    /** @var Smartmedia\Helper $helper */
+    $helper = Smartmedia\Helper::getInstance();
+    $utility      = new Smartmedia\Utility();
+//    $configurator = new Smartmedia\Common\Configurator();
     // Load language files
     $helper->loadLanguage('admin');
     $helper->loadLanguage('common');
@@ -86,5 +87,4 @@ function xoops_module_uninstall_xxxx(\XoopsModule $module)
 
     return $success;
     //------------ END  ----------------
-
 }

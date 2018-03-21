@@ -35,7 +35,7 @@ trait ServerStats
         //        $query = $GLOBALS['xoopsDB']->query($sql);
         //        list($meta) = $GLOBALS['xoopsDB']->fetchRow($query);
         $html .= '<fieldset>';
-        $html .= "<legend style='font-weight: bold; color: #900;'>" . constant('CO_' . $moduleDirNameUpper . '_IMAGEINFO') . "</legend>";        
+        $html .= "<legend style='font-weight: bold; color: #900;'>" . constant('CO_' . $moduleDirNameUpper . '_IMAGEINFO') . "</legend>";
         $html .= "<div style='padding: 8px;'>";
         //        $html .= '<div>' . constant('CO_' . $moduleDirNameUpper . '_METAVERSION') . $meta . "</div>";
         //        $html .= "<br>";

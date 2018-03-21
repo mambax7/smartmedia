@@ -144,5 +144,4 @@ class Utility
 
         return $truncate;
     }
-
 }

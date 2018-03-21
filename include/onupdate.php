@@ -17,7 +17,7 @@
  * @author       XOOPS Development Team
  */
 
-use XoopsModules\xxxxx;
+use XoopsModules\Smartmedia;
 
 if ((!defined('XOOPS_ROOT_PATH')) || !($GLOBALS['xoopsUser'] instanceof XoopsUser)
     || !$GLOBALS['xoopsUser']->IsAdmin()) {
@@ -42,13 +42,13 @@ function tableExists($tablename)
  * @param \XoopsModule $module {@link XoopsModule}
  * @return bool true if ready to install, false if not
  */
-function xoops_module_pre_update_xxxx(\XoopsModule $module)
+function xoops_module_pre_update_smartmedia(\XoopsModule $module)
 {
     $moduleDirName = basename(dirname(__DIR__));
-    /** @var xxxxx\Helper $helper */
-    /** @var xxxxx\Utility $utility */
-    $helper  = xxxxx\Helper::getInstance();
-    $utility = new xxxxx\Utility();
+    /** @var Smartmedia\Helper $helper */
+    /** @var Smartmedia\Utility $utility */
+    $helper  = Smartmedia\Helper::getInstance();
+    $utility = new Smartmedia\Utility();
 
     $xoopsSuccess = $utility::checkVerXoops($module);
     $phpSuccess   = $utility::checkVerPhp($module);
@@ -64,17 +64,17 @@ function xoops_module_pre_update_xxxx(\XoopsModule $module)
  * @return bool true if update successful, false if not
  */
 
-function xoops_module_update_xxxx(\XoopsModule $module, $previousVersion = null)
+function xoops_module_update_smartmedia(\XoopsModule $module, $previousVersion = null)
 {
     $moduleDirName = basename(dirname(__DIR__));
     $moduleDirNameUpper   = strtoupper($moduleDirName);
 
-    /** @var xxxxx\Helper $helper */
-    /** @var xxxxx\Utility $utility */
-    /** @var xxxxx\Common\Configurator $configurator */
-    $helper  = xxxxx\Helper::getInstance();
-    $utility = new xxxxx\Utility();
-    $configurator = new xxxxx\Common\Configurator();
+    /** @var Smartmedia\Helper $helper */
+    /** @var Smartmedia\Utility $utility */
+    /** @var Smartmedia\Common\Configurator $configurator */
+    $helper  = Smartmedia\Helper::getInstance();
+    $utility = new Smartmedia\Utility();
+    $configurator = new Smartmedia\Common\Configurator();
     
     $helper->loadLanguage('common');
 
@@ -158,7 +158,6 @@ function xoops_module_update_xxxx(\XoopsModule $module, $previousVersion = null)
         /** @var XoopsGroupPermHandler $gpermHandler */
         $gpermHandler = xoops_getHandler('groupperm');
         return $gpermHandler->deleteByModule($module->getVar('mid'), 'item_read');
-
     }
     return true;
 }

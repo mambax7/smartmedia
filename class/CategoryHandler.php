@@ -13,7 +13,6 @@
 
 use XoopsModules\Smartmedia;
 
-
 /**
  * Smartmedia Category Handler class
  *

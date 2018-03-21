@@ -28,9 +28,11 @@
 //                          GIJOE <http://www.peak.ne.jp/>                   //
 // ------------------------------------------------------------------------- //
 
+use XoopsModules\Smartmedia;
+
 require_once __DIR__ . '/admin_header.php';
 require_once __DIR__ . '/../../../include/cp_header.php';
-require_once __DIR__ . '/mygrouppermform.php';
+//require_once __DIR__ . '/mygrouppermform.php';
 require_once XOOPS_ROOT_PATH . "/class/xoopsblock.php";
 require_once XOOPS_ROOT_PATH . '/modules/' . $xoopsModule->dirname() . '/include/functions.php';
 
@@ -238,7 +240,7 @@ function list_groups()
         $item_list[$block_arr[$i]->getVar('bid')] = $block_arr[$i]->getVar('title');
     }
 
-    $form = new MyXoopsGroupPermForm('', 1, 'block_read', "<img id='bottomtableicon' src="
+    $form = new Smartmedia\GroupPermForm('', 1, 'block_read', "<img id='bottomtableicon' src="
                                                           . XOOPS_URL
                                                           . '/modules/'
                                                           . $xoopsModule->dirname()

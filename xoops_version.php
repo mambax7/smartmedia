@@ -93,6 +93,15 @@ $modversion = [
     ],
 ];
 
+// ------------------- Help files ------------------- //
+$modversion['helpsection'] = [
+    ['name' => _MI_SMARTMEDIA_OVERVIEW, 'link' => 'page=help'],
+    ['name' => _MI_SMARTMEDIA_DISCLAIMER, 'link' => 'page=disclaimer'],
+    ['name' => _MI_SMARTMEDIA_LICENSE, 'link' => 'page=license'],
+    ['name' => _MI_SMARTMEDIA_SUPPORT, 'link' => 'page=support'],
+];
+
+
 // Added by marcan for the About page in admin section
 $modversion['adminMenu']              = 'smartmedia_adminMenu';
 $modversion['modFooter']              = 'smartmedia_modFooter';

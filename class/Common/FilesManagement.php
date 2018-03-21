@@ -35,8 +35,7 @@ trait FilesManagement
 
                 file_put_contents($folder . '/index.html', '<script>history.go(-1);</script>');
             }
-        }
-        catch (\Exception $e) {
+        } catch (\Exception $e) {
             echo 'Caught exception: ', $e->getMessage(), '<br>';
         }
     }
@@ -58,18 +57,18 @@ trait FilesManagement
     public static function recurseCopy($src, $dst)
     {
         $dir = opendir($src);
-                @mkdir($dst);
-            while (false !== ($file = readdir($dir))) {
-                if (('.' !== $file) && ('..' !== $file)) {
-                    if (is_dir($src . '/' . $file)) {
-                        self::recurseCopy($src . '/' . $file, $dst . '/' . $file);
-                    } else {
-                        copy($src . '/' . $file, $dst . '/' . $file);
-                    }
+        @mkdir($dst);
+        while (false !== ($file = readdir($dir))) {
+            if (('.' !== $file) && ('..' !== $file)) {
+                if (is_dir($src . '/' . $file)) {
+                    self::recurseCopy($src . '/' . $file, $dst . '/' . $file);
+                } else {
+                    copy($src . '/' . $file, $dst . '/' . $file);
                 }
             }
-        closedir($dir);
         }
+        closedir($dir);
+    }
 
     /**
      * Copy a file, or recursively copy a folder and its contents

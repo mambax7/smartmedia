@@ -98,10 +98,10 @@ class FormatHandler extends \XoopsObjectHandler
      */
     public function create($isNew = true)
     {
-                $obj = new $this->classname;
-                if ($isNew) {
-                    $obj->setNew();
-                }
+        $obj = new $this->classname;
+        if ($isNew) {
+            $obj->setNew();
+        }
 
         return $obj;
     }
@@ -251,7 +251,6 @@ class FormatHandler extends \XoopsObjectHandler
         }
 
         while (false !== ($myrow = $this->db->fetchArray($result))) {
-
             $obj = new $this->classname;
 //            $temp = '\\XoopsModules\\Smartmedia\\' . $this->classname;
 //            $obj = new $temp;

@@ -20,6 +20,7 @@
 
 use XoopsModules\Smartmedia;
 use XoopsModules\Smartmedia\Common;
+use XoopsModules\Smartmedia\Constants;
 
 require_once __DIR__ . '/admin_header.php';
 
@@ -60,4 +61,3 @@ $adminObject->displayIndex();
 echo $utility::getServerStats();
 
 require_once __DIR__ . '/admin_footer.php';
-

@@ -23,23 +23,21 @@ require_once __DIR__ . '/admin_header.php';
 //defined('XOOPS_ROOT_PATH') || die('XOOPS root path not defined');
 
 /**
- * @param      $DB
+ * @param      $db
  * @param      $gperm_modid
  * @param null $gperm_name
  * @param null $gperm_itemid
  * @return bool
  */
-
-
 
 /**
- * @param \XoopsDatabase  $DB
+ * @param \XoopsDatabase  $db
  * @param      $gperm_modid
  * @param null $gperm_name
  * @param null $gperm_itemid
  * @return bool
  */
-function myDeleteByModule(\XoopsDatabase $DB, $gperm_modid, $gperm_name = null, $gperm_itemid = null)
+function myDeleteByModule(\XoopsDatabase $db, $gperm_modid, $gperm_name = null, $gperm_itemid = null)
 {
     $criteria = new \CriteriaCompo(new \Criteria('gperm_modid', (int)$gperm_modid));
     if (null !== $gperm_name) {
@@ -48,8 +46,8 @@ function myDeleteByModule(\XoopsDatabase $DB, $gperm_modid, $gperm_name = null, 
             $criteria->add(new \Criteria('gperm_itemid', (int)$gperm_itemid));
         }
     }
-    $sql = 'DELETE FROM ' . $DB->prefix('group_permission') . ' ' . $criteria->renderWhere();
-    if (!$result = $DB->query($sql)) {
+    $sql = 'DELETE FROM ' . $db->prefix('group_permission') . ' ' . $criteria->renderWhere();
+    if (!$result = $db->query($sql)) {
         return false;
     }
 
@@ -65,7 +63,7 @@ if ($modid <= 0 || !is_object($xoopsUser) || !$xoopsUser->isAdmin($modid)) {
     redirect_header(XOOPS_URL . '/user.php', 1, _NOPERM);
     exit();
 }
-
+/** @var XoopsModuleHandler $moduleHandler */
 $moduleHandler = xoops_getHandler('module');
 $module        = $moduleHandler->get($modid);
 if (!is_object($module) || !$module->getVar('isactive')) {
@@ -81,11 +79,9 @@ if (is_array($_POST['perms']) && !empty($_POST['perms'])) {
     $gpermHandler = xoops_getHandler('groupperm');
 
 
-
-
-//$memberHandler = xoops_getHandler('member');
-//$groupList    = $memberHandler->getGroupList();
-//if (is_array($_POST['perms'])   && !empty($_POST['perms'])) {
+    //$memberHandler = xoops_getHandler('member');
+    //$groupList    = $memberHandler->getGroupList();
+    //if (is_array($_POST['perms'])   && !empty($_POST['perms'])) {
 //    $gpermHandler = xoops_getHandler('groupperm');
 //
     foreach ($_POST['perms'] as $perm_name => $perm_data) {

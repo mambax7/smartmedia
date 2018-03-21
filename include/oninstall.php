@@ -17,8 +17,8 @@
  * @author       XOOPS Development Team
  */
 
-use XoopsModules\xxxxx;
-use XoopsModules\xxxxx\Common;
+use XoopsModules\Smartmedia;
+use XoopsModules\Smartmedia\Common;
 
 /**
  *
@@ -27,13 +27,13 @@ use XoopsModules\xxxxx\Common;
  *
  * @return bool true if ready to install, false if not
  */
-function xoops_module_pre_install_xxxxx(\XoopsModule $module)
+function xoops_module_pre_install_smartmedia(\XoopsModule $module)
 {
 
 //    include __DIR__ . '/../preloads/autoloader.php';
     include __DIR__ . '/common.php';
-    /** @var xxxxx\Utility $utility */
-    $utility = new \XoopsModules\xxxxx\Utility();
+    /** @var Smartmedia\Utility $utility */
+    $utility = new \XoopsModules\Smartmedia\Utility();
     //check for minimum XOOPS version
     $xoopsSuccess = $utility::checkVerXoops($module);
     
@@ -57,17 +57,17 @@ function xoops_module_pre_install_xxxxx(\XoopsModule $module)
  *
  * @return bool true if installation successful, false if not
  */
-function xoops_module_install_xxxx(\XoopsModule $module)
+function xoops_module_install_smartmedia(\XoopsModule $module)
 {
     include __DIR__ . '/../preloads/autoloader.php';
 
     $moduleDirName = basename(dirname(__DIR__));
 
-    /** @var xxxxx\Helper $helper */
-    /** @var xxxxx\Utility $utility */
-   /** @var xxxxx\Common\Configurator $configurator */
-    $helper = xxxxx\Helper::getInstance();
-    $utility      = new xxxxx\Utility();
+    /** @var Smartmedia\Helper $helper */
+    /** @var Smartmedia\Utility $utility */
+    /** @var Smartmedia\Common\Configurator $configurator */
+    $helper = Smartmedia\Helper::getInstance();
+    $utility      = new Smartmedia\Utility();
     $configurator = new Common\Configurator();
     // Load language files
     $helper->loadLanguage('admin');

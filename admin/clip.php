@@ -12,6 +12,7 @@
 
 
 use XoopsModules\Smartmedia;
+
 require_once __DIR__ . '/admin_header.php';
 //xoops_cp_header();
 

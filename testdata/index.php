@@ -15,8 +15,9 @@
  * @author          Michael Beck (aka Mamba)
  */
 
-use XoopsModules\xxxxx;
-use XoopsModules\xxxxx\Common;
+use XoopsModules\Smartmedia;
+use XoopsModules\Smartmedia\Common;
+
 require_once __DIR__ . '/../../../mainfile.php';
 
 include __DIR__ . '/../preloads/autoloader.php';
