@@ -22,6 +22,10 @@
  * Licence: GNU
  */
 
+use XoopsModules\Smartmedia;
+/** @var Smartmedia\Helper $helper */
+$helper = Smartmedia\Helper::getInstance();
+
 require_once __DIR__ . '/header.php';
 
 global $smartmediaFolderHandler, $smartmediaClipHandler;
@@ -66,7 +70,7 @@ $xoopsTpl->assign('categoryPath', $parentObj->getItemLink() . ' &gt; ' . $folder
 // At which record shall we start
 $start = isset($_GET['start']) ? (int)$_GET['start'] : 0;
 
-$clipsObj = $smartmediaClipHandler->getclips($xoopsModuleConfig['clips_per_folder'], $start, $folderid, 'weight', 'ASC', false);
+$clipsObj = $smartmediaClipHandler->getclips($helper->getConfig('clips_per_folder'), $start, $folderid, 'weight', 'ASC', false);
 
 $clips = [];
 $i     = 1;
@@ -85,10 +89,10 @@ $xoopsTpl->assign('module_home', smartmedia_module_home());
 // The Navigation Bar
 require_once XOOPS_ROOT_PATH . '/class/pagenav.php';
 
-if (0 != $xoopsModuleConfig['clips_per_folder']) {
-    $pagenav = new \XoopsPageNav($totalItem[$folderObj->getVar('folderid')], $xoopsModuleConfig['clips_per_folder'], $start, 'start', 'categoryid=' . $categoryid . '&folderid=' . $folderObj->getVar('folderid'));
+if (0 != $helper->getConfig('clips_per_folder')) {
+    $pagenav = new \XoopsPageNav($totalItem[$folderObj->getVar('folderid')], $helper->getConfig('clips_per_folder'), $start, 'start', 'categoryid=' . $categoryid . '&folderid=' . $folderObj->getVar('folderid'));
     $xoopsTpl->assign('navbar', '<div style="text-align:right;">' . $pagenav->renderNav() . '</div>');
-    if ($xoopsModuleConfig['clips_per_folder'] >= 8) {
+    if ($helper->getConfig('clips_per_folder') >= 8) {
         $xoopsTpl->assign('navbarbottom', 1);
     }
 }

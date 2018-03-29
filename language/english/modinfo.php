@@ -102,11 +102,12 @@ define('_MI_SMARTMEDIA_BACK_2_ADMIN', 'Back to Administration of ');
 //help
 define('_MI_SMARTMEDIA_HELP_OVERVIEW', 'Overview');
 
-define('_MI_SMARTMEDIA_SHOW_SAMPLE_BUTTON', 'Show Sample Button?');
-define('_MI_SMARTMEDIA_SHOW_SAMPLE_BUTTON_DESC', 'If yes, the "Add Sample Data" button will be visible to the Admin. It is Yes as a default for first installation.');
-
 //help multi-page
 define('_MI_SMARTMEDIA_DISCLAIMER', 'Disclaimer');
 define('_MI_SMARTMEDIA_LICENSE', 'License');
 define('_MI_SMARTMEDIA_SUPPORT', 'Support');
 define('_MI_SMARTMEDIA_OVERVIEW', 'Overview');
+
+define('_MI_SMARTMEDIA_SHOW_SAMPLE_BUTTON', 'Show Sample Button?');
+define('_MI_SMARTMEDIA_SHOW_SAMPLE_BUTTON_DESC', 'If yes, the "Add Sample Data" button will be visible to the Admin. It is Yes as a default for first installation.');
+

@@ -106,7 +106,7 @@ class Folder extends \XoopsObject
      */
     public function notLoaded()
     {
-        return ($this->folderid() == -1);
+        return (-1 == $this->folderid());
     }
 
     /**

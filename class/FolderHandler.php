@@ -670,7 +670,7 @@ class FolderHandler extends \XoopsObjectHandler
 
         // Check if there is still a link to another parent, if not, also delete the folder itself
         $links_left = $this->getParentCount($obj->folderid());
-        if (!isset($links_left) || ($links_left == -1)) {
+        if (!isset($links_left) || (-1 == $links_left)) {
             // an error occured
             return false;
         } elseif (0 == $links_left) {

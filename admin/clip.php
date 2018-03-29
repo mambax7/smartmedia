@@ -12,6 +12,8 @@
 
 
 use XoopsModules\Smartmedia;
+/** @var Smartmedia\Helper $helper */
+$helper = Smartmedia\Helper::getInstance();
 
 require_once __DIR__ . '/admin_header.php';
 //xoops_cp_header();
@@ -98,7 +100,9 @@ function displayClip_text($clip_textObj)
  */
 function addClip($language_text = false)
 {
-    global $xoopsUser, $xoopsConfig, $xoopsModule, $xoopsModuleConfig, $myts, $smartmediaClipHandler;
+    global $xoopsUser, $xoopsConfig, $xoopsModule,  $myts, $smartmediaClipHandler;
+    /** @var Smartmedia\Helper $helper */
+    $helper = Smartmedia\Helper::getInstance();
     require_once XOOPS_ROOT_PATH . "/class/uploader.php";
 
     $max_size          = 10000000;
@@ -114,7 +118,7 @@ function addClip($language_text = false)
     } elseif (isset($_POST['default_languageid'])) {
         $languageid = $_POST['default_languageid'];
     } else {
-        $languageid = $xoopsModuleConfig['default_language'];
+        $languageid = $helper->getConfig('default_language');
     }
 
     if (0 != $clipid) {
@@ -175,8 +179,8 @@ function addClip($language_text = false)
         $clipObj->setVar('file_hr', $_POST['file_hr']);
         $clipObj->setVar('file_lr', $_POST['file_lr']);
         $clipObj->setVar('formatid', $_POST['formatid']);
-        $clipObj->setVar('default_languageid', isset($_POST['default_languageid']) ? $_POST['default_languageid'] : $xoopsModuleConfig['default_language']);
-        $clipObj->setTextVar('languageid', isset($_POST['default_languageid']) ? $_POST['default_languageid'] : $xoopsModuleConfig['default_language']);
+        $clipObj->setVar('default_languageid', isset($_POST['default_languageid']) ? $_POST['default_languageid'] : $helper->getConfig('default_language'));
+        $clipObj->setTextVar('languageid', isset($_POST['default_languageid']) ? $_POST['default_languageid'] : $helper->getConfig('default_language'));
     } else {
         $clipObj->setTextVar('languageid', $languageid);
     }
@@ -234,7 +238,9 @@ function addClip($language_text = false)
  */
 function editclip($showmenu = false, $clipid = 0, $folderid = 0)
 {
-    global $xoopsDB, $smartmediaClipHandler, $xoopsUser, $myts, $xoopsConfig, $xoopsModuleConfig, $xoopsModule;
+    global $xoopsDB, $smartmediaClipHandler, $xoopsUser, $myts, $xoopsConfig,  $xoopsModule;
+    /** @var Smartmedia\Helper $helper */
+    $helper = Smartmedia\Helper::getInstance();
     require_once XOOPS_ROOT_PATH . '/class/xoopsformloader.php';
 
     // if $clipid == 0 then we are adding a new clip
@@ -437,7 +443,7 @@ function editclip($showmenu = false, $clipid = 0, $folderid = 0)
     $hr_image_tray = new \XoopsFormElementTray(_AM_SMARTMEDIA_CLIP_IMAGE_HR, '&nbsp;');
     $hr_image_tray->addElement($hr_image_select);
     $hr_image_tray->addElement(new XoopsFormLabel('', "<br><br><img src='" . smartmedia_getImageDir('clip', false) . $clipObj->image_hr() . "' name='the_image_hr' id='the_image_hr' alt='' />"));
-    $hr_image_tray->setDescription(sprintf(_AM_SMARTMEDIA_CLIP_IMAGE_HR_DSC, $xoopsModuleConfig['main_image_width']));
+    $hr_image_tray->setDescription(sprintf(_AM_SMARTMEDIA_CLIP_IMAGE_HR_DSC, $helper->getConfig('main_image_width')));
     $sform->addElement($hr_image_tray);
 
     // HR IMAGE UPLOAD
@@ -502,7 +508,9 @@ function editclip($showmenu = false, $clipid = 0, $folderid = 0)
 
 function editclip_text($showmenu = false, $clipid, $languageid)
 {
-    global $xoopsDB, $smartmediaClipHandler, $xoopsUser, $myts, $xoopsConfig, $xoopsModuleConfig, $xoopsModule;
+    global $xoopsDB, $smartmediaClipHandler, $xoopsUser, $myts, $xoopsConfig,  $xoopsModule;
+    /** @var Smartmedia\Helper $helper */
+    $helper = Smartmedia\Helper::getInstance();
     require_once XOOPS_ROOT_PATH . '/class/xoopsformloader.php';
 
     echo '<script type="text/javascript" src="../assets/js/funcs.js"></script>';

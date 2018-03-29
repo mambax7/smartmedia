@@ -92,7 +92,7 @@ class Category extends \XoopsObject
      */
     public function notLoaded()
     {
-        return ($this->categoryid() == -1);
+        return (-1 == $this->categoryid());
     }
 
     /**

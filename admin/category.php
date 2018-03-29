@@ -17,6 +17,8 @@
 
 
 use XoopsModules\Smartmedia;
+/** @var Smartmedia\Helper $helper */
+$helper = Smartmedia\Helper::getInstance();
 
 require_once __DIR__ . '/admin_header.php';
 
@@ -66,7 +68,9 @@ function displayCategory_text($category_textObj)
  */
 function addCategory($language_text = false)
 {
-    global $xoopsUser, $xoopsConfig, $xoopsModule, $xoopsModuleConfig, $myts, $smartmediaCategoryHandler;
+    global $xoopsUser, $xoopsConfig, $xoopsModule, $myts, $smartmediaCategoryHandler;
+    /** @var Smartmedia\Helper $helper */
+    $helper = Smartmedia\Helper::getInstance();
 
     $categoryid = isset($_POST['categoryid']) ? (int)$_POST['categoryid'] : 0;
 
@@ -75,7 +79,7 @@ function addCategory($language_text = false)
     } elseif (isset($_POST['default_languageid'])) {
         $languageid = $_POST['default_languageid'];
     } else {
-        $languageid = $xoopsModuleConfig['default_language'];
+        $languageid = $helper->getConfig('default_language');
     }
 
     if (0 != $categoryid) {
@@ -90,8 +94,6 @@ function addCategory($language_text = false)
         if ('' != $_FILES['image_file']['name']) {
             $filename = $_POST['xoops_upload_file'][0];
             if (!empty($filename) || '' != $filename) {
-                global $xoopsModuleConfig;
-
                 $max_size          = 10000000;
                 $max_imgwidth      = 1000;
                 $max_imgheight     = 1000;
@@ -119,8 +121,8 @@ function addCategory($language_text = false)
 
         $categoryObj->setVar('parentid', isset($_POST['parentid']) ? (int)$_POST['parentid'] : 0);
         $categoryObj->setVar('weight', isset($_POST['weight']) ? (int)$_POST['weight'] : 1);
-        $categoryObj->setVar('default_languageid', isset($_POST['default_languageid']) ? $_POST['default_languageid'] : $xoopsModuleConfig['default_language']);
-        $categoryObj->setTextVar('languageid', isset($_POST['default_languageid']) ? $_POST['default_languageid'] : $xoopsModuleConfig['default_language']);
+        $categoryObj->setVar('default_languageid', isset($_POST['default_languageid']) ? $_POST['default_languageid'] : $helper->getConfig('default_language'));
+        $categoryObj->setTextVar('languageid', isset($_POST['default_languageid']) ? $_POST['default_languageid'] : $helper->getConfig('default_language'));
     } else {
         $categoryObj->setTextVar('languageid', $languageid);
     }
@@ -155,7 +157,9 @@ function addCategory($language_text = false)
  */
 function editcat($showmenu = false, $categoryid = 0)
 {
-    global $xoopsDB, $smartmediaCategoryHandler, $xoopsUser, $myts, $xoopsConfig, $xoopsModuleConfig, $xoopsModule;
+    global $xoopsDB, $smartmediaCategoryHandler, $xoopsUser, $myts, $xoopsConfig,  $xoopsModule;
+    /** @var Smartmedia\Helper $helper */
+    $helper = Smartmedia\Helper::getInstance();
     require_once XOOPS_ROOT_PATH . '/class/xoopsformloader.php';
 
     // if $categoryid == 0 then we are adding a new category
@@ -279,7 +283,7 @@ function editcat($showmenu = false, $categoryid = 0)
     $image_tray = new \XoopsFormElementTray(_AM_SMARTMEDIA_IMAGE, '&nbsp;');
     $image_tray->addElement($image_select);
     $image_tray->addElement(new XoopsFormLabel('', "<br><br><img src='" . smartmedia_getImageDir('category', false) . $categoryObj->image() . "' name='image3' id='image3' alt='' />"));
-    $image_tray->setDescription(sprintf(_AM_SMARTMEDIA_IMAGE_DSC, $xoopsModuleConfig['main_image_width']));
+    $image_tray->setDescription(sprintf(_AM_SMARTMEDIA_IMAGE_DSC, $helper->getConfig('main_image_width')));
     $sform->addElement($image_tray);
 
     // IMAGE UPLOAD
@@ -339,7 +343,9 @@ function editcat($showmenu = false, $categoryid = 0)
  */
 function editcat_text($showmenu = false, $categoryid, $languageid)
 {
-    global $xoopsDB, $smartmediaCategoryHandler, $xoopsUser, $myts, $xoopsConfig, $xoopsModuleConfig, $xoopsModule;
+    global $xoopsDB, $smartmediaCategoryHandler, $xoopsUser, $myts, $xoopsConfig,  $xoopsModule;
+    /** @var Smartmedia\Helper $helper */
+    $helper = Smartmedia\Helper::getInstance();
     require_once XOOPS_ROOT_PATH . '/class/xoopsformloader.php';
 
     echo '<script type="text/javascript" src="../assets/js/funcs.js"></script>';
@@ -566,7 +572,7 @@ switch ($op) {
         //echo "<br>\n";
 
         // Creating the objects for top categories
-        $categoriesObj = $smartmediaCategoryHandler->getCategories($xoopsModuleConfig['cat_per_page_admin'], $catstart);
+        $categoriesObj = $smartmediaCategoryHandler->getCategories($helper->getConfig('cat_per_page_admin'), $catstart);
 
         smartmedia_collapsableBar('toptable', 'toptableicon');
         echo "<img id='toptableicon' src=" . XOOPS_URL . '/modules/' . $xoopsModule->dirname() . "/assets/images/icon/close12.gif alt='' /></a>&nbsp;" . _AM_SMARTMEDIA_CATEGORIES_TITLE . '</h3>';
@@ -610,8 +616,8 @@ switch ($op) {
 }
 // Navigation Bar
 require_once XOOPS_ROOT_PATH . '/class/pagenav.php';
-if ($xoopsModuleConfig['cat_per_page_admin'] > 0) {
-    $pagenav = new \XoopsPageNav($totalCategories, $xoopsModuleConfig['cat_per_page_admin'], $catstart, 'catstart', '');
+if ($helper->getConfig('cat_per_page_admin') > 0) {
+    $pagenav = new \XoopsPageNav($totalCategories, $helper->getConfig('cat_per_page_admin'), $catstart, 'catstart', '');
     echo '<div style="text-align:right;">' . $pagenav->renderNav() . '</div>';
 }
 

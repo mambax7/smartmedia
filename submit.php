@@ -22,10 +22,14 @@
  * Licence: GNU
  */
 
+use XoopsModules\Smartmedia;
+/** @var Smartmedia\Helper $helper */
+$helper = Smartmedia\Helper::getInstance();
+
 require_once __DIR__ . '/header.php';
 require_once XOOPS_ROOT_PATH . "/header.php";
 
-global $smartmediaCategoryHandler, $smartmedia_itemHandler, $xoopsUser, $xoopsConfig, $xoopsModuleConfig, $xoopsModule;
+global $smartmediaCategoryHandler, $smartmedia_itemHandler, $xoopsUser, $xoopsConfig, $xoopsModule;
 
 // Get the total number of categories
 $totalCategories = count($smartmediaCategoryHandler->getCategories());
@@ -36,9 +40,10 @@ if (0 == $totalCategories) {
 }
 
 // Find if the user is admin of the module
-$isAdmin = smartmedia_userIsAdmin();
+$isAdmin = $helper->isUserAdmin();
 // If the user is not admin AND we don't allow user submission, exit
-if (!($isAdmin || (isset($xoopsModuleConfig['allowsubmit']) && 1 == $xoopsModuleConfig['allowsubmit'] && (is_object($xoopsUser) || (isset($xoopsModuleConfig['anonpost']) && 1 == $xoopsModuleConfig['anonpost']))))) {
+if (!($isAdmin || (null !== ($helper->getConfig('allowsubmit')) && 1 == $helper->getConfig('allowsubmit') && (is_object($xoopsUser)))
+      || (null !== ($helper->getConfig('anonpost')) && 1 == $helper->getConfig('anonpost')))) {
     redirect_header('index.php', 1, _NOPERM);
     exit();
 }
@@ -55,12 +60,13 @@ if (isset($_POST['op'])) {
 switch ($op) {
     case 'preview':
 
-        global $xoopsUser, $xoopsConfig, $xoopsModule, $xoopsModuleConfig, $xoopsDB;
+        global $xoopsUser, $xoopsConfig, $xoopsModule,  $xoopsDB;
+
 
         $newItemObj = $smartmedia_itemHandler->create();
 
         if (!$xoopsUser) {
-            if (1 == $xoopsModuleConfig['anonpost']) {
+            if (1 == $helper->getConfig('anonpost')) {
                 $uid = 0;
             } else {
                 redirect_header('index.php', 3, _NOPERM);
@@ -88,7 +94,7 @@ switch ($op) {
         $categoryObj =& $newItemObj->category();
 
         // If autoapprove_submitted
-        if (1 == $xoopsModuleConfig['autoapprove_submitted']) {
+        if (1 == $helper->getConfig('autoapprove_submitted')) {
             // We do not not subscribe user to notification on publish since we publish it right away
 
             // Send notifications
@@ -115,12 +121,12 @@ switch ($op) {
 
     case 'post':
 
-        global $xoopsUser, $xoopsConfig, $xoopsModule, $xoopsModuleConfig, $xoopsDB;
+        global $xoopsUser, $xoopsConfig, $xoopsModule,  $xoopsDB;
 
         $newItemObj = $smartmedia_itemHandler->create();
 
         if (!$xoopsUser) {
-            if (1 == $xoopsModuleConfig['anonpost']) {
+            if (1 == $helper->getConfig('anonpost')) {
                 $uid = 0;
             } else {
                 redirect_header('index.php', 3, _NOPERM);
@@ -140,7 +146,7 @@ switch ($op) {
         $newItemObj->setVar('notifypub', $notifypub);
 
         // Setting the status of the item
-        if (1 == $xoopsModuleConfig['autoapprove_submitted']) {
+        if (1 == $helper->getConfig('autoapprove_submitted')) {
             $newItemObj->setVar('status', _SMARTMEDIA_STATUS_PUBLISHED);
         } else {
             $newItemObj->setVar('status', _SMARTMEDIA_STATUS_SUBMITTED);
@@ -156,7 +162,7 @@ switch ($op) {
         $categoryObj =& $newItemObj->category();
 
         // If autoapprove_submitted
-        if (1 == $xoopsModuleConfig['autoapprove_submitted']) {
+        if (1 == $helper->getConfig('autoapprove_submitted')) {
             // We do not not subscribe user to notification on publish since we publish it right away
 
             // Send notifications

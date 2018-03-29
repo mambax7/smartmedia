@@ -6,6 +6,10 @@
  * Licence: GNU
  */
 
+use XoopsModules\Smartmedia;
+/** @var Smartmedia\Helper $helper */
+$helper = Smartmedia\Helper::getInstance();
+
 require_once __DIR__ . '/header.php';
 
 global $smartmediaCategoryHandler, $smartmediaFolderHandler;
@@ -41,7 +45,7 @@ $xoopsTpl->assign('categoryPath', $categoryObj->title());
 // At which record shall we start
 $start = isset($_GET['start']) ? (int)$_GET['start'] : 0;
 
-$foldersObj =& $smartmediaFolderHandler->getfolders($xoopsModuleConfig['folders_per_category'], $start, $categoryid, _SMARTMEDIA_FOLDER_STATUS_ONLINE, 'parent.categoryid ASC, weight ASC, parent.folderid', 'ASC', false);
+$foldersObj =& $smartmediaFolderHandler->getfolders($helper->getConfig('folders_per_category'), $start, $categoryid, _SMARTMEDIA_FOLDER_STATUS_ONLINE, 'parent.categoryid ASC, weight ASC, parent.folderid', 'ASC', false);
 
 $folders = [];
 $i       = 1;
@@ -59,12 +63,12 @@ $xoopsTpl->assign('folders', $folders);
 $xoopsTpl->assign('module_home', smartmedia_module_home());
 
 // The Navigation Bar
-if ($xoopsModuleConfig['folders_per_category'] > 0) {
+if ($helper->getConfig('folders_per_category') > 0) {
     require_once XOOPS_ROOT_PATH . '/class/pagenav.php';
-    $pagenav = new \XoopsPageNav($totalItem[$categoryObj->getVar('categoryid')], $xoopsModuleConfig['folders_per_category'], $start, 'start', 'categoryid=' . $categoryObj->getVar('categoryid'));
+    $pagenav = new \XoopsPageNav($totalItem[$categoryObj->getVar('categoryid')], $helper->getConfig('folders_per_category'), $start, 'start', 'categoryid=' . $categoryObj->getVar('categoryid'));
     $xoopsTpl->assign('navbar', '<div style="text-align:right;">' . $pagenav->renderNav() . '</div>');
 
-    if ($xoopsModuleConfig['folders_per_category'] >= 8) {
+    if ($helper->getConfig('folders_per_category') >= 8) {
         $xoopsTpl->assign('navbarbottom', 1);
     }
 }

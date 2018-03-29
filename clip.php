@@ -20,7 +20,7 @@ $categoryid = isset($_GET['categoryid']) ? (int)$_GET['categoryid'] : 0;
 // Creating the clip object for the selected clip
 //patche pour navpage defectueux
 $clipsObj = $smartmediaClipHandler->getclips(0, 0, $folderid, 'weight', 'ASC', false);
-//$clipsObj =& $smartmediaClipHandler->getclips($xoopsModuleConfig['clips_per_folder'], $start, $folderid, 'weight', 'ASC', false);
+//$clipsObj =& $smartmediaClipHandler->getclips($helper->getConfig('clips_per_folder'), $start, $folderid, 'weight', 'ASC', false);
 $theClipObj = $clipsObj[$clipid];
 
 $array_keys    = array_keys($clipsObj);
@@ -73,7 +73,7 @@ $start = isset($_GET['start']) ? (int)$_GET['start'] : 0;
 
 //patche pour navpage defectueux
 $clipsObj =& $smartmediaClipHandler->getclips(0, 0, $clipid, 'weight', 'ASC', false);
-//$clipsObj =& $smartmediaClipHandler->getclips($xoopsModuleConfig['clips_per_folder'], $start, $clipid, 'weight', 'ASC', false);
+//$clipsObj =& $smartmediaClipHandler->getclips($helper->getConfig('clips_per_folder'), $start, $clipid, 'weight', 'ASC', false);
 
 $clips = [];
 $i     = 1;
@@ -109,8 +109,8 @@ $xoopsTpl->assign('lang_clip_counter', sprintf(_MD_SMARTMEDIA_CLIP_HAS_BEEN_SEEN
 
 // The Navigation Bar
 require_once XOOPS_ROOT_PATH . '/class/pagenav.php';
-$pagenav = new \XoopsPageNav($thisclip_itemcount, $xoopsModuleConfig['indexperpage'], $start, 'start', 'clipid=' . $clipObj->getVar('clipid'));
-If ($xoopsModuleConfig['useimagenavpage'] == 1) {
+$pagenav = new \XoopsPageNav($thisclip_itemcount, $helper->getConfig('indexperpage'), $start, 'start', 'clipid=' . $clipObj->getVar('clipid'));
+If ($helper->getConfig('useimagenavpage') == 1) {
 $clip['navbar'] = '<div style="text-align:right;">' . $pagenav->renderImageNav() . '</div>';
 } else {
 $clip['navbar'] = '<div style="text-align:right;">' . $pagenav->renderNav() . '</div>';

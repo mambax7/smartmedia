@@ -185,7 +185,7 @@ class ContentHandler extends \XoopsObjectHandler
             return $this->getCount();
         }
         $criteria = new \CriteriaCompo();
-        if (isset($parentid) && ($parentid != -1)) {
+        if (isset($parentid) && (-1 != $parentid)) {
             $criteria->add(new \Criteria('parentid', $parentid));
         }
 
@@ -329,7 +329,7 @@ class ContentHandler extends \XoopsObjectHandler
         $criteria->setSort($sort);
         $criteria->setOrder($order);
 
-        if ($parentid != -1) {
+        if (-1 != $parentid) {
             $criteria->add(new \Criteria('parentid', $parentid));
         }
 

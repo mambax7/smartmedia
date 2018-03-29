@@ -53,7 +53,7 @@ class Content extends \XoopsObject
      */
     public function notLoaded()
     {
-        return ($this->contentid() == -1);
+        return (-1 == $this->contentid());
     }
 
     /**

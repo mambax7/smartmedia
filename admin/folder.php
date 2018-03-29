@@ -12,6 +12,8 @@
 
 
 use XoopsModules\Smartmedia;
+/** @var Smartmedia\Helper $helper */
+$helper = Smartmedia\Helper::getInstance();
 
 /**
  * Module: SmartMedia
@@ -66,7 +68,9 @@ function displayFolder_text($folder_textObj)
  */
 function addFolder($language_text = false)
 {
-    global $xoopsUser, $xoopsConfig, $xoopsModule, $xoopsModuleConfig, $myts, $smartmediaFolderHandler;
+    global $xoopsUser, $xoopsConfig, $xoopsModule,  $myts, $smartmediaFolderHandler;
+    /** @var Smartmedia\Helper $helper */
+    $helper = Smartmedia\Helper::getInstance();
     require_once XOOPS_ROOT_PATH . "/class/uploader.php";
 
     $max_size          = 10000000;
@@ -82,7 +86,7 @@ function addFolder($language_text = false)
     } elseif (isset($_POST['default_languageid'])) {
         $languageid = $_POST['default_languageid'];
     } else {
-        $languageid = $xoopsModuleConfig['default_language'];
+        $languageid = $helper->getConfig('default_language');
     }
 
     if (0 != $folderid) {
@@ -137,8 +141,8 @@ function addFolder($language_text = false)
         $folderObj->setVar('categoryid', isset($_POST['categoryid']) ? (int)$_POST['categoryid'] : 0);
         $folderObj->setVar('new_category', isset($_POST['category_action']) ? 'add' === $_POST['category_action'] : false);
         $folderObj->setVar('weight', isset($_POST['weight']) ? (int)$_POST['weight'] : 1);
-        $folderObj->setVar('default_languageid', isset($_POST['default_languageid']) ? $_POST['default_languageid'] : $xoopsModuleConfig['default_language']);
-        $folderObj->setTextVar('languageid', isset($_POST['default_languageid']) ? $_POST['default_languageid'] : $xoopsModuleConfig['default_language']);
+        $folderObj->setVar('default_languageid', isset($_POST['default_languageid']) ? $_POST['default_languageid'] : $helper->getConfig('default_language'));
+        $folderObj->setTextVar('languageid', isset($_POST['default_languageid']) ? $_POST['default_languageid'] : $helper->getConfig('default_language'));
     } else {
         $folderObj->setTextVar('languageid', $languageid);
     }
@@ -180,7 +184,9 @@ function addFolder($language_text = false)
  */
 function editfolder($showmenu = false, $folderid = 0, $categoryid = 0)
 {
-    global $xoopsDB, $smartmediaFolderHandler, $xoopsUser, $myts, $xoopsConfig, $xoopsModuleConfig, $xoopsModule;
+    global $xoopsDB, $smartmediaFolderHandler, $xoopsUser, $myts, $xoopsConfig,  $xoopsModule;
+    /** @var Smartmedia\Helper $helper */
+    $helper = Smartmedia\Helper::getInstance();
     require_once XOOPS_ROOT_PATH . '/class/xoopsformloader.php';
 
     // if $folderid == 0 then we are adding a new folder
@@ -356,7 +362,7 @@ function editfolder($showmenu = false, $folderid = 0, $categoryid = 0)
     $hr_image_tray = new \XoopsFormElementTray(_AM_SMARTMEDIA_FOLDER_IMAGE_HR, '&nbsp;');
     $hr_image_tray->addElement($hr_image_select);
     $hr_image_tray->addElement(new XoopsFormLabel('', "<br><br><img src='" . smartmedia_getImageDir('folder', false) . $folderObj->image_hr() . "' name='the_image_hr' id='the_image_hr' alt='' />"));
-    $hr_image_tray->setDescription(sprintf(_AM_SMARTMEDIA_FOLDER_IMAGE_HR_DSC, $xoopsModuleConfig['main_image_width']));
+    $hr_image_tray->setDescription(sprintf(_AM_SMARTMEDIA_FOLDER_IMAGE_HR_DSC, $helper->getConfig('main_image_width')));
     $sform->addElement($hr_image_tray);
 
     // HR IMAGE UPLOAD
@@ -416,7 +422,10 @@ function editfolder($showmenu = false, $folderid = 0, $categoryid = 0)
  */
 function editfolder_text($showmenu = false, $folderid, $languageid)
 {
-    global $xoopsDB, $smartmediaFolderHandler, $xoopsUser, $myts, $xoopsConfig, $xoopsModuleConfig, $xoopsModule;
+    global $xoopsDB, $smartmediaFolderHandler, $xoopsUser, $myts, $xoopsConfig,  $xoopsModule;
+    /** @var Smartmedia\Helper $helper */
+    $helper = Smartmedia\Helper::getInstance();
+
     require_once XOOPS_ROOT_PATH . '/class/xoopsformloader.php';
 
     echo '<script type="text/javascript" src="../assets/js/funcs.js"></script>';

@@ -119,7 +119,7 @@ class CategoryHandler extends \XoopsObjectHandler
             }
             $numrows = $this->db->getRowsNum($result);
             if (1 == $numrows) {
-                if ('current' == $languageid) {
+                if ('current' === $languageid) {
                     global $xoopsConfig;
                     $languageid = $xoopsConfig['language'];
                 }
@@ -191,7 +191,7 @@ class CategoryHandler extends \XoopsObjectHandler
             return $this->getCount();
         }
         $criteria = new \CriteriaCompo();
-        if (isset($parentid) && ($parentid != -1)) {
+        if (isset($parentid) && (-1 != $parentid)) {
             $criteria->add(new \Criteria('parentid', $parentid));
         }
 
@@ -340,7 +340,7 @@ class CategoryHandler extends \XoopsObjectHandler
         $criteria->setSort($sort);
         $criteria->setOrder($order);
 
-        if ($parentid != -1) {
+        if (-1 != $parentid) {
             $criteria->add(new \Criteria('parentid', $parentid));
         }
 

@@ -22,6 +22,10 @@
  * Licence: GNU
  */
 
+use XoopsModules\Smartmedia;
+/** @var Smartmedia\Helper $helper */
+$helper = Smartmedia\Helper::getInstance();
+
 require_once __DIR__ . '/header.php';
 
 global $smartmediaCategoryHandler;
@@ -38,7 +42,7 @@ require_once __DIR__ . '/footer.php';
 
 // Creating the categories objects
 
-$categoriesObj = $smartmediaCategoryHandler->getCategories($xoopsModuleConfig['categories_on_index'], $catstart);
+$categoriesObj = $smartmediaCategoryHandler->getCategories($helper->getConfig('categories_on_index'), $catstart);
 
 $categories = [];
 $i          = 1;
@@ -54,16 +58,16 @@ foreach ($categoriesObj as $categoryObj) {
 $xoopsTpl->assign('categories', $categories);
 
 $xoopsTpl->assign('module_home', smartmedia_module_home(false));
-$index_msg = $myts->displayTarea($xoopsModuleConfig['index_msg'], 1);
+$index_msg = $myts->displayTarea($helper->getConfig('index_msg'), 1);
 $xoopsTpl->assign('index_msg', $index_msg);
 
 // ITEM Navigation Bar
 
-if ($xoopsModuleConfig['categories_on_index'] > 0) {
-    $pagenav = new \XoopsPageNav($totalCategories, $xoopsModuleConfig['categories_on_index'], $catstart, 'catstart', '');
+if ($helper->getConfig('categories_on_index') > 0) {
+    $pagenav = new \XoopsPageNav($totalCategories, $helper->getConfig('categories_on_index'), $catstart, 'catstart', '');
     $xoopsTpl->assign('navbar', '<div style="text-align:right;">' . $pagenav->renderNav() . '</div>');
 
-    if ($xoopsModuleConfig['categories_on_index'] >= 8) {
+    if ($helper->getConfig('categories_on_index') >= 8) {
         $xoopsTpl->assign('navbarbottom', 1);
     }
 }

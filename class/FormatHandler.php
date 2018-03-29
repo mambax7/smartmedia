@@ -246,7 +246,7 @@ class FormatHandler extends \XoopsObjectHandler
 
 //        if (!is_array($result) || 0 == count($result)) {
 
-        if ((!$result) || ($result->num_rows === 0)) {
+        if ((!$result) || (0 === $result->num_rows)) {
             return $ret;
         }
 

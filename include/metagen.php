@@ -1,7 +1,8 @@
 <?php
 
-
 use XoopsModules\Smartmedia;
+/** @var Smartmedia\Helper $helper */
+$helper = Smartmedia\Helper::getInstance();
 
 /**
  * Module: SmartMedia
@@ -66,7 +67,9 @@ function smartmedia_findMetaKeywords($text, $minChar)
  */
 function smartmedia_createMetaTags($title, $categoryPath = '', $description = '', $minChar = 4)
 {
-    global $xoopsTpl, $xoopsModule, $xoopsModuleConfig;
+    global $xoopsTpl, $xoopsModule;
+    /** @var Smartmedia\Helper $helper */
+    $helper = Smartmedia\Helper::getInstance();
     $myts = \MyTextSanitizer::getInstance();
 
     $ret = '';
@@ -83,8 +86,8 @@ function smartmedia_createMetaTags($title, $categoryPath = '', $description = ''
     if (isset($title) && ('' != $title)) {
         $keywords = smartmedia_findMetaKeywords($title, $minChar);
 
-        if (isset($xoopsModuleConfig) && isset($xoopsModuleConfig['moduleMetaKeywords']) && '' != $xoopsModuleConfig['moduleMetaKeywords']) {
-            $moduleKeywords = explode(',', $xoopsModuleConfig['moduleMetaKeywords']);
+        if (null !== ($helper->getModule()) && null !==($helper->getConfig('moduleMetaKeywords')) && '' != $helper->getConfig('moduleMetaKeywords')) {
+            $moduleKeywords = explode(',', $helper->getConfig('moduleMetaKeywords'));
             foreach ($moduleKeywords as $moduleKeyword) {
                 if (!in_array($moduleKeyword, $keywords)) {
                     $keywords[] = trim($moduleKeyword);

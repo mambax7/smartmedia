@@ -114,7 +114,7 @@ class Clip extends \XoopsObject
      */
     public function notLoaded()
     {
-        return ($this->clipid() == -1);
+        return (-1 == $this->clipid());
     }
 
     /**
