@@ -43,7 +43,7 @@ if (isset($_POST['op'])) {
  */
 
 // At what folder do we start
-$startfolder = isset($_GET['startfolder']) ? (int)$_GET['startfolder'] : 0;
+$startfolder = \Xmf\Request::getInt('startfolder', 0, 'GET');
 
 // Display a single folder
 /**
@@ -79,7 +79,7 @@ function addFolder($language_text = false)
     $allowed_mimetypes = smartmedia_getAllowedMimeTypes();
     $upload_msgs       = [];
 
-    $folderid = isset($_POST['folderid']) ? (int)$_POST['folderid'] : 0;
+    $folderid = \Xmf\Request::getInt('folderid', 0, 'POST');
 
     if (isset($_POST['languageid'])) {
         $languageid = $_POST['languageid'];
@@ -541,15 +541,15 @@ function editfolder_text($showmenu = false, $folderid, $languageid)
 switch ($op) {
     // Displaying the form to edit or add a folder
     case 'mod':
-        $folderid   = isset($_GET['folderid']) ? (int)$_GET['folderid'] : 0;
-        $categoryid = isset($_GET['categoryid']) ? (int)$_GET['categoryid'] : 0;
+        $folderid   = \Xmf\Request::getInt('folderid', 0, 'GET');
+        $categoryid = \Xmf\Request::getInt('categoryid', 0, 'GET');
         xoops_cp_header();
         editfolder(true, $folderid, $categoryid);
         break;
 
     // Displaying the form to edit a folder language info
     case 'modtext':
-        $folderid   = isset($_GET['folderid']) ? (int)$_GET['folderid'] : 0;
+        $folderid   = \Xmf\Request::getInt('folderid', 0, 'GET');
         $languageid = isset($_GET['languageid']) ? $_GET['languageid'] : 'new';
 
         xoops_cp_header();
@@ -573,10 +573,10 @@ switch ($op) {
         $module_id    = $xoopsModule->getVar('mid');
         $gpermHandler = xoops_getHandler('groupperm');
 
-        $folderid   = isset($_POST['folderid']) ? (int)$_POST['folderid'] : 0;
-        $folderid   = isset($_GET['folderid']) ? (int)$_GET['folderid'] : $folderid;
-        $categoryid = isset($_POST['categoryid']) ? (int)$_POST['categoryid'] : 0;
-        $categoryid = isset($_GET['categoryid']) ? (int)$_GET['categoryid'] : $categoryid;
+        $folderid   = \Xmf\Request::getInt('folderid', 0, 'POST');
+        $folderid   = \Xmf\Request::getInt('folderid', $folderid, 'GET');
+        $categoryid = \Xmf\Request::getInt('categoryid', 0, 'POST');
+        $categoryid = \Xmf\Request::getInt('categoryid', $categoryid, 'GET');
 
         $folderObj = $smartmediaFolderHandler->get($folderid);
 
@@ -586,8 +586,8 @@ switch ($op) {
             exit();
         }
 
-        $confirm = isset($_POST['confirm']) ? $_POST['confirm'] : 0;
-        $name    = isset($_POST['name']) ? $_POST['name'] : '';
+        $confirm = \Xmf\Request::getInt('confirm', 0, POST);
+        $name    = \Xmf\Request::getString('name', '', 'POST');
 
         if ($confirm) {
             if (!$smartmediaFolderHandler->deleteParentLink($folderObj, $categoryid)) {
@@ -613,16 +613,16 @@ switch ($op) {
 
         $module_id = $xoopsModule->getVar('mid');
 
-        $folderid = isset($_POST['folderid']) ? (int)$_POST['folderid'] : 0;
-        $folderid = isset($_GET['folderid']) ? (int)$_GET['folderid'] : $folderid;
+        $folderid = \Xmf\Request::getInt('folderid', 0, 'POST');
+        $folderid = \Xmf\Request::getInt('folderid', $folderid, 'GET');
 
         $languageid = isset($_POST['languageid']) ? $_POST['languageid'] : null;
         $languageid = isset($_GET['languageid']) ? $_GET['languageid'] : $languageid;
 
         $folder_textObj = $smartsection_folder_textHandler->get($folderid, $languageid);
 
-        $confirm = isset($_POST['confirm']) ? $_POST['confirm'] : 0;
-        $name    = isset($_POST['name']) ? $_POST['name'] : '';
+        $confirm = \Xmf\Request::getInt('confirm', 0, POST);
+        $name    = \Xmf\Request::getString('name', '', 'POST');
 
         if ($confirm) {
             if (!$smartsection_folder_textHandler->delete($folder_textObj)) {
@@ -634,7 +634,7 @@ switch ($op) {
             exit();
         } else {
             // no confirm: show deletion condition
-            $folderid   = isset($_GET['folderid']) ? (int)$_GET['folderid'] : 0;
+            $folderid   = \Xmf\Request::getInt('folderid', 0, 'GET');
             $languageid = isset($_GET['languageid']) ? $_GET['languageid'] : null;
             xoops_cp_header();
             xoops_confirm(

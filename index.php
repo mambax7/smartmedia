@@ -31,7 +31,7 @@ require_once __DIR__ . '/header.php';
 global $smartmediaCategoryHandler;
 
 // At which record shall we start for the Categories
-$catstart = isset($_GET['catstart']) ? (int)$_GET['catstart'] : 0;
+$catstart = \Xmf\Request::getInt('catstart', 0, 'GET');
 
 $totalCategories = $smartmediaCategoryHandler->getCategoriesCount();
 

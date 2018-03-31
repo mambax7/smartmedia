@@ -27,7 +27,7 @@ use XoopsModules\Smartmedia;
 require_once __DIR__ . '/admin_header.php';
 $myts = \MyTextSanitizer::getInstance();
 
-$op = isset($_GET['op']) ? $_GET['op'] : '';
+$op = \Xmf\Request::getString('op', '', 'GET');
 
 // Test de la fonction getFolders
 

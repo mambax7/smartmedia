@@ -13,7 +13,7 @@ require_once XOOPS_ROOT_PATH . '/class/xoopsformloader.php';
 
 global $smartmedia_fileHandler;
 
-$fileid = isset($_GET['fileid']) ? (int)$_GET['fileid'] : 0;
+$fileid = \Xmf\Request::getInt('fileid', 0, 'GET');
 
 if (0 != $fileid) {
     $fileObj = new ssFile($fileid);

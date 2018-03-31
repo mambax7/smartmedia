@@ -140,7 +140,7 @@ switch ($op) {
     case 'mod':
 
         global $xoopsUser, $xoopsConfig, $xoopsModuleConfig, $xoopsModule;
-        $id = isset($_GET['formatid']) ? (int)$_GET['formatid'] : 0;
+        $id = \Xmf\Request::getInt('formatid', 0, 'GET');
 
         xoops_cp_header();
         require_once XOOPS_ROOT_PATH . '/class/xoopsformloader.php';
@@ -151,7 +151,7 @@ switch ($op) {
     case 'addformat':
         global $xoopsUser;
 
-        $id = isset($_POST['formatid']) ? (int)$_POST['formatid'] : 0;
+        $id = \Xmf\Request::getInt('formatid', 0, 'POST');
 
         // Creating the format object
         if (0 != $id) {
@@ -183,13 +183,13 @@ switch ($op) {
 
     case 'del':
 
-        $id = isset($_POST['formatid']) ? (int)$_POST['formatid'] : 0;
-        $id = isset($_GET['formatid']) ? (int)$_GET['formatid'] : $id;
+        $id = \Xmf\Request::getInt('formatid', 0, 'POST');
+        $id = \Xmf\Request::getInt('formatid', $id, 'GET');
 
         $formatObj = new Smartmedia\Format($id);
 
-        $confirm = isset($_POST['confirm']) ? $_POST['confirm'] : 0;
-        $title   = isset($_POST['format']) ? $_POST['format'] : '';
+        $confirm = \Xmf\Request::getInt('confirm', 0, POST);
+        $title   = \Xmf\Request::getString('format', '', 'POST');
 
         $redirect_msgs = $formatObj->getRedirectMsg('delete');
 
@@ -203,7 +203,7 @@ switch ($op) {
             exit();
         } else {
             // no confirm: show deletion condition
-            $id = isset($_GET['formatid']) ? (int)$_GET['formatid'] : 0;
+            $id = \Xmf\Request::getInt('formatid', 0, 'GET');
             xoops_cp_header();
             xoops_confirm(['op' => 'del', 'formatid' => $formatObj->formatid(), 'confirm' => 1, 'title' => $formatObj->format()], 'format.php', _AM_SMARTMEDIA_FORMAT_DELETE_CONFIRM . " <br>'" . $formatObj->format() . "' <br> <br>", _AM_SMARTMEDIA_DELETE);
             xoops_cp_footer();

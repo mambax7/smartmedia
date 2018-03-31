@@ -75,7 +75,7 @@ if (isset($_POST['op'])) {
  */
 
 // At what clip do we start
-$startclip = isset($_GET['startclip']) ? (int)$_GET['startclip'] : 0;
+$startclip = \Xmf\Request::getInt('startclip', 0, 'GET');
 
 // Display a single clip
 /**
@@ -111,7 +111,7 @@ function addClip($language_text = false)
     $allowed_mimetypes = smartmedia_getAllowedMimeTypes();
     $upload_msgs       = [];
 
-    $clipid = isset($_POST['clipid']) ? (int)$_POST['clipid'] : 0;
+    $clipid = \Xmf\Request::getInt('clipid', 0, 'POST');
 
     if (isset($_POST['languageid'])) {
         $languageid = $_POST['languageid'];
@@ -638,8 +638,8 @@ switch ($op) {
     // Displaying the form to edit or add a clip
     case 'mod':
         //default:
-        $clipid   = isset($_GET['clipid']) ? (int)$_GET['clipid'] : 0;
-        $folderid = isset($_GET['folderid']) ? (int)$_GET['folderid'] : 0;
+        $clipid   = \Xmf\Request::getInt('clipid', 0, 'GET');
+        $folderid = \Xmf\Request::getInt('folderid', 0, 'GET');
         xoops_cp_header();
         $adminObject = \Xmf\Module\Admin::getInstance();
         $adminObject->displayNavigation('clip.php');
@@ -648,7 +648,7 @@ switch ($op) {
 
     // Displaying the form to edit a clip language info
     case 'modtext':
-        $clipid     = isset($_GET['clipid']) ? (int)$_GET['clipid'] : 0;
+        $clipid     = \Xmf\Request::getInt('clipid', 0, 'GET');
         $languageid = isset($_GET['languageid']) ? $_GET['languageid'] : 'new';
 
         xoops_cp_header();
@@ -674,13 +674,13 @@ switch ($op) {
         $module_id    = $xoopsModule->getVar('mid');
         $gpermHandler = xoops_getHandler('groupperm');
 
-        $clipid = isset($_POST['clipid']) ? (int)$_POST['clipid'] : 0;
-        $clipid = isset($_GET['clipid']) ? (int)$_GET['clipid'] : $clipid;
+        $clipid = \Xmf\Request::getInt('clipid', 0, 'POST');
+        $clipid = \Xmf\Request::getInt('clipid', $clipid, 'GET');
 
         $clipObj = $smartmediaClipHandler->get($clipid);
 
-        $confirm = isset($_POST['confirm']) ? $_POST['confirm'] : 0;
-        $name    = isset($_POST['name']) ? $_POST['name'] : '';
+        $confirm = \Xmf\Request::getInt('confirm', 0, POST);
+        $name    = \Xmf\Request::getString('name', '', 'POST');
 
         if ($confirm) {
             if (!$smartmediaClipHandler->delete($clipObj)) {
@@ -706,16 +706,16 @@ switch ($op) {
 
         $module_id = $xoopsModule->getVar('mid');
 
-        $clipid = isset($_POST['clipid']) ? (int)$_POST['clipid'] : 0;
-        $clipid = isset($_GET['clipid']) ? (int)$_GET['clipid'] : $clipid;
+        $clipid = \Xmf\Request::getInt('clipid', 0, 'POST');
+        $clipid = \Xmf\Request::getInt('clipid', $clipid, 'GET');
 
         $languageid = isset($_POST['languageid']) ? $_POST['languageid'] : null;
         $languageid = isset($_GET['languageid']) ? $_GET['languageid'] : $languageid;
 
         $clip_textObj = $smartsection_clip_textHandler->get($clipid, $languageid);
 
-        $confirm = isset($_POST['confirm']) ? $_POST['confirm'] : 0;
-        $name    = isset($_POST['name']) ? $_POST['name'] : '';
+        $confirm = \Xmf\Request::getInt('confirm', 0, POST);
+        $name    = \Xmf\Request::getString('name', '', 'POST');
 
         if ($confirm) {
             if (!$smartsection_clip_textHandler->delete($clip_textObj)) {
@@ -727,7 +727,7 @@ switch ($op) {
             exit();
         } else {
             // no confirm: show deletion condition
-            $clipid     = isset($_GET['clipid']) ? (int)$_GET['clipid'] : 0;
+            $clipid     = \Xmf\Request::getInt('clipid', 0, 'GET');
             $languageid = isset($_GET['languageid']) ? $_GET['languageid'] : null;
             xoops_cp_header();
             xoops_confirm(['op' => 'deltext', 'clipid' => $clip_textObj->clipid(), 'languageid' => $clip_textObj->languageid(), 'confirm' => 1, 'name' => $clip_textObj->languageid()], 'clip.php?op=mod&clipid=' . $clip_textObj->clipid(), _AM_SMARTMEDIA_CLIP_TEXT_DELETE, _AM_SMARTMEDIA_DELETE);
@@ -745,8 +745,8 @@ switch ($op) {
         $adminObject = \Xmf\Module\Admin::getInstance();
         $adminObject->displayNavigation('clip.php');
 
-        $folderid   = isset($_GET['folderid']) ? (int)$_GET['folderid'] : 0;
-        $categoryid = isset($_GET['categoryid']) ? (int)$_GET['categoryid'] : 0;
+        $folderid   = \Xmf\Request::getInt('folderid', 0, 'GET');
+        $categoryid = \Xmf\Request::getInt('categoryid', 0, 'GET');
 
         $folderObj =& $smartmediaFolderHandler->get($folderid);
 
@@ -808,7 +808,7 @@ switch ($op) {
         $adminObject = \Xmf\Module\Admin::getInstance();
         $adminObject->displayNavigation('clip.php');
 
-        $folderid = isset($_GET['folderid']) ? (int)$_GET['folderid'] : 0;
+        $folderid = \Xmf\Request::getInt('folderid', 0, 'GET');
 
         $languagesel = isset($_GET['languagesel']) ? $_GET['languagesel'] : 'all';
         $languagesel = isset($_POST['languagesel']) ? $_POST['languagesel'] : $languagesel;
@@ -823,7 +823,7 @@ switch ($op) {
         $limitsel = isset($_POST['limitsel']) ? $_POST['limitsel'] : $limitsel;
         smartmedia_setCookieVar('smartmedia_clip_limitsel', $limitsel);
 
-        $startsel = isset($_GET['startsel']) ? $_GET['startsel'] : 0;
+        $startsel = \Xmf\Request::getInt('startsel', 0, GET);
         $startsel = isset($_POST['startsel']) ? $_POST['startsel'] : $startsel;
 
         $showingtxt = '';

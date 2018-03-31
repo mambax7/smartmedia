@@ -19,7 +19,7 @@
 require_once __DIR__ . '/../../mainfile.php';
 require_once XOOPS_ROOT_PATH . '/modules/smartmedia/include/functions.php';
 
-$com_itemid = isset($_GET['com_itemid']) ? (int)$_GET['com_itemid'] : 0;
+$com_itemid = \Xmf\Request::getInt('com_itemid', 0, 'GET');
 if ($com_itemid > 0) {
     $itemObj       = new ssItem($com_itemid);
     $com_replytext = _POSTEDBY . '&nbsp;<b>' . smartmedia_getLinkedUnameFromId($itemObj->uid()) . '</b>&nbsp;' . _DATE . '&nbsp;<b>' . $itemObj->dateSub() . '</b><br><br>' . $itemObj->summary();

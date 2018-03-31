@@ -13,9 +13,9 @@ require_once __DIR__ . '/header.php';
 
 global $smartmediaCategoryHandler, $smartmediaFolderHandler, $smartmediaClipHandler;
 
-$clipid     = isset($_GET['clipid']) ? (int)$_GET['clipid'] : 0;
-$folderid   = isset($_GET['folderid']) ? (int)$_GET['folderid'] : 0;
-$categoryid = isset($_GET['categoryid']) ? (int)$_GET['categoryid'] : 0;
+$clipid     = \Xmf\Request::getInt('clipid', 0, 'GET');
+$folderid   = \Xmf\Request::getInt('folderid', 0, 'GET');
+$categoryid = \Xmf\Request::getInt('categoryid', 0, 'GET');
 
 // Creating the clip object for the selected clip
 //patche pour navpage defectueux
@@ -69,7 +69,7 @@ $xoopsTpl->assign('clip', $theClipObj->toArray2($categoryid));
 $xoopsTpl->assign('categoryPath', $categoryObj->getItemLink() . ' &gt; ' . $folderObj->getItemLink() . ' &gt; ' . $theClipObj->title());
 
 // At which record shall we start
-$start = isset($_GET['start']) ? (int)$_GET['start'] : 0;
+$start = \Xmf\Request::getInt('start', 0, 'GET');
 
 //patche pour navpage defectueux
 $clipsObj =& $smartmediaClipHandler->getclips(0, 0, $clipid, 'weight', 'ASC', false);

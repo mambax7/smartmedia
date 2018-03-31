@@ -42,7 +42,7 @@ if (isset($_POST['op'])) {
  */
 
 // At which record shall we start for the Categories
-$catstart        = isset($_GET['catstart']) ? (int)$_GET['catstart'] : 0;
+$catstart        = \Xmf\Request::getInt('catstart', 0, 'GET');
 $totalCategories = $smartmediaCategoryHandler->getCategoriesCount();
 
 // Display a single category
@@ -72,7 +72,7 @@ function addCategory($language_text = false)
     /** @var Smartmedia\Helper $helper */
     $helper = Smartmedia\Helper::getInstance();
 
-    $categoryid = isset($_POST['categoryid']) ? (int)$_POST['categoryid'] : 0;
+    $categoryid = \Xmf\Request::getInt('categoryid', 0, 'POST');
 
     if (isset($_POST['languageid'])) {
         $languageid = $_POST['languageid'];
@@ -450,14 +450,14 @@ function editcat_text($showmenu = false, $categoryid, $languageid)
 switch ($op) {
     // Displaying the form to edit or add a category
     case 'mod':
-        $categoryid = isset($_GET['categoryid']) ? (int)$_GET['categoryid'] : 0;
+        $categoryid = \Xmf\Request::getInt('categoryid', 0, 'GET');
         xoops_cp_header();
         editcat(true, $categoryid);
         break;
 
     // Displaying the form to edit a category language info
     case 'modtext':
-        $categoryid = isset($_GET['categoryid']) ? (int)$_GET['categoryid'] : 0;
+        $categoryid = \Xmf\Request::getInt('categoryid', 0, 'GET');
         $languageid = isset($_GET['languageid']) ? $_GET['languageid'] : 'new';
 
         xoops_cp_header();
@@ -481,8 +481,8 @@ switch ($op) {
         $module_id    = $xoopsModule->getVar('mid');
         $gpermHandler = xoops_getHandler('groupperm');
 
-        $categoryid = isset($_POST['categoryid']) ? (int)$_POST['categoryid'] : 0;
-        $categoryid = isset($_GET['categoryid']) ? (int)$_GET['categoryid'] : $categoryid;
+        $categoryid = \Xmf\Request::getInt('categoryid', 0, 'POST');
+        $categoryid = \Xmf\Request::getInt('categoryid', $categoryid, 'GET');
 
         $categoryObj = $smartmediaCategoryHandler->get($categoryid);
 
@@ -492,8 +492,8 @@ switch ($op) {
             exit();
         }
 
-        $confirm = isset($_POST['confirm']) ? $_POST['confirm'] : 0;
-        $name    = isset($_POST['name']) ? $_POST['name'] : '';
+        $confirm = \Xmf\Request::getInt('confirm', 0, POST);
+        $name    = \Xmf\Request::getString('name', '', 'POST');
 
         if ($confirm) {
             if (!$smartmediaCategoryHandler->delete($categoryObj)) {
@@ -519,16 +519,16 @@ switch ($op) {
 
         $module_id = $xoopsModule->getVar('mid');
 
-        $categoryid = isset($_POST['categoryid']) ? (int)$_POST['categoryid'] : 0;
-        $categoryid = isset($_GET['categoryid']) ? (int)$_GET['categoryid'] : $categoryid;
+        $categoryid = \Xmf\Request::getInt('categoryid', 0, 'POST');
+        $categoryid = \Xmf\Request::getInt('categoryid', $categoryid, 'GET');
 
         $languageid = isset($_POST['languageid']) ? $_POST['languageid'] : null;
         $languageid = isset($_GET['languageid']) ? $_GET['languageid'] : $languageid;
 
         $category_textObj = $smartsection_category_text_handler->get($categoryid, $languageid);
 
-        $confirm = isset($_POST['confirm']) ? $_POST['confirm'] : 0;
-        $name    = isset($_POST['name']) ? $_POST['name'] : '';
+        $confirm = \Xmf\Request::getInt('confirm', 0, POST);
+        $name    = \Xmf\Request::getString('name', '', 'POST');
 
         if ($confirm) {
             if (!$smartsection_category_text_handler->delete($category_textObj)) {
@@ -540,7 +540,7 @@ switch ($op) {
             exit();
         } else {
             // no confirm: show deletion condition
-            $categoryid = isset($_GET['categoryid']) ? (int)$_GET['categoryid'] : 0;
+            $categoryid = \Xmf\Request::getInt('categoryid', 0, 'GET');
             $languageid = isset($_GET['languageid']) ? $_GET['languageid'] : null;
             xoops_cp_header();
             xoops_confirm(

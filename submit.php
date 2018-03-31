@@ -142,7 +142,7 @@ switch ($op) {
         $newItemObj->setVar('title', $_POST['title']);
         $newItemObj->setVar('summary', isset($_POST['summary']) ? $_POST['summary'] : '');
         $newItemObj->setVar('body', $_POST['body']);
-        $notifypub = isset($_POST['notifypub']) ? $_POST['notifypub'] : '';
+        $notifypub = \Xmf\Request::getString('notifypub', '', 'POST');
         $newItemObj->setVar('notifypub', $notifypub);
 
         // Setting the status of the item

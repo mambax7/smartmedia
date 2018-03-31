@@ -14,7 +14,7 @@ require_once XOOPS_ROOT_PATH . '/class/xoopsformloader.php';
 
 require_once __DIR__ . '/functions.php';
 
-$categoryid = isset($_GET['categoryid']) ? (int)$_GET['categoryid'] : 0;
+$categoryid = \Xmf\Request::getInt('categoryid', 0, 'GET');
 $mytree     = new \XoopsTree($xoopsDB->prefix('smartmedia_categories'), 'categoryid', 'parentid');
 $sform      = new \XoopsThemeForm(_MD_SMARTMEDIA_SUB_SMNAME, 'storyform', xoops_getenv('PHP_SELF'));
 

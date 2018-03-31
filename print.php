@@ -26,7 +26,7 @@ require_once __DIR__ . '/header.php';
 
 global $smartmedia_itemHandler;
 
-$itemid = isset($_GET['itemid']) ? (int)$_GET['itemid'] : 0;
+$itemid = \Xmf\Request::getInt('itemid', 0, 'GET');
 
 if (0 == $itemid) {
     redirect_header('javascript:history.go(-1)', 1, _MD_SMARTMEDIA_NOITEMSELECTED);

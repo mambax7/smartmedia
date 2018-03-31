@@ -14,7 +14,7 @@ require_once __DIR__ . '/header.php';
 
 global $smartmediaCategoryHandler, $smartmediaFolderHandler;
 
-$categoryid = isset($_GET['categoryid']) ? (int)$_GET['categoryid'] : 0;
+$categoryid = \Xmf\Request::getInt('categoryid', 0, 'GET');
 
 // Creating the category object for the selected category
 $categoryObj = $smartmediaCategoryHandler->get($categoryid);
@@ -43,7 +43,7 @@ $xoopsTpl->assign('category', $categoryObj->toArray());
 $xoopsTpl->assign('categoryPath', $categoryObj->title());
 
 // At which record shall we start
-$start = isset($_GET['start']) ? (int)$_GET['start'] : 0;
+$start = \Xmf\Request::getInt('start', 0, 'GET');
 
 $foldersObj =& $smartmediaFolderHandler->getfolders($helper->getConfig('folders_per_category'), $start, $categoryid, _SMARTMEDIA_FOLDER_STATUS_ONLINE, 'parent.categoryid ASC, weight ASC, parent.folderid', 'ASC', false);
 
