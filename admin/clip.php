@@ -823,7 +823,7 @@ switch ($op) {
         $limitsel = isset($_POST['limitsel']) ? $_POST['limitsel'] : $limitsel;
         smartmedia_setCookieVar('smartmedia_clip_limitsel', $limitsel);
 
-        $startsel = \Xmf\Request::getInt('startsel', 0, GET);
+        $startsel = \Xmf\Request::getInt('startsel', 0, 'GET');
         $startsel = isset($_POST['startsel']) ? $_POST['startsel'] : $startsel;
 
         $showingtxt = '';
