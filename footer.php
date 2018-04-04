@@ -26,7 +26,7 @@ global $xoopsModule, $xoopsModuleConfig;
 
 require_once XOOPS_ROOT_PATH . '/modules/smartmedia/include/functions.php';
 
-$uid = $xoopsUser ? $xoopsUser->getVar("uid") : 0;
+$uid = $xoopsUser ? $xoopsUser->getVar('uid') : 0;
 
 $xoopsTpl->assign('smartmedia_adminpage', "<a href='" . SMARTMEDIA_URL . "admin/index.php'>" . _MD_SMARTMEDIA_ADMIN_PAGE . '</a>');
 $xoopsTpl->assign('isAdmin', $is_smartmedia_admin);

@@ -56,7 +56,7 @@ if (!defined($moduleDirNameUpper . '_CONSTANTS_DEFINED')) {
 //    define('SMARTMEDIA_IMAGE_URL', SMARTMEDIA_URL . 'images/');
 //}
 
-require_once SMARTMEDIA_ROOT_PATH . "include/functions.php";
+require_once SMARTMEDIA_ROOT_PATH . 'include/functions.php';
 
 // Creating the SmartModule object
 $smartModule           = smartmedia_getModuleInfo();

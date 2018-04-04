@@ -51,7 +51,7 @@ if (!isset($totalItem[$folderid]) || 0 == $totalItem[$folderid]) {
 
 $GLOBALS['xoopsOption']['template_main'] = 'smartmedia_folder.tpl';
 
-require_once XOOPS_ROOT_PATH . "/header.php";
+require_once XOOPS_ROOT_PATH . '/header.php';
 require_once __DIR__ . '/footer.php';
 
 // Updating folder counter
@@ -99,4 +99,4 @@ if (0 != $helper->getConfig('clips_per_folder')) {
 // MetaTag Generator
 smartmedia_createMetaTags($folderObj->title(), $parentObj->title(), $folderObj->description());
 
-require_once XOOPS_ROOT_PATH . "/footer.php";
+require_once XOOPS_ROOT_PATH . '/footer.php';

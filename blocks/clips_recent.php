@@ -30,7 +30,7 @@ function b_smartmedia_clips_recent_show($options)
     if (!defined('SMARTMEDIA_DIRNAME')) {
         define('SMARTMEDIA_DIRNAME', 'smartmedia');
     }
-    require_once XOOPS_ROOT_PATH . "/modules/" . SMARTMEDIA_DIRNAME . "/include/common.php";
+    require_once XOOPS_ROOT_PATH . '/modules/' . SMARTMEDIA_DIRNAME . '/include/common.php';
 
     //$max_clips = $options[0];
     $title_length = $options[0];

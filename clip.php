@@ -49,7 +49,7 @@ if (!$theClipObj) {
 
 $GLOBALS['xoopsOption']['template_main'] = 'smartmedia_clip.tpl';
 
-require_once XOOPS_ROOT_PATH . "/header.php";
+require_once XOOPS_ROOT_PATH . '/header.php';
 require_once __DIR__ . '/footer.php';
 
 // Updating clip counter
@@ -91,7 +91,7 @@ $xoopsTpl->assign('clips', $clips);
 $tabsObj = new Smartmedia\Tabs($theClipObj);
 
 // Get user's browser
-require_once SMARTMEDIA_ROOT_PATH . "include/browser_detect.php";
+require_once SMARTMEDIA_ROOT_PATH . 'include/browser_detect.php';
 $browser = browser_detection('browser');
 
 $xoopsTpl->assign('tabs', $tabsObj->getTabs($browser));
@@ -122,4 +122,4 @@ $xoopsTpl->assign('clip', $clip);
 // MetaTag Generator
 smartmedia_createMetaTags($theClipObj->title('clean'), $folderObj->title('clean') . ' - ' . $categoryObj->title('clean'), $theClipObj->description());
 
-require_once XOOPS_ROOT_PATH . "/footer.php";
+require_once XOOPS_ROOT_PATH . '/footer.php';

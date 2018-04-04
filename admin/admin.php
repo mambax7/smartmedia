@@ -49,7 +49,7 @@ $error = false;
 if (0 != $admintest) {
     if (isset($fct) && '' != $fct) {
         if (file_exists(XOOPS_ROOT_PATH . '/modules/system/admin/' . $fct . '/xoops_version.php')) {
-            require_once XOOPS_ROOT_PATH . "/modules/system/language/" . $xoopsConfig['language'] . "/admin.php";
+            require_once XOOPS_ROOT_PATH . '/modules/system/language/' . $xoopsConfig['language'] . '/admin.php';
 
             if (file_exists(XOOPS_ROOT_PATH . '/modules/system/language/' . $xoopsConfig['language'] . '/admin/' . $fct . '.php')) {
                 require_once XOOPS_ROOT_PATH . '/modules/system/language/' . $xoopsConfig['language'] . '/admin/' . $fct . '.php';

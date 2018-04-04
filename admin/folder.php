@@ -71,7 +71,7 @@ function addFolder($language_text = false)
     global $xoopsUser, $xoopsConfig, $xoopsModule,  $myts, $smartmediaFolderHandler;
     /** @var Smartmedia\Helper $helper */
     $helper = Smartmedia\Helper::getInstance();
-    require_once XOOPS_ROOT_PATH . "/class/uploader.php";
+    require_once XOOPS_ROOT_PATH . '/class/uploader.php';
 
     $max_size          = 10000000;
     $max_imgwidth      = 1000;

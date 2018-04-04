@@ -35,7 +35,7 @@ if (!isset($totalItem[$categoryid]) || 0 == $totalItem[$categoryid]) {
 
 $GLOBALS['xoopsOption']['template_main'] = 'smartmedia_category.tpl';
 
-require_once XOOPS_ROOT_PATH . "/header.php";
+require_once XOOPS_ROOT_PATH . '/header.php';
 require_once __DIR__ . '/footer.php';
 
 // Category Smarty variabble
@@ -76,4 +76,4 @@ if ($helper->getConfig('folders_per_category') > 0) {
 // MetaTag Generator
 smartmedia_createMetaTags($categoryObj->title(), '', $categoryObj->description());
 
-require_once XOOPS_ROOT_PATH . "/footer.php";
+require_once XOOPS_ROOT_PATH . '/footer.php';

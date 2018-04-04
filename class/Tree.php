@@ -231,7 +231,7 @@ class Tree
             echo "<option value='0'>----</option>\n";
         }
 
-        require_once SMARTMEDIA_ROOT_PATH . "include/metagen.php";
+        require_once SMARTMEDIA_ROOT_PATH . 'include/metagen.php';
 
         while (false !== (list($catid, $name) = $this->db->fetchRow($result))) {
             $sel = '';

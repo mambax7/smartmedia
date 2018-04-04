@@ -37,7 +37,7 @@ $totalCategories = $smartmediaCategoryHandler->getCategoriesCount();
 
 $GLOBALS['xoopsOption']['template_main'] = 'smartmedia_index.tpl';
 
-require_once XOOPS_ROOT_PATH . "/header.php";
+require_once XOOPS_ROOT_PATH . '/header.php';
 require_once __DIR__ . '/footer.php';
 
 // Creating the categories objects
@@ -75,4 +75,4 @@ if ($helper->getConfig('categories_on_index') > 0) {
 // MetaTag Generator
 smartmedia_createMetaTags($smartmedia_moduleName, '', $index_msg);
 
-require_once XOOPS_ROOT_PATH . "/footer.php";
+require_once XOOPS_ROOT_PATH . '/footer.php';

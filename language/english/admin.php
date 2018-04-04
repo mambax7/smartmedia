@@ -326,6 +326,6 @@ define('_AM_VISIBLE', 'Visible');
 define('_AM_VISIBLEIN', 'Visible In');
 define('_AM_ACTION', 'Action');
 
-define("_AM_ACTIVERIGHTS", "Admin Rights");
-define("_AM_ACCESSRIGHTS", "Access Rights");
+define('_AM_ACTIVERIGHTS', 'Admin Rights');
+define('_AM_ACCESSRIGHTS', 'Access Rights');
 define('_AM_BCACHETIME', 'Cache Time');

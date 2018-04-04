@@ -27,7 +27,7 @@ use XoopsModules\Smartmedia;
 $helper = Smartmedia\Helper::getInstance();
 
 require_once __DIR__ . '/header.php';
-require_once XOOPS_ROOT_PATH . "/header.php";
+require_once XOOPS_ROOT_PATH . '/header.php';
 
 global $smartmediaCategoryHandler, $smartmedia_itemHandler, $xoopsUser, $xoopsConfig, $xoopsModule;
 
@@ -192,7 +192,7 @@ switch ($op) {
 
         global $xoopsUser, $myts;
 
-        $name = $xoopsUser ? ucwords($xoopsUser->getVar("uname")) : 'Anonymous';
+        $name = $xoopsUser ? ucwords($xoopsUser->getVar('uname')) : 'Anonymous';
 
         $sectionname = $myts->htmlSpecialChars($xoopsModule->getVar('name'));
 
