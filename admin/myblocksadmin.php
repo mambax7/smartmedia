@@ -54,7 +54,7 @@ error_reporting($error_reporting_level);
 
 $group_defs = file("$xoops_system_path/language/$language/admin/groups.php");
 foreach ($group_defs as $def) {
-    if (strstr($def, '_AM_ACCESSRIGHTS') || strstr($def, '_AM_ACTIVERIGHTS')) {
+    if (false !== strpos($def, '_AM_ACCESSRIGHTS') || false !== strpos($def, '_AM_ACTIVERIGHTS')) {
         eval($def);
     }
 }

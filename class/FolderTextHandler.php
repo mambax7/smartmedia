@@ -127,7 +127,7 @@ class FolderTextHandler extends \XoopsObjectHandler
      */
     public function _selectQuery($criteria = null)
     {
-        $sql = sprintf('SELECT * FROM %s', $this->db->prefix($this->dbtable));
+        $sql = sprintf('SELECT * FROM `%s`', $this->db->prefix($this->dbtable));
         if (isset($criteria) && is_subclass_of($criteria, 'CriteriaElement')) {
             $sql .= ' ' . $criteria->renderWhere();
             if ('' != $criteria->getSort()) {
@@ -206,7 +206,7 @@ class FolderTextHandler extends \XoopsObjectHandler
     public function getCreatedLanguages($folderid)
     {
         $ret = [];
-        $sql = sprintf('SELECT languageid FROM %s', $this->db->prefix($this->dbtable));
+        $sql = sprintf('SELECT languageid FROM `%s`', $this->db->prefix($this->dbtable));
         $sql .= " WHERE folderid = $folderid";
 
         //  echo "<br>$sql<br>";
@@ -320,7 +320,7 @@ class FolderTextHandler extends \XoopsObjectHandler
             return false;
         }
 
-        $sql = sprintf('DELETE FROM %s WHERE folderid = %u AND languageid = %s', $this->db->prefix($this->dbtable), $obj->getVar('folderid'), $this->db->quoteString($obj->getVar('languageid')));
+        $sql = sprintf('DELETE FROM `%s` WHERE folderid = %u AND languageid = %s', $this->db->prefix($this->dbtable), $obj->getVar('folderid'), $this->db->quoteString($obj->getVar('languageid')));
 
         //echo "<br>" . $sql . "<br>";
 

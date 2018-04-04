@@ -75,7 +75,7 @@ class ContentHandler extends \XoopsObjectHandler
      * Singleton - prevent multiple instances of this class
      *
      * @param  objecs &$db {@link XoopsHandlerFactory}
-     * @return object {@link Smartmedia\ContentHandler}
+     * @return Smartmedia\ContentHandler {@link Smartmedia\ContentHandler}
      * @access public
      */
     public static function getInstance($db)
@@ -139,7 +139,7 @@ class ContentHandler extends \XoopsObjectHandler
      */
     public function _selectQuery($criteria = null)
     {
-        $sql = sprintf('SELECT * FROM %s', $this->db->prefix($this->dbtable));
+        $sql = sprintf('SELECT * FROM `%s`', $this->db->prefix($this->dbtable));
         if (isset($criteria) && is_subclass_of($criteria, 'CriteriaElement')) {
             $sql .= ' ' . $criteria->renderWhere();
             if ('' != $criteria->getSort()) {
@@ -435,7 +435,7 @@ class ContentHandler extends \XoopsObjectHandler
         if (!$smartmedia_content_textHandler->deleteAll($criteria)) {
             return false;
         }
-        $sql = sprintf('DELETE FROM %s WHERE contentid = %u', $this->db->prefix($this->dbtable), $obj->getVar('contentid'));
+        $sql = sprintf('DELETE FROM `%s` WHERE contentid = %u', $this->db->prefix($this->dbtable), $obj->getVar('contentid'));
 
         //echo "<br>$sql</br />";
 

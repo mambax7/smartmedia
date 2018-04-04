@@ -80,19 +80,6 @@ function xoops_module_update_smartmedia(\XoopsModule $module, $previousVersion =
 
     if ($previousVersion < 240) {
 
-        //rename column EXAMPLE
-        $tables     = new Tables();
-        $table      = 'xxxxx_categories';
-        $column     = 'ordre';
-        $newName    = 'order';
-        $attributes = "INT(5) NOT NULL DEFAULT '0'";
-        if ($tables->useTable($table)) {
-            $tables->alterColumn($table, $column, $attributes, $newName);
-            if (!$tables->executeQueue()) {
-                echo '<br>' . constant('CO_' . $moduleDirNameUpper . '_UPGRADEFAILED0') . ' ' . $migrate->getLastError();
-            }
-        }
-
         //delete old HTML templates
         if (count($configurator->templateFolders) > 0) {
             foreach ($configurator->templateFolders as $folder) {
@@ -155,9 +142,9 @@ function xoops_module_update_smartmedia(\XoopsModule $module, $previousVersion =
         $sql = 'DELETE FROM ' . $GLOBALS['xoopsDB']->prefix('tplfile') . " WHERE `tpl_module` = '" . $module->getVar('dirname', 'n') . "' AND `tpl_file` LIKE '%.html%'";
         $GLOBALS['xoopsDB']->queryF($sql);
 
-        /** @var XoopsGroupPermHandler $gpermHandler */
-        $gpermHandler = xoops_getHandler('groupperm');
-        return $gpermHandler->deleteByModule($module->getVar('mid'), 'item_read');
+        /** @var XoopsGroupPermHandler $grouppermHandler */
+        $grouppermHandler = xoops_getHandler('groupperm');
+        return $grouppermHandler->deleteByModule($module->getVar('mid'), 'item_read');
     }
     return true;
 }

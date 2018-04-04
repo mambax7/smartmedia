@@ -571,7 +571,7 @@ switch ($op) {
         global $smartmediaFolderHandler, $xoopsUser, $xoopsUser, $xoopsConfig, $xoopsDB, $_GET;
 
         $module_id    = $xoopsModule->getVar('mid');
-        $gpermHandler = xoops_getHandler('groupperm');
+        $grouppermHandler = xoops_getHandler('groupperm');
 
         $folderid   = \Xmf\Request::getInt('folderid', 0, 'POST');
         $folderid   = \Xmf\Request::getInt('folderid', $folderid, 'GET');

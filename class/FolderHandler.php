@@ -171,7 +171,7 @@ class FolderHandler extends \XoopsObjectHandler
      */
     public function _selectQuery($criteria = null)
     {
-        $sql = sprintf('SELECT * FROM %s', $this->db->prefix($this->dbtable));
+        $sql = sprintf('SELECT * FROM `%s`', $this->db->prefix($this->dbtable));
         if (isset($criteria) && is_subclass_of($criteria, 'CriteriaElement')) {
             $sql .= ' ' . $criteria->renderWhere();
             if ('' != $criteria->getSort()) {
@@ -194,7 +194,7 @@ class FolderHandler extends \XoopsObjectHandler
      */
     public function _selectJoinQuery($parentid, $criteria = null)
     {
-        $sql = sprintf('SELECT * FROM %s AS parent INNER JOIN %s AS child ON parent.%s=child.%s', $this->db->prefix($this->dbtable_parent), $this->db->prefix($this->dbtable), $this->_key_field, $this->_key_field);
+        $sql = sprintf('SELECT * FROM `%s` AS parent INNER JOIN %s AS child ON parent.%s=child.%s', $this->db->prefix($this->dbtable_parent), $this->db->prefix($this->dbtable), $this->_key_field, $this->_key_field);
         if (isset($criteria) && is_subclass_of($criteria, 'CriteriaElement')) {
             if (0 != $parentid) {
                 $criteria->add(new \Criteria($this->_parent_field, $parentid));
@@ -622,7 +622,7 @@ class FolderHandler extends \XoopsObjectHandler
         if (!$smartmediaFolderTextHandler->deleteAll($criteria)) {
             return false;
         }
-        $sql = sprintf('DELETE FROM %s WHERE folderid = %u', $this->db->prefix($this->dbtable), $obj->getVar('folderid'));
+        $sql = sprintf('DELETE FROM `%s` WHERE folderid = %u', $this->db->prefix($this->dbtable), $obj->getVar('folderid'));
 
         //echo "<br>$sql</br />";
 
@@ -657,7 +657,7 @@ class FolderHandler extends \XoopsObjectHandler
         }
 
         // Delete parent link
-        $sql = sprintf('DELETE FROM %s WHERE folderid = %u AND categoryid = %u', $this->db->prefix($this->dbtable_parent), $obj->getVar('folderid'), $parentid);
+        $sql = sprintf('DELETE FROM `%s` WHERE folderid = %u AND categoryid = %u', $this->db->prefix($this->dbtable_parent), $obj->getVar('folderid'), $parentid);
 
         if (false !== $force) {
             $result = $this->db->queryF($sql);

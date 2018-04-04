@@ -195,7 +195,7 @@ class FormatHandler extends \XoopsObjectHandler
             return false;
         }
 
-        $sql = sprintf('DELETE FROM %s WHERE ' . $this->_key_field . ' = %u', $this->db->prefix($this->dbtable), $object->formatid());
+        $sql = sprintf('DELETE FROM `%s` WHERE ' . $this->_key_field . ' = %u', $this->db->prefix($this->dbtable), $object->formatid());
 
         //echo "<br>$sql<br>";
 

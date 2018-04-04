@@ -162,7 +162,7 @@ class ClipHandler extends \XoopsObjectHandler
      */
     public function _selectQuery($criteria = null)
     {
-        $sql = sprintf('SELECT * FROM %s', $this->db->prefix($this->dbtable));
+        $sql = sprintf('SELECT * FROM `%s`', $this->db->prefix($this->dbtable));
         if (isset($criteria) && is_subclass_of($criteria, 'CriteriaElement')) {
             $sql .= ' ' . $criteria->renderWhere();
             if ('' != $criteria->getSort()) {
@@ -696,7 +696,7 @@ class ClipHandler extends \XoopsObjectHandler
         if (!$smartmediaClipTextHandler->deleteAll($criteria)) {
             return false;
         }
-        $sql = sprintf('DELETE FROM %s WHERE clipid = %u', $this->db->prefix($this->dbtable), $obj->getVar('clipid'));
+        $sql = sprintf('DELETE FROM `%s` WHERE clipid = %u', $this->db->prefix($this->dbtable), $obj->getVar('clipid'));
 
         //echo "<br>$sql</br />";
 

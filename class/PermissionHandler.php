@@ -50,7 +50,7 @@ class PermissionHandler extends \XoopsObjectHandler
         if (!isset($groups[$type]) || (null != $id && !isset($groups[$type][$id]))) {
             $smartModule =& smartmedia_getModuleInfo();
             //Get group permissions handler
-            $gpermHandler = xoops_getHandler('groupperm');
+            $grouppermHandler = xoops_getHandler('groupperm');
 
             switch ($type) {
 
@@ -64,7 +64,7 @@ class PermissionHandler extends \XoopsObjectHandler
             }
 
             //Get groups allowed for an item id
-            $allowedgroups =& $gpermHandler->getGroupIds($gperm_name, $id, $smartModule->getVar('mid'));
+            $allowedgroups =& $grouppermHandler->getGroupIds($gperm_name, $id, $smartModule->getVar('mid'));
             $groups[$type] = $allowedgroups;
         }
 
@@ -93,7 +93,7 @@ class PermissionHandler extends \XoopsObjectHandler
         if (!isset($permissions[$type]) || (null != $id && !isset($permissions[$type][$id]))) {
             $smartModule =& smartmedia_getModuleInfo();
             //Get group permissions handler
-            $gpermHandler = xoops_getHandler('groupperm');
+            $grouppermHandler = xoops_getHandler('groupperm');
             //Get user's groups
             $groups = is_object($xoopsUser) ? $xoopsUser->getGroups() : [XOOPS_GROUP_ANONYMOUS];
 
@@ -109,7 +109,7 @@ class PermissionHandler extends \XoopsObjectHandler
             }
 
             //Get all allowed item ids in this module and for this user's groups
-            $userpermissions    =& $gpermHandler->getItemIds($gperm_name, $groups, $smartModule->getVar('mid'));
+            $userpermissions    =& $grouppermHandler->getItemIds($gperm_name, $groups, $smartModule->getVar('mid'));
             $permissions[$type] = $userpermissions;
         }
 
@@ -134,15 +134,15 @@ class PermissionHandler extends \XoopsObjectHandler
 
         $result       = true;
         $module_id    = $smartModule->getVar('mid');
-        $gpermHandler = xoops_getHandler('groupperm');
+        $grouppermHandler = xoops_getHandler('groupperm');
 
         // First, if the permissions are already there, delete them
-        $gpermHandler->deleteByModule($module_id, $perm_name, $pageid);
+        $grouppermHandler->deleteByModule($module_id, $perm_name, $pageid);
 
         // Save the new permissions
         if (count($groups) > 0) {
             foreach ($groups as $group_id) {
-                $gpermHandler->addRight($perm_name, $pageid, $group_id, $module_id);
+                $grouppermHandler->addRight($perm_name, $pageid, $group_id, $module_id);
             }
         }
 
@@ -167,7 +167,7 @@ class PermissionHandler extends \XoopsObjectHandler
 
         $result       = true;
         $module_id    = $smartModule->getVar('mid');
-        $gpermHandler = xoops_getHandler('groupperm');
+        $grouppermHandler = xoops_getHandler('groupperm');
 
         switch ($type) {
 
@@ -180,7 +180,7 @@ class PermissionHandler extends \XoopsObjectHandler
                 break;
         }
 
-        $gpermHandler->deleteByModule($module_id, $gperm_name, $itemid);
+        $grouppermHandler->deleteByModule($module_id, $gperm_name, $itemid);
 
         return $result;
     }

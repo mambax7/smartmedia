@@ -51,7 +51,7 @@ function smartmedia_TableExists($table)
 function smartmedia_GetMeta($key)
 {
     $xoopsDB = \XoopsDatabaseFactory::getDatabaseConnection();
-    $sql     = sprintf('SELECT metavalue FROM %s WHERE metakey=%s', $xoopsDB->prefix('smartmedia_meta'), $xoopsDB->quoteString($key));
+    $sql     = sprintf('SELECT metavalue FROM `%s` WHERE metakey=%s', $xoopsDB->prefix('smartmedia_meta'), $xoopsDB->quoteString($key));
     $ret     = $xoopsDB->query($sql);
     if (!$ret) {
         $value = false;
@@ -867,9 +867,9 @@ function smartmedia_moderator()
         $module_name = $smartModule->getVar('dirname');
         $smartConfig = $hModConfig->getConfigsByCat(0, $smartModule->getVar('mid'));
 
-        $gpermHandler = xoops_getHandler('groupperm');
+        $grouppermHandler = xoops_getHandler('groupperm');
 
-        $categories = $gpermHandler->getItemIds('category_moderation', $xoopsUser->getVar('uid'), $module_id);
+        $categories = $grouppermHandler->getItemIds('category_moderation', $xoopsUser->getVar('uid'), $module_id);
         if (0 == count($categories)) {
             $result = false;
         } else {
@@ -953,7 +953,7 @@ function smartmedia_itemAccessGranted($itemid, $categoryid)
 
         $groups = $xoopsUser ? $xoopsUser->getGroups() : XOOPS_GROUP_ANONYMOUS;
 
-        $gpermHandler = xoops_getHandler('groupperm');
+        $grouppermHandler = xoops_getHandler('groupperm');
         $hModule      = xoops_getHandler('module');
         $hModConfig   = xoops_getHandler('config');
 
@@ -961,9 +961,9 @@ function smartmedia_itemAccessGranted($itemid, $categoryid)
 
         $module_id = $smartModule->getVar('mid');
         // Do we have access to the parent category
-        if ($gpermHandler->checkRight('category_read', $categoryid, $groups, $module_id)) {
+        if ($grouppermHandler->checkRight('category_read', $categoryid, $groups, $module_id)) {
             // Do we have access to the item ?
-            if ($gpermHandler->checkRight('item_read', $itemid, $groups, $module_id)) {
+            if ($grouppermHandler->checkRight('item_read', $itemid, $groups, $module_id)) {
                 $result = true;
             } else { // No we don't !
                 $result = false;
@@ -994,7 +994,7 @@ function smartmedia_overrideItemsPermissions($groups, $categoryid)
     $smartModule = $hModule->getByDirname('smartmedia');
 
     $module_id    = $smartModule->getVar('mid');
-    $gpermHandler = xoops_getHandler('groupperm');
+    $grouppermHandler = xoops_getHandler('groupperm');
 
     $sql    = 'SELECT itemid FROM ' . $xoopsDB->prefix('smartmedia_item') . " WHERE categoryid = '$categoryid' ";
     $result = $xoopsDB->query($sql);
@@ -1002,11 +1002,11 @@ function smartmedia_overrideItemsPermissions($groups, $categoryid)
     if (count($result) > 0) {
         while (false !== (list($itemid) = $xoopsDB->fetchRow($result))) {
             // First, if the permissions are already there, delete them
-            $gpermHandler->deleteByModule($module_id, 'item_read', $itemid);
+            $grouppermHandler->deleteByModule($module_id, 'item_read', $itemid);
             // Save the new permissions
             if (count($groups) > 0) {
                 foreach ($groups as $group_id) {
-                    $gpermHandler->addRight('item_read', $itemid, $group_id, $module_id);
+                    $grouppermHandler->addRight('item_read', $itemid, $group_id, $module_id);
                 }
             }
         }
@@ -1031,13 +1031,13 @@ function smartmedia_saveItemPermissions($groups, $itemID)
     $smartModule = $hModule->getByDirname('smartmedia');
 
     $module_id    = $smartModule->getVar('mid');
-    $gpermHandler = xoops_getHandler('groupperm');
+    $grouppermHandler = xoops_getHandler('groupperm');
     // First, if the permissions are already there, delete them
-    $gpermHandler->deleteByModule($module_id, 'item_read', $itemID);
+    $grouppermHandler->deleteByModule($module_id, 'item_read', $itemID);
     // Save the new permissions
     if (count($groups) > 0) {
         foreach ($groups as $group_id) {
-            $gpermHandler->addRight('item_read', $itemID, $group_id, $module_id);
+            $grouppermHandler->addRight('item_read', $itemID, $group_id, $module_id);
         }
     }
 
@@ -1062,13 +1062,13 @@ function smartmedia_saveCategory_Permissions($groups, $categoryid, $perm_name)
     $smartModule = $hModule->getByDirname('smartmedia');
 
     $module_id    = $smartModule->getVar('mid');
-    $gpermHandler = xoops_getHandler('groupperm');
+    $grouppermHandler = xoops_getHandler('groupperm');
     // First, if the permissions are already there, delete them
-    $gpermHandler->deleteByModule($module_id, $perm_name, $categoryid);
+    $grouppermHandler->deleteByModule($module_id, $perm_name, $categoryid);
     // Save the new permissions
     if (count($groups) > 0) {
         foreach ($groups as $group_id) {
-            $gpermHandler->addRight($perm_name, $categoryid, $group_id, $module_id);
+            $grouppermHandler->addRight($perm_name, $categoryid, $group_id, $module_id);
         }
     }
 
@@ -1091,13 +1091,13 @@ function smartmedia_saveModerators($moderators, $categoryid)
     $hModule      = xoops_getHandler('module');
     $smartModule  = $hModule->getByDirname('smartmedia');
     $module_id    = $smartModule->getVar('mid');
-    $gpermHandler = xoops_getHandler('groupperm');
+    $grouppermHandler = xoops_getHandler('groupperm');
     // First, if the permissions are already there, delete them
-    $gpermHandler->deleteByModule($module_id, 'category_moderation', $categoryid);
+    $grouppermHandler->deleteByModule($module_id, 'category_moderation', $categoryid);
     // Save the new permissions
     if (count($moderators) > 0) {
         foreach ($moderators as $uid) {
-            $gpermHandler->addRight('category_moderation', $categoryid, $uid, $module_id);
+            $grouppermHandler->addRight('category_moderation', $categoryid, $uid, $module_id);
         }
     }
 

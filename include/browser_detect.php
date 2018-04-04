@@ -202,7 +202,7 @@ function browser_detection($which_test)
             //unpacks browser array, assigns to variables
             $s_browser = $a_browser_types[$i][0];// text string to id browser from array
 
-            if (stristr($browser_user_agent, $s_browser)) {
+            if (false !== stripos($browser_user_agent, $s_browser)) {
                 // it defaults to true, will become false below if needed
                 // this keeps it easier to keep track of what is safe, only
                 //explicit false assignment will make it false.
@@ -236,7 +236,7 @@ function browser_detection($which_test)
 
                         // this is to pull out specific mozilla versions, firebird, netscape etc..
                         for ($j = 0; $j < count($moz_types); ++$j) {
-                            if (stristr($browser_user_agent, $moz_types[$j])) {
+                            if (false !== stripos($browser_user_agent, $moz_types[$j])) {
                                 $moz_version        = $moz_types[$j];
                                 $moz_version_number = browser_version($browser_user_agent, $moz_version);
                                 break;
@@ -274,7 +274,7 @@ function browser_detection($which_test)
                     case 'ie':
                         $version_number = browser_version($browser_user_agent, $s_browser);
                         // first test for IE 5x mac, that's the most problematic IE out there
-                        if (stristr($browser_user_agent, 'mac')) {
+                        if (false !== stripos($browser_user_agent, 'mac')) {
                             $ie_version = 'ieMac';
                         } // this assigns a general ie id to the $ie_version variable
                         elseif ($version_number >= 5) {
@@ -495,55 +495,55 @@ function which_os($browser_string, $browser_name, $version_number)
         $s_os = $a_os[$i];
 
         //assign os to global os variable, os flag true on success
-        if (!is_array($s_os) && stristr($browser_string, $s_os)) {
+        if (!is_array($s_os) && false !== stripos($browser_string, $s_os)) {
             $os = $s_os;
 
             switch ($os) {
                 case 'win':
-                    if (strstr($browser_string, '95')) {
+                    if (false !== strpos($browser_string, '95')) {
                         $os_version = '95';
-                    } elseif (strstr($browser_string, '9x 4.9') || strstr($browser_string, 'me')) {
+                    } elseif (false !== strpos($browser_string, '9x 4.9') || false !== strpos($browser_string, 'me')) {
                         $os_version = 'me';
-                    } elseif (strstr($browser_string, '98')) {
+                    } elseif (false !== strpos($browser_string, '98')) {
                         $os_version = '98';
-                    } elseif (strstr($browser_string, '2000')) {
+                    } elseif (false !== strpos($browser_string, '2000')) {
                         // windows 2000, for opera ID
                         $os_version = 5.0;
                         $os         = 'nt';
-                    } elseif (strstr($browser_string, 'xp')) {
+                    } elseif (false !== strpos($browser_string, 'xp')) {
                         // windows 2000, for opera ID
                         $os_version = 5.1;
                         $os         = 'nt';
-                    } elseif (strstr($browser_string, '2003')) {
+                    } elseif (false !== strpos($browser_string, '2003')) {
                         // windows server 2003, for opera ID
                         $os_version = 5.2;
                         $os         = 'nt';
-                    } elseif (strstr($browser_string, 'ce')) {
+                    } elseif (false !== strpos($browser_string, 'ce')) {
                         // windows CE
                         $os_version = 'ce';
                     }
                     break;
                 case 'nt':
-                    if (strstr($browser_string, 'nt 5.2')) {
+                    if (false !== strpos($browser_string, 'nt 5.2')) {
                         // windows server 2003
                         $os_version = 5.2;
                         $os         = 'nt';
-                    } elseif (strstr($browser_string, 'nt 5.1') || strstr($browser_string, 'xp')) {
+                    } elseif (false !== strpos($browser_string, 'nt 5.1') || false !== strpos($browser_string, 'xp')) {
                         // windows xp
                         $os_version = 5.1;//
-                    } elseif (strstr($browser_string, 'nt 5') || strstr($browser_string, '2000')) {
+                    } elseif (false !== strpos($browser_string, 'nt 5') || false !== strpos($browser_string, '2000')) {
                         // windows 2000
                         $os_version = 5.0;
-                    } elseif (strstr($browser_string, 'nt 4')) {
+                    } elseif (false !== strpos($browser_string, 'nt 4')) {
                         // nt 4
                         $os_version = 4;
-                    } elseif (strstr($browser_string, 'nt 3')) {
+                    } elseif (false !== strpos($browser_string, 'nt 3')) {
                         // nt 4
                         $os_version = 3;
                     }
                     break;
                 case 'mac':
-                    if (strstr($browser_string, 'os x')) {
+                    if (false !== strpos($browser_string, 'os x')) {
                         $os_version = 10;
                     }
                     //this is a crude test for os x, since safari, camino, ie 5.2, & moz >= rv 1.3
@@ -563,7 +563,7 @@ function which_os($browser_string, $browser_name, $version_number)
         //in the main os array, the unix one that is
         elseif (is_array($s_os) && ($i == (count($a_os) - 2))) {
             for ($j = 0; $j < count($s_os); ++$j) {
-                if (stristr($browser_string, $s_os[$j])) {
+                if (false !== stripos($browser_string, $s_os[$j])) {
                     $os         = 'unix'; //if the os is in the unix array, it's unix, obviously...
                     $os_version = ('unix' !== $s_os[$j]) ? $s_os[$j] : '';// assign sub unix version from the unix array
                     break;
@@ -574,7 +574,7 @@ function which_os($browser_string, $browser_name, $version_number)
         //in the main os array, the linux one that is
         elseif (is_array($s_os) && ($i == (count($a_os) - 1))) {
             for ($j = 0; $j < count($s_os); ++$j) {
-                if (stristr($browser_string, $s_os[$j])) {
+                if (false !== stripos($browser_string, $s_os[$j])) {
                     $os = 'lin';
                     // assign linux distro from the linux array, there's a default
                     //search for 'lin', if it's that, set version to ''

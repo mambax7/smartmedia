@@ -479,7 +479,7 @@ switch ($op) {
         global $smartmediaCategoryHandler, $xoopsUser, $xoopsUser, $xoopsConfig, $xoopsDB, $_GET;
 
         $module_id    = $xoopsModule->getVar('mid');
-        $gpermHandler = xoops_getHandler('groupperm');
+        $grouppermHandler = xoops_getHandler('groupperm');
 
         $categoryid = \Xmf\Request::getInt('categoryid', 0, 'POST');
         $categoryid = \Xmf\Request::getInt('categoryid', $categoryid, 'GET');

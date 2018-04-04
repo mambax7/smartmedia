@@ -672,7 +672,7 @@ switch ($op) {
         global $smartmediaClipHandler, $xoopsUser, $xoopsConfig, $xoopsDB, $_GET;
 
         $module_id    = $xoopsModule->getVar('mid');
-        $gpermHandler = xoops_getHandler('groupperm');
+        $grouppermHandler = xoops_getHandler('groupperm');
 
         $clipid = \Xmf\Request::getInt('clipid', 0, 'POST');
         $clipid = \Xmf\Request::getInt('clipid', $clipid, 'GET');

@@ -140,7 +140,7 @@ class CategoryHandler extends \XoopsObjectHandler
      */
     public function _selectQuery($criteria = null)
     {
-        $sql = sprintf('SELECT * FROM %s', $this->db->prefix($this->dbtable));
+        $sql = sprintf('SELECT * FROM `%s`', $this->db->prefix($this->dbtable));
         if (isset($criteria) && is_subclass_of($criteria, 'CriteriaElement')) {
             $sql .= ' ' . $criteria->renderWhere();
             if ('' != $criteria->getSort()) {
@@ -353,8 +353,8 @@ class CategoryHandler extends \XoopsObjectHandler
     /**
      * Stores a category in the database
      *
-     * @param \XoopsObject $obj reference to the {@link Smartmedia\Category}
-     * @param  bool   $force
+     * @param \XoopsObject $object
+     * @param  bool        $force
      * @return bool   FALSE if failed, TRUE if already present and unchanged or successful
      */
     public function insert(\XoopsObject $object, $force = false)
@@ -439,7 +439,7 @@ class CategoryHandler extends \XoopsObjectHandler
         if (!$smartmediaCategoryTextHandler->deleteAll($criteria)) {
             return false;
         }
-        $sql = sprintf('DELETE FROM %s WHERE categoryid = %u', $this->db->prefix($this->dbtable), $obj->getVar('categoryid'));
+        $sql = sprintf('DELETE FROM `%s` WHERE categoryid = %u', $this->db->prefix($this->dbtable), $obj->getVar('categoryid'));
 
         //echo "<br>$sql</br />";
 

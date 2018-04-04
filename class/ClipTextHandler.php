@@ -126,7 +126,7 @@ class ClipTextHandler extends \XoopsObjectHandler
      */
     public function _selectQuery($criteria = null)
     {
-        $sql = sprintf('SELECT * FROM %s', $this->db->prefix($this->dbtable));
+        $sql = sprintf('SELECT * FROM `%s`', $this->db->prefix($this->dbtable));
         if (isset($criteria) && is_subclass_of($criteria, 'CriteriaElement')) {
             $sql .= ' ' . $criteria->renderWhere();
             if ('' != $criteria->getSort()) {
@@ -205,7 +205,7 @@ class ClipTextHandler extends \XoopsObjectHandler
     public function getCreatedLanguages($clipid)
     {
         $ret = [];
-        $sql = sprintf('SELECT languageid FROM %s', $this->db->prefix($this->dbtable));
+        $sql = sprintf('SELECT languageid FROM `%s`', $this->db->prefix($this->dbtable));
         $sql .= " WHERE clipid = $clipid";
 
         //  echo "<br>$sql<br>";
@@ -348,7 +348,7 @@ class ClipTextHandler extends \XoopsObjectHandler
             return false;
         }
 
-        $sql = sprintf('DELETE FROM %s WHERE clipid = %u AND languageid = %s', $this->db->prefix($this->dbtable), $obj->getVar('clipid'), $this->db->quoteString($obj->getVar('languageid')));
+        $sql = sprintf('DELETE FROM `%s` WHERE clipid = %u AND languageid = %s', $this->db->prefix($this->dbtable), $obj->getVar('clipid'), $this->db->quoteString($obj->getVar('languageid')));
 
         //echo "<br>" . $sql . "<br>";
 
