@@ -48,15 +48,7 @@ if (!($isAdmin || (null !== ($helper->getConfig('allowsubmit')) && 1 == $helper-
     exit();
 }
 
-$op = '';
-
-if (isset($_GET['op'])) {
-    $op = $_GET['op'];
-}
-if (isset($_POST['op'])) {
-    $op = $_POST['op'];
-}
-
+$op    = \Xmf\Request::getCmd('op', '');
 switch ($op) {
     case 'preview':
 

@@ -56,14 +56,7 @@ require_once __DIR__ . '/admin_header.php';
 
 global $smartmediaClipHandler;
 
-$op = '';
-
-if (isset($_GET['op'])) {
-    $op = $_GET['op'];
-}
-if (isset($_POST['op'])) {
-    $op = $_POST['op'];
-}
+$op    = \Xmf\Request::getCmd('op', '');
 
 /* Possible $op :
  mod : Displaying the form to edit or add a clip
@@ -172,10 +165,10 @@ function addClip($language_text = false)
         //var_dump($uploader->errors);
         //exit;
 
-        $clipObj->setVar('width', isset($_POST['width']) ? (int)$_POST['width'] : 320);
-        $clipObj->setVar('height', isset($_POST['height']) ? (int)$_POST['height'] : 260);
-        $clipObj->setVar('folderid', isset($_POST['folderid']) ? (int)$_POST['folderid'] : 0);
-        $clipObj->setVar('weight', isset($_POST['weight']) ? (int)$_POST['weight'] : 1);
+        $clipObj->setVar('width',\Xmf\Request::getInt('width', 320, 'POST'));
+        $clipObj->setVar('height',\Xmf\Request::getInt('height', 260, 'POST'));
+        $clipObj->setVar('folderid',\Xmf\Request::getInt('folderid', 0, 'POST'));
+        $clipObj->setVar('weight',\Xmf\Request::getInt('weight', 1, 'POST'));
         $clipObj->setVar('file_hr', $_POST['file_hr']);
         $clipObj->setVar('file_lr', $_POST['file_lr']);
         $clipObj->setVar('formatid', $_POST['formatid']);

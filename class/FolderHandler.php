@@ -153,7 +153,7 @@ class FolderHandler extends \XoopsObjectHandler
 
                 // Check to see if the categoryid is in the url
                 if (isset($_GET['categoryid'])) {
-                    $obj->setVar('categoryid', (int)$_GET['categoryid']);
+                    $obj->setVar('categoryid', \Xmf\Request::getInt('categoryid', 0, 'GET'));
                 }
 
                 return $obj;

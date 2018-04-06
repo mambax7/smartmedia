@@ -29,13 +29,7 @@ use XoopsModules\Smartmedia;
 
 require_once __DIR__ . '/admin_header.php';
 
-$op = '';
-if (isset($_GET['op'])) {
-    $op = $_GET['op'];
-}
-if (isset($_POST['op'])) {
-    $op = $_POST['op'];
-}
+$op    = \Xmf\Request::getCmd('op', '');
 
 /**
  * @param bool $showmenu

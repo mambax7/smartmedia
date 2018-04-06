@@ -24,14 +24,7 @@ require_once __DIR__ . '/admin_header.php';
 
 global $smartmediaCategoryHandler;
 
-$op = '';
-
-if (isset($_GET['op'])) {
-    $op = $_GET['op'];
-}
-if (isset($_POST['op'])) {
-    $op = $_POST['op'];
-}
+$op    = \Xmf\Request::getCmd('op', 'default');
 
 /* Possible $op :
  mod : Displaying thie form to edit or add a category
@@ -119,8 +112,8 @@ function addCategory($language_text = false)
             $categoryObj->setVar('image', $_POST['image']);
         }
 
-        $categoryObj->setVar('parentid', isset($_POST['parentid']) ? (int)$_POST['parentid'] : 0);
-        $categoryObj->setVar('weight', isset($_POST['weight']) ? (int)$_POST['weight'] : 1);
+        $categoryObj->setVar('parentid',\Xmf\Request::getInt('parentid', 0, 'POST'));
+        $categoryObj->setVar('weight',\Xmf\Request::getInt('weight', 1, 'POST'));
         $categoryObj->setVar('default_languageid', isset($_POST['default_languageid']) ? $_POST['default_languageid'] : $helper->getConfig('default_language'));
         $categoryObj->setTextVar('languageid', isset($_POST['default_languageid']) ? $_POST['default_languageid'] : $helper->getConfig('default_language'));
     } else {
