@@ -76,9 +76,9 @@ function smartmedia_SetMeta($key, $value)
 {
     $xoopsDB = \XoopsDatabaseFactory::getDatabaseConnection();
     if ($ret = smartmedia_GetMeta($key)) {
-        $sql = sprintf('UPDATE %s SET metavalue = %s WHERE metakey = %s', $xoopsDB->prefix('smartmedia_meta'), $xoopsDB->quoteString($value), $xoopsDB->quoteString($key));
+        $sql = sprintf('UPDATE `%s` SET metavalue = %s WHERE metakey = %s', $xoopsDB->prefix('smartmedia_meta'), $xoopsDB->quoteString($value), $xoopsDB->quoteString($key));
     } else {
-        $sql = sprintf('INSERT INTO %s (metakey, metavalue) VALUES (%s, %s)', $xoopsDB->prefix('smartmedia_meta'), $xoopsDB->quoteString($key), $xoopsDB->quoteString($value));
+        $sql = sprintf('INSERT INTO `%s` (metakey, metavalue) VALUES (%s, %s)', $xoopsDB->prefix('smartmedia_meta'), $xoopsDB->quoteString($key), $xoopsDB->quoteString($value));
     }
     $ret = $xoopsDB->queryF($sql);
     if (!$ret) {

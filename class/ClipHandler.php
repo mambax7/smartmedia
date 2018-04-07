@@ -545,7 +545,7 @@ class ClipHandler extends \XoopsObjectHandler
             // Determine next auto-gen ID for table
             $clipid = $this->db->genId($this->db->prefix($this->dbtable) . '_uid_seq');
             $sql    = sprintf(
-                'INSERT INTO %s (
+                'INSERT INTO `%s` (
             clipid,
             folderid,
             statusid,
@@ -611,7 +611,7 @@ class ClipHandler extends \XoopsObjectHandler
             );
         } else {
             $sql = sprintf(
-                'UPDATE %s SET
+                'UPDATE `%s` SET
             folderid = %u,
             statusid = %u,
             created_date = %u,

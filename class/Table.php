@@ -139,7 +139,7 @@ class Table
         global $xoopsDB;
 
         foreach ($this->getData() as $data) {
-            $query = sprintf('INSERT INTO %s VALUES (%s)', $this->name(), $data);
+            $query = sprintf('INSERT INTO `%s` VALUES (%s)', $this->name(), $data);
             $ret   = $xoopsDB->query($query);
             if (!$ret) {
                 echo "<li class='err'>" . sprintf(_AM_SMARTMEDIA_DB_MSG_ADD_DATA_ERR, $this->name()) . '</li>';
@@ -314,7 +314,7 @@ class Table
         $ret = true;
 
         foreach ($this->getUpdatedFields() as $updatedField) {
-            $query = sprintf('UPDATE %s SET %s = %s', $this->name(), $updatedField['name'], $updatedField['value']);
+            $query = sprintf('UPDATE `%s` SET %s = %s', $this->name(), $updatedField['name'], $updatedField['value']);
             $ret   = $ret && $xoopsDB->query($query);
             if (!$ret) {
                 echo "<li class='err'>" . sprintf(_AM_SMARTMEDIA_DB_MSG_UPDATE_TABLE_ERR, $this->name()) . '</li>';

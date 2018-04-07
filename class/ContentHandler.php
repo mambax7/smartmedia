@@ -373,7 +373,7 @@ class ContentHandler extends \XoopsObjectHandler
         if ($object->isNew()) {
             // Determine next auto-gen ID for table
             $contentid = $this->db->genId($this->db->prefix($this->dbtable) . '_uid_seq');
-            $sql       = sprintf('INSERT INTO %s (
+            $sql       = sprintf('INSERT INTO `%s` (
             contentid,
             parentid,
             weight,
@@ -386,7 +386,7 @@ class ContentHandler extends \XoopsObjectHandler
             %s,
             %s)', $this->db->prefix($this->dbtable), $contentid, $parentid, $weight, $this->db->quoteString($image), $this->db->quoteString($default_languageid));
         } else {
-            $sql = sprintf('UPDATE %s SET
+            $sql = sprintf('UPDATE `%s` SET
             parentid = %u,
             weight = %u,
             image = %s,

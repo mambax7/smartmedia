@@ -383,7 +383,7 @@ class CategoryHandler extends \XoopsObjectHandler
         if ($object->isNew()) {
             // Determine next auto-gen ID for table
             $categoryid = $this->db->genId($this->db->prefix($this->dbtable) . '_uid_seq');
-            $sql        = sprintf('INSERT INTO %s (
+            $sql        = sprintf('INSERT INTO `%s` (
             categoryid,
             parentid,
             weight,
@@ -396,7 +396,7 @@ class CategoryHandler extends \XoopsObjectHandler
             %s,
             %s)', $this->db->prefix($this->dbtable), $categoryid, $parentid, $weight, $this->db->quoteString($image), $this->db->quoteString($default_languageid));
         } else {
-            $sql = sprintf('UPDATE %s SET parentid = %u, weight = %u, image = %s, default_languageid = %s WHERE categoryid = %u', $this->db->prefix($this->dbtable), $parentid, $weight, $this->db->quoteString($image), $this->db->quoteString($default_languageid), $categoryid);
+            $sql = sprintf('UPDATE `%s` SET parentid = %u, weight = %u, image = %s, default_languageid = %s WHERE categoryid = %u', $this->db->prefix($this->dbtable), $parentid, $weight, $this->db->quoteString($image), $this->db->quoteString($default_languageid), $categoryid);
         }
 
         //echo "<br>" . $sql . "<br>";

@@ -257,7 +257,7 @@ class CategoryTextHandler extends \XoopsObjectHandler
 
         // Create query for DB update
         if ($object->isNew()) {
-            $sql = sprintf('INSERT INTO %s (
+            $sql = sprintf('INSERT INTO `%s` (
             categoryid,
             languageid,
             title,
@@ -270,7 +270,7 @@ class CategoryTextHandler extends \XoopsObjectHandler
             %s,
             %s)', $this->db->prefix($this->dbtable), $categoryid, $this->db->quoteString($languageid), $this->db->quoteString($title), $this->db->quoteString($description), $this->db->quoteString($meta_description));
         } else {
-            $sql = sprintf('UPDATE %s SET
+            $sql = sprintf('UPDATE `%s` SET
             title = %s,
             description = %s,
             meta_description = %s

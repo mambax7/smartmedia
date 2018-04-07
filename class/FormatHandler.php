@@ -158,10 +158,10 @@ class FormatHandler extends \XoopsObjectHandler
         }
 
         if ($object->isNew()) {
-            $sql = sprintf('INSERT INTO %s (' . $this->_key_field . ", template, FORMAT, ext) VALUES ('', %s, %s, %s)", $this->db->prefix($this->dbtable), $this->db->quoteString($template), $this->db->quoteString($format), $this->db->quoteString($ext));
+            $sql = sprintf('INSERT INTO `%s` (' . $this->_key_field . ", template, FORMAT, ext) VALUES ('', %s, %s, %s)", $this->db->prefix($this->dbtable), $this->db->quoteString($template), $this->db->quoteString($format), $this->db->quoteString($ext));
         } else {
             $id  = $formatid;
-            $sql = sprintf('UPDATE %s SET template = %s, FORMAT = %s, ext = %s WHERE ' . $this->_key_field . ' = %u', $this->db->prefix($this->dbtable), $this->db->quoteString($template), $this->db->quoteString($format), $this->db->quoteString($ext), $id);
+            $sql = sprintf('UPDATE `%s` SET template = %s, FORMAT = %s, ext = %s WHERE ' . $this->_key_field . ' = %u', $this->db->prefix($this->dbtable), $this->db->quoteString($template), $this->db->quoteString($format), $this->db->quoteString($ext), $id);
         }
 
         //echo "<br>" . $sql . "<br>";

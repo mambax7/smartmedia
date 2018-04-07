@@ -515,7 +515,7 @@ class FolderHandler extends \XoopsObjectHandler
         if ($object->isNew()) {
             // Determine next auto-gen ID for table
             $folderid = $this->db->genId($this->db->prefix($this->dbtable) . '_uid_seq');
-            $sql      = sprintf('INSERT INTO %s (
+            $sql      = sprintf('INSERT INTO `%s` (
             folderid,
             statusid,
             created_uid,
@@ -540,7 +540,7 @@ class FolderHandler extends \XoopsObjectHandler
             %s,
             %s)', $this->db->prefix($this->dbtable), $folderid, $statusid, $created_uid, $created_date, $modified_uid, $modified_date, $weight, $this->db->quoteString($image_lr), $this->db->quoteString($image_hr), $counter, $this->db->quoteString($default_languageid));
         } else {
-            $sql = sprintf('UPDATE %s SET
+            $sql = sprintf('UPDATE `%s` SET
             statusid = %u,
             created_uid = %u,
             created_date = %u,

@@ -256,7 +256,7 @@ class FolderTextHandler extends \XoopsObjectHandler
 
         // Create query for DB update
         if ($object->isNew()) {
-            $sql = sprintf('INSERT INTO %s (
+            $sql = sprintf('INSERT INTO `%s` (
             folderid,
             languageid,
             title,
@@ -274,7 +274,7 @@ class FolderTextHandler extends \XoopsObjectHandler
             %s)', $this->db->prefix($this->dbtable), $folderid, $this->db->quoteString($languageid), $this->db->quoteString($title), $this->db->quoteString($short_title), $this->db->quoteString($summary), $this->db->quoteString($description), $this->db->quoteString($meta_description));
         } else {
             $sql = sprintf(
-                'UPDATE %s SET
+                'UPDATE `%s` SET
             title = %s,
             short_title = %s,
             summary = %s,

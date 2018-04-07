@@ -256,7 +256,7 @@ class ClipTextHandler extends \XoopsObjectHandler
         // Create query for DB update
         if ($object->isNew()) {
             $sql = sprintf(
-                'INSERT INTO %s (
+                'INSERT INTO `%s` (
             clipid,
             languageid,
             title,
@@ -295,7 +295,7 @@ class ClipTextHandler extends \XoopsObjectHandler
             );
         } else {
             $sql = sprintf(
-                'UPDATE %s SET
+                'UPDATE `%s` SET
             title = %s,
             description = %s,
             meta_description = %s,
