@@ -14,6 +14,7 @@ function smartmedia_notify_iteminfo($category, $item_id)
     global $xoopsModule, $xoopsModuleConfig, $xoopsConfig;
 
     if (empty($xoopsModule) || 'smartmedia' !== $xoopsModule->getVar('dirname')) {
+        /** @var \XoopsModuleHandler $moduleHandler */
         $moduleHandler = xoops_getHandler('module');
         $module        = $moduleHandler->getByDirname('smartmedia');
         $configHandler = xoops_getHandler('config');

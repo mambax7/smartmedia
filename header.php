@@ -22,7 +22,7 @@
  * Licence: GNU
  */
 
-require_once __DIR__ . '/../../mainfile.php';
+require_once  dirname(dirname(__DIR__)) . '/mainfile.php';
 require_once XOOPS_ROOT_PATH . '/modules/smartmedia/include/common.php';
 require_once SMARTMEDIA_ROOT_PATH . 'include/metagen.php';
 require_once XOOPS_ROOT_PATH . '/class/pagenav.php';

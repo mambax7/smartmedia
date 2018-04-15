@@ -20,7 +20,7 @@ defined('XOOPS_ROOT_PATH') || exit('Restricted access.');
 /**
  * Class SmartmediaCorePreload
  */
-class SmartmediaCorePreload extends XoopsPreloadItem
+class SmartmediaCorePreload extends \XoopsPreloadItem
 {
     // to add PSR-4 autoloader
     /**

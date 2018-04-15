@@ -740,16 +740,17 @@ function &smartmedia_getModuleInfo()
 /**
  * @return mixed
  */
-function &smartmedia_getModuleConfig()
+function smartmedia_getModuleConfig()
 {
     static $smartConfig;
+    $helper = \XoopsModules\Smartmedia\Helper::getInstance();
     if (!$smartConfig) {
         global $xoopsModule;
         if (isset($xoopsModule) && is_object($xoopsModule) && 'smartmedia' === $xoopsModule->getVar('dirname')) {
             global $xoopsModuleConfig;
-            $smartConfig =& $xoopsModuleConfig;
+            $smartConfig = $xoopsModuleConfig;
         } else {
-            $smartModule =& smartmedia_getModuleInfo();
+            $smartModule = $helper->getModule(); //smartmedia_getModuleInfo();
             $hModConfig  = xoops_getHandler('config');
             $smartConfig = $hModConfig->getConfigsByCat(0, $smartModule->getVar('mid'));
         }
@@ -1214,9 +1215,9 @@ function smartmedia_adminMenu($currentoption = 0, $breadcrumb = '')
     $tblColors[0]              = $tblColors[1] = $tblColors[2] = $tblColors[3] = $tblColors[4] = $tblColors[5] = $tblColors[6] = $tblColors[7] = $tblColors[8] = '';
     $tblColors[$currentoption] = 'current';
     if (file_exists(XOOPS_ROOT_PATH . '/modules/' . $xoopsModule->getVar('dirname') . '/language/' . $xoopsConfig['language'] . '/modinfo.php')) {
-        require_once __DIR__ . '/../language/' . $xoopsConfig['language'] . '/modinfo.php';
+        require_once  dirname(__DIR__) . '/language/' . $xoopsConfig['language'] . '/modinfo.php';
     } else {
-        require_once __DIR__ . '/../language/english/modinfo.php';
+        require_once  dirname(__DIR__) . '/language/english/modinfo.php';
     }
 
     echo "<div id='buttontop'>";

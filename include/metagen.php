@@ -1,8 +1,6 @@
 <?php
 
 use XoopsModules\Smartmedia;
-/** @var Smartmedia\Helper $helper */
-$helper = Smartmedia\Helper::getInstance();
 
 /**
  * Module: SmartMedia

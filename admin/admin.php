@@ -24,7 +24,7 @@ if (isset($_GET['fct'])) {
 if (empty($fct)) {
     $fct = 'preferences';
 }
-require_once __DIR__ . '/../../../mainfile.php';
+require_once  dirname(dirname(dirname(__DIR__))) . '/mainfile.php';
 require_once XOOPS_ROOT_PATH . '/include/cp_functions.php';
 
 require_once XOOPS_ROOT_PATH . '/kernel/module.php';

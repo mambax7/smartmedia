@@ -2,18 +2,18 @@
 
 use XoopsModules\Smartmedia;
 
-include __DIR__ . '/../preloads/autoloader.php';
+include  dirname(__DIR__) . '/preloads/autoloader.php';
 
 $moduleDirName = basename(dirname(__DIR__));
 $moduleDirNameUpper   = strtoupper($moduleDirName); //$capsDirName
 
 
 /** @var \XoopsDatabase $db */
-/** @var Smartmedia\Helper $helper */
-/** @var Smartmedia\Utility $utility */
+/** @var \XoopsModules\Smartmedia\Helper $helper */
+/** @var \XoopsModules\Smartmedia\Utility $utility */
 $db      = \XoopsDatabaseFactory::getDatabaseConnection();
-$helper  = Smartmedia\Helper::getInstance();
-$utility = new Smartmedia\Utility();
+$helper  = \XoopsModules\Smartmedia\Helper::getInstance();
+$utility = new \XoopsModules\Smartmedia\Utility();
 //$configurator = new Smartmedia\Common\Configurator();
 
 $helper->loadLanguage('common');
@@ -59,11 +59,12 @@ if (!defined($moduleDirNameUpper . '_CONSTANTS_DEFINED')) {
 require_once SMARTMEDIA_ROOT_PATH . 'include/functions.php';
 
 // Creating the SmartModule object
-$smartModule           = smartmedia_getModuleInfo();
+//$smartModule           = smartmedia_getModuleInfo();
+$smartModule = $helper->getModule();
 $myts                  = \MyTextSanitizer::getInstance();
-$smartmedia_moduleName = $myts->displayTarea($smartModule->getVar('name'));
+//mb $smartmedia_moduleName = $myts->displayTarea($smartModule->getVar('name'));
 
-$is_smartmedia_admin = smartmedia_userIsAdmin();
+//mb $is_smartmedia_admin = smartmedia_userIsAdmin();
 
 // Creating the SmartModule config Object
 $smartConfig = smartmedia_getModuleConfig();
@@ -107,8 +108,8 @@ $smartmediaFormatHandler = Smartmedia\Helper::getInstance()->getHandler('Format'
 
 
 
-$pathIcon16    = Xmf\Module\Admin::iconUrl('', 16);
-$pathIcon32    = Xmf\Module\Admin::iconUrl('', 32);
+$pathIcon16    = \Xmf\Module\Admin::iconUrl('', 16);
+$pathIcon32    = \Xmf\Module\Admin::iconUrl('', 32);
 //$pathModIcon16 = $helper->getModule()->getInfo('modicons16');
 //$pathModIcon32 = $helper->getModule()->getInfo('modicons32');
 

@@ -7,8 +7,6 @@
  */
 
 use XoopsModules\Smartmedia;
-/** @var Smartmedia\Helper $helper */
-$helper = Smartmedia\Helper::getInstance();
 
 $categoryID = isset($categoryID) ? $categoryID : 0;
 $type       = isset($type) ? (int)$type : 3;
@@ -20,6 +18,9 @@ $sform->setExtra('enctype="multipart/form-data"');
 $searchtype = new \XoopsFormSelect(_MD_WB_LOOKON, 'type', $type);
 $searchtype->addOptionArray(['1' => _MD_WB_TERMS, '2' => _MD_WB_DEFINS, '3' => _MD_WB_TERMSDEFS]);
 $sform->addElement($searchtype, true);
+
+/** @var Smartmedia\Helper $helper */
+$helper = Smartmedia\Helper::getInstance();
 
 if (1 == $helper->getConfig('multicats')) {
     $searchcat = new \XoopsFormSelect(_MD_WB_CATEGORY, 'categoryID', $categoryID);

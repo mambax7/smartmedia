@@ -19,7 +19,7 @@
 
 use XoopsModules\Smartmedia;
 
-if ((!defined('XOOPS_ROOT_PATH')) || !($GLOBALS['xoopsUser'] instanceof XoopsUser)
+if ((!defined('XOOPS_ROOT_PATH')) || !($GLOBALS['xoopsUser'] instanceof \XoopsUser)
     || !$GLOBALS['xoopsUser']->IsAdmin()) {
     exit('Restricted access' . PHP_EOL);
 }
@@ -131,7 +131,7 @@ function xoops_module_update_smartmedia(\XoopsModule $module, $previousVersion =
 
         //  ---  COPY blank.png FILES ---------------
         if (count($configurator->copyBlankFiles) > 0) {
-            $file = __DIR__ . '/../assets/images/blank.png';
+            $file =  dirname(__DIR__) . '/assets/images/blank.png';
             foreach (array_keys($configurator->copyBlankFiles) as $i) {
                 $dest = $configurator->copyBlankFiles[$i] . '/blank.png';
                 $utility::copyFile($file, $dest);

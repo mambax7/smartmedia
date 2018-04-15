@@ -7,10 +7,11 @@
  */
 
 use XoopsModules\Smartmedia;
-/** @var Smartmedia\Helper $helper */
-$helper = Smartmedia\Helper::getInstance();
 
 require_once __DIR__ . '/header.php';
+
+/** @var Smartmedia\Helper $helper */
+$helper = Smartmedia\Helper::getInstance();
 
 global $smartmediaCategoryHandler, $smartmediaFolderHandler;
 

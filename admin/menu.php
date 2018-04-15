@@ -25,7 +25,7 @@
 
 use XoopsModules\Smartmedia;
 
-include __DIR__ . '/../preloads/autoloader.php';
+include  dirname(__DIR__) . '/preloads/autoloader.php';
 
 //defined('XOOPS_ROOT_PATH') || die('XOOPS root path not defined');
 

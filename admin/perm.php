@@ -20,7 +20,7 @@ use  XoopsModules\Rwbanner;
 
 require_once __DIR__ . '/admin_header.php';
 // Функции модуля
-include __DIR__ . '/../include/functions.php';
+include  dirname(__DIR__) . '/include/functions.php';
 
 // Admin Gui
 $adminObject = \Xmf\Module\Admin::getInstance();

@@ -12,11 +12,12 @@
 
 
 use XoopsModules\Smartmedia;
-/** @var Smartmedia\Helper $helper */
-$helper = Smartmedia\Helper::getInstance();
 
 require_once __DIR__ . '/admin_header.php';
 //xoops_cp_header();
+
+/** @var Smartmedia\Helper $helper */
+$helper = Smartmedia\Helper::getInstance();
 
 /**
  * @param $item

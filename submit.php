@@ -23,11 +23,12 @@
  */
 
 use XoopsModules\Smartmedia;
-/** @var Smartmedia\Helper $helper */
-$helper = Smartmedia\Helper::getInstance();
 
 require_once __DIR__ . '/header.php';
 require_once XOOPS_ROOT_PATH . '/header.php';
+
+/** @var Smartmedia\Helper $helper */
+$helper = Smartmedia\Helper::getInstance();
 
 global $smartmediaCategoryHandler, $smartmedia_itemHandler, $xoopsUser, $xoopsConfig, $xoopsModule;
 
@@ -97,6 +98,7 @@ switch ($op) {
             // Subscribe the user to On Published notification, if requested
             if (1 == $_POST['notifypub']) {
                 require_once XOOPS_ROOT_PATH . '/include/notification_constants.php';
+                /** @var \XoopsNotificationHandler $notificationHandler */
                 $notificationHandler = xoops_getHandler('notification');
                 $notificationHandler->subscribe('item', $categoryObj->categoryid(), 'approve', XOOPS_NOTIFICATION_MODE_SENDONCETHENDELETE);
             }
