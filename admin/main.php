@@ -144,7 +144,7 @@ $totalcategories = $smartmediaCategoryHandler->getCategoriesCount(-1);
 $totalfolders = $folderHandler->getFoldersCount();
 
 // Total Clips
-$totalclips = $smartmediaClipHandler->getClipsCount();
+$totalclips = $smartmediaClipHandler->getclipsCount();
 
 // Check Path Configuration
 if ((Utility::admin_getPathStatus('root', true) < 0)
