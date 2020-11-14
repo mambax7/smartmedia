@@ -25,9 +25,11 @@
  */
 
 // -- General Stuff -- //
+use Xmf\Request;
+
 require_once __DIR__ . '/admin_header.php';
 
-$op = \Xmf\Request::getCmd('op', '');
+$op = Request::getCmd('op', '');
 
 global $xoopsDB;
 

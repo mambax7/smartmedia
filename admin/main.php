@@ -26,11 +26,13 @@ use XoopsModules\Smartmedia\{
     Helper,
     Utility
 };
+use Xmf\Module\Admin;
+use Xmf\Request;
 
 require_once __DIR__ . '/admin_header.php';
 $myts = \MyTextSanitizer::getInstance();
 
-$op = \Xmf\Request::getString('op', '', 'GET');
+$op = Request::getString('op', '', 'GET');
 
 // Test de la fonction getFolders
 
@@ -123,7 +125,7 @@ global $smartmediaCategoryHandler, $smartmedia_itemHandler;
 
 xoops_cp_header();
 
-$adminObject = \Xmf\Module\Admin::getInstance();
+$adminObject = Admin::getInstance();
 $adminObject->displayNavigation('main.php');
 
 $adminObject->addItemButton(_AM_SMARTMEDIA_CATEGORY_CREATE, 'category.php?op=mod', 'add', '');

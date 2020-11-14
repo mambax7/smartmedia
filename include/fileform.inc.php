@@ -5,6 +5,9 @@
  * Author: The SmartFactory <www.smartfactory.ca>
  * Licence: GNU
  */
+
+use Xmf\Request;
+
 require_once XOOPS_ROOT_PATH . '/modules/smartmedia/include/functions.php';
 require_once XOOPS_ROOT_PATH . '/class/xoopstree.php';
 require_once XOOPS_ROOT_PATH . '/class/xoopslists.php';
@@ -12,7 +15,7 @@ require_once XOOPS_ROOT_PATH . '/class/xoopsformloader.php';
 
 global $smartmedia_fileHandler;
 
-$fileid = \Xmf\Request::getInt('fileid', 0, 'GET');
+$fileid = Request::getInt('fileid', 0, 'GET');
 
 if (0 != $fileid) {
     $fileObj = new ssFile($fileid);

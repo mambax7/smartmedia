@@ -18,13 +18,14 @@
  * @version      $Id $
  */
 
+use Xmf\Module\Admin;
 use XoopsModules\Smartmedia\Common;
 
 require_once __DIR__ . '/admin_header.php';
 
 xoops_cp_header();
 
-$adminObject = \Xmf\Module\Admin::getInstance();
+$adminObject = Admin::getInstance();
 
 //check or upload folders
 $configurator = new Common\Configurator();

@@ -22,13 +22,14 @@
  * Licence: GNU
  */
 
+use Xmf\Request;
 use XoopsModules\Smartmedia;
 
 require_once __DIR__ . '/header.php';
 
 global $smartmedia_itemHandler;
 
-$itemid = \Xmf\Request::getInt('itemid', 0, 'GET');
+$itemid = Request::getInt('itemid', 0, 'GET');
 
 if (0 == $itemid) {
     redirect_header('<script>javascript:history.go(-1)</script>', 1, _MD_SMARTMEDIA_NOITEMSELECTED);

@@ -28,6 +28,8 @@ use XoopsModules\Smartmedia\{
     Helper,
     Utility
 };
+use Xmf\Request;
+
 /** @var Helper $helper */
 
 require_once __DIR__ . '/admin_header.php';
@@ -40,7 +42,7 @@ $module_id = $xoopsModule->getVar('mid');
 
 $op = 'default';
 
-if (\Xmf\Request::hasVar('op', 'REQUEST')) {
+if (Request::hasVar('op', 'REQUEST')) {
     $op = $_REQUEST['op'];
 }
 

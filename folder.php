@@ -27,6 +27,8 @@ use XoopsModules\Smartmedia\{
     Utility,
     Metagen
 };
+use Xmf\Request;
+
 /** @var Helper $helper */
 
 require_once __DIR__ . '/header.php';
@@ -35,7 +37,7 @@ $helper =Helper::getInstance();
 
 global $folderHandler, $smartmediaClipHandler;
 
-$folderid = \Xmf\Request::getInt('folderid', 0, 'GET');
+$folderid = Request::getInt('folderid', 0, 'GET');
 
 // Creating the folder object for the selected folder
 $folderObj = $folderHandler->get($folderid);
@@ -63,7 +65,7 @@ require_once __DIR__ . '/footer.php';
 $folderObj->updateCounter();
 
 // Retreiving the parent category name to this folder
-$categoryid = \Xmf\Request::getInt('categoryid', 0, 'GET');
+$categoryid = Request::getInt('categoryid', 0, 'GET');
 $parentObj  = $smartmediaCategoryHandler->get($categoryid);
 
 // Folder Smarty variabble
@@ -73,7 +75,7 @@ $xoopsTpl->assign('folder', $folderObj->toArray());
 $xoopsTpl->assign('categoryPath', $parentObj->getItemLink() . ' &gt; ' . $folderObj->title());
 
 // At which record shall we start
-$start = \Xmf\Request::getInt('start', 0, 'GET');
+$start = Request::getInt('start', 0, 'GET');
 
 $clipsObj = $smartmediaClipHandler->getClips($helper->getConfig('clips_per_folder'), $start, $folderid, 'weight', 'ASC', false);
 

@@ -15,10 +15,13 @@
  * @package
  * @author       XOOPS Development Team
  */
+
+use Xmf\Request;
+
 require_once dirname(dirname(__DIR__)) . '/mainfile.php';
 require_once XOOPS_ROOT_PATH . '/modules/smartmedia/include/functions.php';
 
-$com_itemid = \Xmf\Request::getInt('com_itemid', 0, 'GET');
+$com_itemid = Request::getInt('com_itemid', 0, 'GET');
 if ($com_itemid > 0) {
     $itemObj       = new ssItem($com_itemid);
     $com_replytext = _POSTEDBY . '&nbsp;<b>' . Utility::getLinkedUnameFromId($itemObj->uid()) . '</b>&nbsp;' . _DATE . '&nbsp;<b>' . $itemObj->dateSub() . '</b><br><br>' . $itemObj->summary();

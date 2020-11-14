@@ -29,11 +29,13 @@ use XoopsModules\Smartmedia\{
     Helper,
     Utility
 };
+use Xmf\Request;
+
 /** @var Helper $helper */
 
 require_once __DIR__ . '/admin_header.php';
 
-$op = \Xmf\Request::getCmd('op', '');
+$op = Request::getCmd('op', '');
 
 /**
  * @param bool $showmenu
@@ -137,7 +139,7 @@ switch ($op) {
     case 'mod':
 
         global $xoopsUser, $xoopsConfig, $xoopsModuleConfig, $xoopsModule;
-        $id = \Xmf\Request::getInt('formatid', 0, 'GET');
+        $id = Request::getInt('formatid', 0, 'GET');
 
         xoops_cp_header();
         require_once XOOPS_ROOT_PATH . '/class/xoopsformloader.php';
@@ -147,7 +149,7 @@ switch ($op) {
     case 'addformat':
         global $xoopsUser;
 
-        $id = \Xmf\Request::getInt('formatid', 0, 'POST');
+        $id = Request::getInt('formatid', 0, 'POST');
 
         // Creating the format object
         if (0 != $id) {
@@ -178,13 +180,13 @@ switch ($op) {
         break;
     case 'del':
 
-        $id = \Xmf\Request::getInt('formatid', 0, 'POST');
-        $id = \Xmf\Request::getInt('formatid', $id, 'GET');
+        $id = Request::getInt('formatid', 0, 'POST');
+        $id = Request::getInt('formatid', $id, 'GET');
 
         $formatObj = new Smartmedia\Format($id);
 
-        $confirm = \Xmf\Request::getInt('confirm', 0, 'POST');
-        $title   = \Xmf\Request::getString('format', '', 'POST');
+        $confirm = Request::getInt('confirm', 0, 'POST');
+        $title   = Request::getString('format', '', 'POST');
 
         $redirect_msgs = $formatObj->getRedirectMsg('delete');
 
@@ -198,7 +200,7 @@ switch ($op) {
             exit();
         }
         // no confirm: show deletion condition
-        $id = \Xmf\Request::getInt('formatid', 0, 'GET');
+        $id = Request::getInt('formatid', 0, 'GET');
         xoops_cp_header();
         xoops_confirm(['op' => 'del', 'formatid' => $formatObj->formatid(), 'confirm' => 1, 'title' => $formatObj->format()], 'format.php', _AM_SMARTMEDIA_FORMAT_DELETE_CONFIRM . " <br>'" . $formatObj->format() . "' <br> <br>", _AM_SMARTMEDIA_DELETE);
         xoops_cp_footer();

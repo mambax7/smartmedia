@@ -10,6 +10,7 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  */
 
+use Xmf\Module\Admin;
 use Xmf\Request;
 use XoopsModules\Smartmedia\{
     Helper,
@@ -645,7 +646,7 @@ switch ($op) {
 
         xoops_cp_header();
         /** @var \Xmf\Module\Admin $adminObject */
-        $adminObject = \Xmf\Module\Admin::getInstance();
+        $adminObject = Admin::getInstance();
         $adminObject->displayNavigation('folder.php');
 
         $adminObject->addItemButton(_AM_SMARTMEDIA_FOLDER_CREATE, 'folder.php?op=mod', 'add', '');

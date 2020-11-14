@@ -27,6 +27,8 @@ use XoopsModules\Smartmedia\{
     Metagen,
     Utility
 };
+use Xmf\Request;
+
 /** @var Helper $helper */
 /** @var Utility $utility */
 
@@ -37,7 +39,7 @@ global $smartmediaCategoryHandler;
 $helper = Helper::getInstance();
 
 // At which record shall we start for the Categories
-$catstart = \Xmf\Request::getInt('catstart', 0, 'GET');
+$catstart = Request::getInt('catstart', 0, 'GET');
 
 $totalCategories = $smartmediaCategoryHandler->getCategoriesCount();
 

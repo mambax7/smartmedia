@@ -6,6 +6,7 @@
  * Licence: GNU
  */
 
+use Xmf\Request;
 use XoopsModules\Smartmedia;
 use XoopsModules\Smartmedia\Metagen;
 use XoopsModules\Smartmedia\{
@@ -20,7 +21,7 @@ $helper =Helper::getInstance();
 
 global $smartmediaCategoryHandler, $folderHandler;
 
-$categoryid = \Xmf\Request::getInt('categoryid', 0, 'GET');
+$categoryid = Request::getInt('categoryid', 0, 'GET');
 
 // Creating the category object for the selected category
 $categoryObj = $smartmediaCategoryHandler->get($categoryid);
@@ -49,7 +50,7 @@ $xoopsTpl->assign('category', $categoryObj->toArray());
 $xoopsTpl->assign('categoryPath', $categoryObj->title());
 
 // At which record shall we start
-$start = \Xmf\Request::getInt('start', 0, 'GET');
+$start = Request::getInt('start', 0, 'GET');
 
 $foldersObj = &$folderHandler->getFolders($helper->getConfig('folders_per_category'), $start, $categoryid, _SMARTMEDIA_FOLDER_STATUS_ONLINE, 'parent.categoryid ASC, weight ASC, parent.folderid', 'ASC', false);
 

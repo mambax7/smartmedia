@@ -15,6 +15,9 @@
  * @package
  * @author       XOOPS Development Team
  */
+
+use Xmf\Request;
+
 require_once __DIR__ . '/admin_header.php';
 
 /**
@@ -43,7 +46,7 @@ function myDeleteByModule(\XoopsDatabase $db, $gperm_modid, $gperm_name = null, 
 
 global $xoopsUser;
 // require_once  dirname(__DIR__) . '/.include_onceclude/cp_header.php'; GIJ
-$modid = \Xmf\Request::getInt('modid', 1, 'POST');
+$modid = Request::getInt('modid', 1, 'POST');
 // we dont want system module permissions to be changed here ( 1 -> 0 GIJ)
 if ($modid <= 0 || !is_object($xoopsUser) || !$xoopsUser->isAdmin($modid)) {
     redirect_header(XOOPS_URL . '/user.php', 1, _NOPERM);

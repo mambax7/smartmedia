@@ -15,12 +15,15 @@
  * @package
  * @author       XOOPS Development Team
  */
+
+use Xmf\Module\Admin;
+
 require_once __DIR__ . '/admin_header.php';
 // Функции модуля
 require_once dirname(__DIR__) . '/include/functions.php';
 
 // Admin Gui
-$adminObject = \Xmf\Module\Admin::getInstance();
+$adminObject = Admin::getInstance();
 
 // Подключаем форму прав
 require_once $GLOBALS['xoops']->path('class/xoopsform/grouppermform.php');

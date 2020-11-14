@@ -6,7 +6,11 @@
  * Licence: GNU
  */
 
-global $_POST, $xoopsDB;
+global
+
+use Xmf\Request;
+
+$_POST, $xoopsDB;
 
 require_once XOOPS_ROOT_PATH . '/class/xoopstree.php';
 require_once XOOPS_ROOT_PATH . '/class/xoopslists.php';
@@ -14,7 +18,7 @@ require_once XOOPS_ROOT_PATH . '/class/xoopsformloader.php';
 
 require_once __DIR__ . '/functions.php';
 
-$categoryid = \Xmf\Request::getInt('categoryid', 0, 'GET');
+$categoryid = Request::getInt('categoryid', 0, 'GET');
 $mytree     = new \XoopsTree($xoopsDB->prefix('smartmedia_categories'), 'categoryid', 'parentid');
 $sform      = new \XoopsThemeForm(_MD_SMARTMEDIA_SUB_SMNAME, 'storyform', xoops_getenv('SCRIPT_NAME'));
 

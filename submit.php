@@ -26,6 +26,8 @@ use XoopsModules\Smartmedia\{
     Helper,
     Utility
 };
+use Xmf\Request;
+
 /** @var Helper $helper */
 /** @var Utility $utility */
 
@@ -57,7 +59,7 @@ if (!($isAdmin || (null !== $helper->getConfig('allowsubmit') && 1 == $helper->g
     exit();
 }
 
-$op = \Xmf\Request::getCmd('op', '');
+$op = Request::getCmd('op', '');
 switch ($op) {
     case 'preview':
 
@@ -142,7 +144,7 @@ switch ($op) {
         $newItemObj->setVar('title', $_POST['title']);
         $newItemObj->setVar('summary', isset($_POST['summary']) ? $_POST['summary'] : '');
         $newItemObj->setVar('body', $_POST['body']);
-        $notifypub = \Xmf\Request::getString('notifypub', '', 'POST');
+        $notifypub = Request::getString('notifypub', '', 'POST');
         $newItemObj->setVar('notifypub', $notifypub);
 
         // Setting the status of the item
