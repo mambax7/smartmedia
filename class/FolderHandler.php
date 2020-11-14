@@ -83,7 +83,7 @@ class FolderHandler extends \XoopsObjectHandler
     /**
      * Constructor
      *
-     * @param object $db reference to a xoopsDB object
+     * @param \XoopsDatabase $db reference to a xoopsDB object
      */
     public function __construct(\XoopsDatabase $db)
     {
@@ -93,7 +93,7 @@ class FolderHandler extends \XoopsObjectHandler
     /**
      * Singleton - prevent multiple instances of this class
      *
-     * @param \XoopsDatabase $db {@link XoopsHandlerFactory}
+     * @param \XoopsDatabase|null $db {@link XoopsHandlerFactory}
      * @return Smartmedia\FolderHandler
      */
     public static function getInstance(\XoopsDatabase $db = null)

@@ -282,7 +282,7 @@ class FormatHandler extends \XoopsObjectHandler
     /**
      * count Formats matching a condition
      *
-     * @param \CriteriaElement $criteria {@link \CriteriaElement} to match
+     * @param \CriteriaElement|null $criteria {@link \CriteriaElement} to match
      * @return int    count of clients
      */
     public function getCount(\CriteriaElement $criteria = null)

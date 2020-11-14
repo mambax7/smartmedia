@@ -17,7 +17,14 @@ use XoopsModules\Smartmedia\{
     Utility
 };
 /** @var Helper $helper */
-/** @var Utility $utility */
+/**
+ * @param $queryarray
+ * @param $andor
+ * @param $limit
+ * @param $offset
+ * @param $userid
+ * @return array
+ */
 
 function smartmedia_search($queryarray, $andor, $limit, $offset, $userid)
 {

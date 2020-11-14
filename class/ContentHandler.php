@@ -61,7 +61,7 @@ class ContentHandler extends \XoopsObjectHandler
     /**
      * Constructor
      *
-     * @param object $db reference to a xoopsDB object
+     * @param \XoopsDatabase $db reference to a xoopsDB object
      */
     public function __construct(\XoopsDatabase $db)
     {

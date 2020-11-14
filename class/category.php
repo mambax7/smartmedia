@@ -229,7 +229,7 @@ class Category extends \XoopsObject
      *
      * @param string $key   of the variable to set
      * @param string $value of the field to set
-     * @return
+     * @return mixed
      * @see Smartmedia\CategoryText
      */
     public function setTextVar($key, $value)
