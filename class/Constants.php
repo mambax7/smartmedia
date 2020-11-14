@@ -29,26 +29,26 @@ interface Constants
      * Constant definition
      */
 
-    const DISALLOW = 0;
+    public const DISALLOW = 0;
     // CONFIG displayicons
-    const DISPLAYICONS_ICON = 1;
-    const DISPLAYICONS_TEXT = 2;
-    const DISPLAYICONS_NO = 3;
+    public const DISPLAYICONS_ICON = 1;
+    public const DISPLAYICONS_TEXT = 2;
+    public const DISPLAYICONS_NO = 3;
     // CONFIG submissions
-    const SUBMISSIONS_NONE = 1;
-    const SUBMISSIONS_DOWNLOAD = 2;
-    const SUBMISSIONS_MIRROR = 3;
-    const SUBMISSIONS_BOTH = 4;
+    public const SUBMISSIONS_NONE = 1;
+    public const SUBMISSIONS_DOWNLOAD = 2;
+    public const SUBMISSIONS_MIRROR = 3;
+    public const SUBMISSIONS_BOTH = 4;
     // CONFIG anonpost
-    const ANONPOST_NONE = 1;
-    const ANONPOST_DOWNLOAD = 2;
-    const ANONPOST_MIRROR = 3;
-    const ANONPOST_BOTH = 4;
+    public const ANONPOST_NONE = 1;
+    public const ANONPOST_DOWNLOAD = 2;
+    public const ANONPOST_MIRROR = 3;
+    public const ANONPOST_BOTH = 4;
     // CONFIG autoapprove
-    const AUTOAPPROVE_NONE = 1;
-    const AUTOAPPROVE_DOWNLOAD = 2;
-    const AUTOAPPROVE_MIRROR = 3;
-    const AUTOAPPROVE_BOTH = 4;
-    const DEFAULT_ELEMENT_SIZE = 1;
+    public const AUTOAPPROVE_NONE = 1;
+    public const AUTOAPPROVE_DOWNLOAD = 2;
+    public const AUTOAPPROVE_MIRROR = 3;
+    public const AUTOAPPROVE_BOTH = 4;
+    public const DEFAULT_ELEMENT_SIZE = 1;
     /**#@-*/
 }
