@@ -207,9 +207,9 @@ function myblocksadmin_update_block($bid, $bside, $bweight, $bvisible, $btitle, 
     $myblock->setVar('bcachetime', $bcachetime);
 
     // Hack by marcan to enabled array type options
-    for ($i = 0, $iMax = count($options); $i < $iMax; ++$i) {
-        if (is_array($options[$i])) {
-            $options[$i] = implode(',', $options[$i]);
+    foreach ($options as $i => $iValue) {
+        if (is_array($iValue)) {
+            $options[$i] = implode(',', $iValue);
         }
     }
 

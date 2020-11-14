@@ -198,7 +198,7 @@ function browser_detection($which_test)
          run through the browser_types array, break if you hit a match, if no match, assume old browser
          or non dom browser, assigns false value to $b_success.
          */
-        for ($i = 0, $iMax = count($a_browser_types); $i < $iMax; ++$i) {
+        foreach ($a_browser_types as $i => $iValue) {
             //unpacks browser array, assigns to variables
             $s_browser = $a_browser_types[$i][0]; // text string to id browser from array
 
@@ -235,9 +235,9 @@ function browser_detection($which_test)
                         $moz_rv = mb_substr($moz_rv_full, 0, 3);
 
                         // this is to pull out specific mozilla versions, firebird, netscape etc..
-                        for ($j = 0, $jMax = count($moz_types); $j < $jMax; ++$j) {
+                        foreach ($moz_types as $j => $jValue) {
                             if (false !== mb_stripos($browser_user_agent, $moz_types[$j])) {
-                                $moz_version        = $moz_types[$j];
+                                $moz_version        = $jValue;
                                 $moz_version_number = browser_version($browser_user_agent, $moz_version);
                                 break;
                             }
@@ -488,9 +488,9 @@ function which_os($browser_string, $browser_name, $version_number)
     $a_os = ['beos', 'os2', 'amiga', 'webtv', 'mac', 'nt', 'win', $a_unix, $a_linux];
 
     //os tester
-    for ($i = 0, $iMax = count($a_os); $i < $iMax; ++$i) {
+    foreach ($a_os as $i => $iValue) {
         //unpacks os array, assigns to variable
-        $s_os = $a_os[$i];
+        $s_os = $iValue;
 
         //assign os to global os variable, os flag true on success
         if (!is_array($s_os) && false !== mb_stripos($browser_string, $s_os)) {

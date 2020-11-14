@@ -261,10 +261,10 @@ class CategoryHandler extends \XoopsObjectHandler
 
         if (!empty($queryarray)) {
             $criteriaKeywords = new \CriteriaCompo();
-            for ($i = 0, $iMax = \count($queryarray); $i < $iMax; ++$i) {
+            foreach ($queryarray as $iValue) {
                 $criteriaKeyword = new \CriteriaCompo();
-                $criteriaKeyword->add(new \Criteria('itemtext.title', '%' . $queryarray[$i] . '%', 'LIKE'), 'OR');
-                $criteriaKeyword->add(new \Criteria('itemtext.description', '%' . $queryarray[$i] . '%', 'LIKE'), 'OR');
+                $criteriaKeyword->add(new \Criteria('itemtext.title', '%' . $iValue . '%', 'LIKE'), 'OR');
+                $criteriaKeyword->add(new \Criteria('itemtext.description', '%' . $iValue . '%', 'LIKE'), 'OR');
                 $criteriaKeywords->add($criteriaKeyword, $andor);
             }
         }

@@ -281,16 +281,16 @@ class ClipHandler extends \XoopsObjectHandler
 
         if (!empty($queryarray)) {
             $criteriaKeywords = new \CriteriaCompo();
-            for ($i = 0, $iMax = \count($queryarray); $i < $iMax; ++$i) {
+            foreach ($queryarray as $iValue) {
                 $criteriaKeyword = new \CriteriaCompo();
-                $criteriaKeyword->add(new \Criteria('itemtext.title', '%' . $queryarray[$i] . '%', 'LIKE'), 'OR');
-                $criteriaKeyword->add(new \Criteria('itemtext.description', '%' . $queryarray[$i] . '%', 'LIKE'), 'OR');
-                $criteriaKeyword->add(new \Criteria('itemtext.tab_caption_1', '%' . $queryarray[$i] . '%', 'LIKE'), 'OR');
-                $criteriaKeyword->add(new \Criteria('itemtext.tab_text_1', '%' . $queryarray[$i] . '%', 'LIKE'), 'OR');
-                $criteriaKeyword->add(new \Criteria('itemtext.tab_caption_2', '%' . $queryarray[$i] . '%', 'LIKE'), 'OR');
-                $criteriaKeyword->add(new \Criteria('itemtext.tab_text_2', '%' . $queryarray[$i] . '%', 'LIKE'), 'OR');
-                $criteriaKeyword->add(new \Criteria('itemtext.tab_caption_3', '%' . $queryarray[$i] . '%', 'LIKE'), 'OR');
-                $criteriaKeyword->add(new \Criteria('itemtext.tab_text_3', '%' . $queryarray[$i] . '%', 'LIKE'), 'OR');
+                $criteriaKeyword->add(new \Criteria('itemtext.title', '%' . $iValue . '%', 'LIKE'), 'OR');
+                $criteriaKeyword->add(new \Criteria('itemtext.description', '%' . $iValue . '%', 'LIKE'), 'OR');
+                $criteriaKeyword->add(new \Criteria('itemtext.tab_caption_1', '%' . $iValue . '%', 'LIKE'), 'OR');
+                $criteriaKeyword->add(new \Criteria('itemtext.tab_text_1', '%' . $iValue . '%', 'LIKE'), 'OR');
+                $criteriaKeyword->add(new \Criteria('itemtext.tab_caption_2', '%' . $iValue . '%', 'LIKE'), 'OR');
+                $criteriaKeyword->add(new \Criteria('itemtext.tab_text_2', '%' . $iValue . '%', 'LIKE'), 'OR');
+                $criteriaKeyword->add(new \Criteria('itemtext.tab_caption_3', '%' . $iValue . '%', 'LIKE'), 'OR');
+                $criteriaKeyword->add(new \Criteria('itemtext.tab_text_3', '%' . $iValue . '%', 'LIKE'), 'OR');
                 $criteriaKeywords->add($criteriaKeyword, $andor);
             }
         }

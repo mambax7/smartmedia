@@ -99,8 +99,8 @@ class Metagen
             }
 
             $keywordsCount = \count($keywords);
-            for ($i = 0; $i < $keywordsCount; ++$i) {
-                $ret .= $keywords[$i];
+            foreach ($keywords as $i => $iValue) {
+                $ret .= $iValue;
                 if ($i < $keywordsCount - 1) {
                     $ret .= ', ';
                 }
