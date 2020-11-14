@@ -100,7 +100,7 @@ class Utility extends Common\SysUtility
     public static function SetMeta($key, $value)
     {
         $xoopsDB = \XoopsDatabaseFactory::getDatabaseConnection();
-        $ret     = Utility::GetMeta($key);
+        $ret     = self::GetMeta($key);
         if ($ret) {
             $sql = \sprintf('UPDATE `%s` SET metavalue = %s WHERE metakey = %s', $xoopsDB->prefix('smartmedia_meta'), $xoopsDB->quoteString($value), $xoopsDB->quoteString($key));
         } else {
@@ -147,7 +147,7 @@ class Utility extends Common\SysUtility
      */
     public static function getConfig($key)
     {
-        $configs = Utility::getModuleConfig();
+        $configs = self::getModuleConfig();
 
         return $configs[$key];
     }
@@ -167,7 +167,7 @@ class Utility extends Common\SysUtility
     public static function highlighter($matches)
     {
         //$color=getmoduleoption('highlightcolor');
-        $smartConfig = Utility::getModuleConfig();
+        $smartConfig = self::getModuleConfig();
         $color       = $smartConfig['highlight_color'];
         if (0 !== mb_strpos($color, '#')) {
             $color = '#' . $color;
@@ -574,7 +574,7 @@ class Utility extends Common\SysUtility
             $path = $item;
         }
 
-        $thePath = Utility::getUploadDir(true, $path);
+        $thePath = self::getUploadDir(true, $path);
 
         if (empty($thePath)) {
             return false;
@@ -668,7 +668,7 @@ class Utility extends Common\SysUtility
             $item = 'images';
         }
 
-        return Utility::getUploadDir($local, $item);
+        return self::getUploadDir($local, $item);
     }
 
     /**
@@ -729,7 +729,7 @@ class Utility extends Common\SysUtility
      */
     public static function getHelpPath()
     {
-        $smartConfig = Utility::getModuleConfig();
+        $smartConfig = self::getModuleConfig();
         switch ($smartConfig['helppath_select']) {
             case 'docs.xoops.org':
                 return 'http://docs.xoops.org/help/ssectionh/index.htm';
@@ -840,7 +840,7 @@ class Utility extends Common\SysUtility
         if (\count($subCategoriesObj) > 0) {
             ++$level;
             foreach ($subCategoriesObj as $catID => $subCategoryObj) {
-                $ret .= Utility::addCategoryOption($subCategoryObj, $selectedid, $level);
+                $ret .= self::addCategoryOption($subCategoryObj, $selectedid, $level);
             }
         }
 
@@ -868,7 +868,7 @@ class Utility extends Common\SysUtility
         $categoriesObj = $categoryHandler->getCategories(0, 0, $parentcategory);
         if (\count($categoriesObj) > 0) {
             foreach ($categoriesObj as $catID => $categoryObj) {
-                $ret .= Utility::addCategoryOption($categoryObj, $selectedid);
+                $ret .= self::addCategoryOption($categoryObj, $selectedid);
             }
         }
 
