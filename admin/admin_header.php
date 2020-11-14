@@ -10,25 +10,33 @@
  */
 
 /**
- * @copyright    The XOOPS Project http://sourceforge.net/projects/xoops/
- * @license      GNU GPL 2 or later (http://www.gnu.org/licenses/gpl-2.0.html)
+ * @copyright    XOOPS Project (https://xoops.org)
+ * @license      GNU GPL 2 or later (https://www.gnu.org/licenses/gpl-2.0.html)
  * @package
  * @since
  * @author       XOOPS Development Team
  * @version      $Id $
  */
 
-use XoopsModules\Smartmedia;
+use Xmf\Module\Admin;
+use Xmf\Request;
+use XoopsModules\Smartmedia\{
+    Helper,
+    Utility
+};
+/** @var Helper $helper */
+/** @var Utility $utility */
+/** @var Admin $adminObject */
 
-require_once  dirname(dirname(dirname(__DIR__))) . '/include/cp_header.php';
-require_once  dirname(__DIR__) . '/include/common.php';
+require_once dirname(dirname(dirname(__DIR__))) . '/include/cp_header.php';
+require dirname(__DIR__) . '/preloads/autoloader.php';
+
+require_once dirname(__DIR__) . '/include/common.php';
 
 $moduleDirName = basename(dirname(__DIR__));
-/** @var Smartmedia\Helper $helper */
-$helper = Smartmedia\Helper::getInstance();
+$helper = Helper::getInstance();
 
-/** @var Xmf\Module\Admin $adminObject */
-$adminObject = \Xmf\Module\Admin::getInstance();
+$adminObject = Admin::getInstance();
 
 // Load language files
 $helper->loadLanguage('admin');

@@ -12,10 +12,10 @@
 
 /**
  * @copyright    XOOPS Project https://xoops.org/
- * @license      GNU GPL 2 or later (http://www.gnu.org/licenses/gpl-2.0.html)
+ * @license      GNU GPL 2 or later (https://www.gnu.org/licenses/gpl-2.0.html)
  * @package
  * @since
- * @author     XOOPS Development Team
+ * @author       XOOPS Development Team
  */
 
 /**
@@ -24,12 +24,16 @@
  * Licence: GNU
  */
 
-
-use XoopsModules\Smartmedia;
+use XoopsModules\Smartmedia\{
+    Format,
+    Helper,
+    Utility
+};
+/** @var Helper $helper */
 
 require_once __DIR__ . '/admin_header.php';
 
-$op    = \Xmf\Request::getCmd('op', '');
+$op = \Xmf\Request::getCmd('op', '');
 
 /**
  * @param bool $showmenu
@@ -39,13 +43,13 @@ function editformat($showmenu = false, $id = 0)
 {
     global $xoopsUser, $xoopsConfig, $xoopsModuleConfig, $xoopsModule;
 
-    $smartmediaFormatHandler = Smartmedia\Helper::getInstance()->getHandler('Format');
+    $smartmediaFormatHandler = Helper::getInstance()->getHandler('Format');
 
     require_once XOOPS_ROOT_PATH . '/class/xoopsformloader.php';
     // If there is a parameter, and the id exists, retrieve data: we're editing a format
     if (0 != $id) {
         // Creating the format object
-        $formatObj = new Smartmedia\Format($id);
+        $formatObj = new Format($id);
 
         if (!$formatObj) {
             redirect_header('format.php', 1, _AM_SMARTMEDIA_FORMAT_NOT_SELECTED);
@@ -76,13 +80,13 @@ function editformat($showmenu = false, $id = 0)
         }
     }
 
-    smartmedia_collapsableBar('bottomtable', 'bottomtableicon');
-    echo "<img id='bottomtableicon' src=" . XOOPS_URL . '/modules/' . $xoopsModule->dirname() . "/assets/images/icon/close12.gif alt='' /></a>&nbsp;" . $page_title . '</h3>';
+    Utility::collapsableBar('bottomtable', 'bottomtableicon');
+    echo "<img id='bottomtableicon' src=" . XOOPS_URL . '/modules/' . $xoopsModule->dirname() . "/assets/images/icon/close12.gif alt='' ></a>&nbsp;" . $page_title . '</h3>';
     echo '<span style="color: #567; margin: 3px 0 12px 0; font-size: small; display: block; ">' . $page_info . '</span>';
     echo "<div id='bottomtable'>";
 
     // FORMAT FORM
-    $sform = new \XoopsThemeForm(_AM_SMARTMEDIA_FORMAT, 'op', xoops_getenv('PHP_SELF'));
+    $sform = new \XoopsThemeForm(_AM_SMARTMEDIA_FORMAT, 'op', xoops_getenv('SCRIPT_NAME'));
     $sform->setExtra('enctype="multipart/form-data"');
 
     // FORMAT
@@ -103,19 +107,19 @@ function editformat($showmenu = false, $id = 0)
     // FORMAT ID
     $sform->addElement(new XoopsFormHidden('formatid', $formatObj->formatid()));
 
-    $button_tray = new \XoopsFormElementTray('', '');
-    $hidden      = new \XoopsFormHidden('op', 'addformat');
-    $button_tray->addElement($hidden);
+    $buttonTray = new \XoopsFormElementTray('', '');
+    $hidden     = new \XoopsFormHidden('op', 'addformat');
+    $buttonTray->addElement($hidden);
 
     $butt_create = new \XoopsFormButton('', '', $button_caption, 'submit');
     $butt_create->setExtra('onclick="this.form.elements.op.value=\'addformat\'"');
-    $button_tray->addElement($butt_create);
+    $buttonTray->addElement($butt_create);
 
     $butt_cancel = new \XoopsFormButton('', '', _AM_SMARTMEDIA_CANCEL, 'button');
     $butt_cancel->setExtra('onclick="location=\'format.php\'"');
-    $button_tray->addElement($butt_cancel);
+    $buttonTray->addElement($butt_cancel);
 
-    $sform->addElement($button_tray);
+    $sform->addElement($buttonTray);
     $sform->display();
     unset($hidden);
     echo '</div>';
@@ -130,7 +134,6 @@ switch ($op) {
 
         editformat(true, 0);
         break;
-
     case 'mod':
 
         global $xoopsUser, $xoopsConfig, $xoopsModuleConfig, $xoopsModule;
@@ -141,7 +144,6 @@ switch ($op) {
 
         editformat(true, $id);
         break;
-
     case 'addformat':
         global $xoopsUser;
 
@@ -166,7 +168,7 @@ switch ($op) {
 
         // Storing the format
         if (!$formatObj->store()) {
-            redirect_header('format.php', 3, $redirect_msgs['error'] . smartmedia_formatErrors($formatObj->getErrors()));
+            redirect_header('format.php', 3, $redirect_msgs['error'] . Utility::formatErrors($formatObj->getErrors()));
             exit;
         }
 
@@ -174,7 +176,6 @@ switch ($op) {
 
         exit();
         break;
-
     case 'del':
 
         $id = \Xmf\Request::getInt('formatid', 0, 'POST');
@@ -182,34 +183,32 @@ switch ($op) {
 
         $formatObj = new Smartmedia\Format($id);
 
-        $confirm = \Xmf\Request::getInt('confirm', 0, POST);
+        $confirm = \Xmf\Request::getInt('confirm', 0, 'POST');
         $title   = \Xmf\Request::getString('format', '', 'POST');
 
         $redirect_msgs = $formatObj->getRedirectMsg('delete');
 
         if ($confirm) {
             if (!$smartmediaFormatHandler->delete($formatObj)) {
-                redirect_header('format.php', 2, $redirect_msgs['error'] . smartmedia_formatErrors($formatObj->getErrors()));
+                redirect_header('format.php', 2, $redirect_msgs['error'] . Utility::formatErrors($formatObj->getErrors()));
                 exit;
             }
 
             redirect_header('javascript:history.go(-2)', 2, $redirect_msgs['success']);
             exit();
-        } else {
-            // no confirm: show deletion condition
-            $id = \Xmf\Request::getInt('formatid', 0, 'GET');
-            xoops_cp_header();
-            xoops_confirm(['op' => 'del', 'formatid' => $formatObj->formatid(), 'confirm' => 1, 'title' => $formatObj->format()], 'format.php', _AM_SMARTMEDIA_FORMAT_DELETE_CONFIRM . " <br>'" . $formatObj->format() . "' <br> <br>", _AM_SMARTMEDIA_DELETE);
-            xoops_cp_footer();
         }
+        // no confirm: show deletion condition
+        $id = \Xmf\Request::getInt('formatid', 0, 'GET');
+        xoops_cp_header();
+        xoops_confirm(['op' => 'del', 'formatid' => $formatObj->formatid(), 'confirm' => 1, 'title' => $formatObj->format()], 'format.php', _AM_SMARTMEDIA_FORMAT_DELETE_CONFIRM . " <br>'" . $formatObj->format() . "' <br> <br>", _AM_SMARTMEDIA_DELETE);
+        xoops_cp_footer();
 
         exit();
         break;
-
     case 'default':
     default:
         xoops_cp_header();
-         $totalFormats = 0;
+        $totalFormats = 0;
 
         //smartmedia_adminMenu(4, _AM_SMARTMEDIA_FORMATS);
 
@@ -218,9 +217,9 @@ switch ($op) {
 
         echo "<br>\n";
 
-        smartmedia_collapsableBar('toptable', 'toptableicon');
+        Utility::collapsableBar('toptable', 'toptableicon');
 
-        echo "<img id='toptableicon' src=" . XOOPS_URL . '/modules/' . $xoopsModule->dirname() . "/assets/images/icon/close12.gif alt='' /></a>&nbsp;" . _AM_SMARTMEDIA_FORMATS_TITLE . '</h3>';
+        echo "<img id='toptableicon' src=" . XOOPS_URL . '/modules/' . $xoopsModule->dirname() . "/assets/images/icon/close12.gif alt='' ></a>&nbsp;" . _AM_SMARTMEDIA_FORMATS_TITLE . '</h3>';
         echo "<div id='toptable'>";
         echo '<span style="color: #567; margin: 3px 0 12px 0; font-size: small; display: block; ">' . _AM_SMARTMEDIA_FORMATS_TITLE_INFO . '</span>';
 
@@ -229,7 +228,7 @@ switch ($op) {
         echo '</div></form>';
 
         // creating the format objects that are published
-        $formatsObjs  = $smartmediaFormatHandler->getFormats();
+        $formatsObjs = $smartmediaFormatHandler->getFormats();
         if (is_array($formatsObjs)) {
             $totalFormats = count($formatsObjs);
         }
@@ -243,8 +242,8 @@ switch ($op) {
         if ($totalFormats > 0) {
             global $pathIcon16;
             foreach ($formatsObjs as $formatsObj) {
-                $modify = "<a href='format.php?op=mod&formatid=" . $formatsObj->formatid() . "'><img src='" . $pathIcon16 . '/edit.png' . "' title='" . _AM_SMARTMEDIA_EDIT . "' alt='" . _AM_SMARTMEDIA_EDIT . "' /></a>&nbsp;";
-                $delete = "<a href='format.php?op=del&formatid=" . $formatsObj->formatid() . "'><img src='" . $pathIcon16 . '/delete.png' . "' title='" . _AM_SMARTMEDIA_DELETE . "' alt='" . _AM_SMARTMEDIA_DELETE . "'/></a>&nbsp;";
+                $modify = "<a href='format.php?op=mod&formatid=" . $formatsObj->formatid() . "'><img src='" . $pathIcon16 . '/edit.png' . "' title='" . _AM_SMARTMEDIA_EDIT . "' alt='" . _AM_SMARTMEDIA_EDIT . "' ></a>&nbsp;";
+                $delete = "<a href='format.php?op=del&formatid=" . $formatsObj->formatid() . "'><img src='" . $pathIcon16 . '/delete.png' . "' title='" . _AM_SMARTMEDIA_DELETE . "' alt='" . _AM_SMARTMEDIA_DELETE . "'></a>&nbsp;";
 
                 echo '<tr>';
                 echo "<td class='even' align='left'>" . $formatsObj->format() . '</td>';

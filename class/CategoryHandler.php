@@ -1,4 +1,6 @@
-<?php namespace XoopsModules\Smartmedia;
+<?php
+
+namespace XoopsModules\Smartmedia;
 
 /**
  * Contains the classes for managing categories
@@ -30,28 +32,24 @@ class CategoryHandler extends \XoopsObjectHandler
      * @var object
      */
     public $db;
-
     /**
      * Name of child class
      *
      * @var string
      */
     public $classname = Category::class; //'Category';
-
     /**
      * Related table name
      *
      * @var string
      */
     public $dbtable = 'smartmedia_categories';
-
     /**
      * key field name
      *
      * @var string
      */
     public $_key_field = 'categoryid';
-
     /**
      * caption field name
      *
@@ -64,7 +62,7 @@ class CategoryHandler extends \XoopsObjectHandler
      *
      * @param object $db reference to a xoopsDB object
      */
-    public function __construct($db)
+    public function __construct(\XoopsDatabase $db)
     {
         $this->db = $db;
     }
@@ -72,7 +70,7 @@ class CategoryHandler extends \XoopsObjectHandler
     /**
      * Singleton - prevent multiple instances of this class
      *
-     * @param  \XoopsObject &$db {@link XoopsHandlerFactory}
+     * @param \XoopsObject &$db {@link XoopsHandlerFactory}
      * @return  Smartmedia\CategoryHandler
      */
     public static function getInstance($db)
@@ -92,8 +90,8 @@ class CategoryHandler extends \XoopsObjectHandler
     public function create()
     {
         return new $this->classname();
-//        $temp = '\\XoopsModules\\Smartmedia\\' . $this->classname;
-//        return new $temp;
+        //        $temp = '\\XoopsModules\\Smartmedia\\' . $this->classname;
+        //        return new $temp;
     }
 
     /**
@@ -102,17 +100,17 @@ class CategoryHandler extends \XoopsObjectHandler
      * If no languageid is specified, the method will load the translation related to the current
      * language selected by the user
      *
-     * @param  int    $id         id of the folder
-     * @param  string $languageid language of the translation to load
+     * @param int    $id         id of the folder
+     * @param string $languageid language of the translation to load
      * @return mixed  reference to the {@link Smartmedia\Category} object, FALSE if failed
      */
-    public function &get($id, $languageid = 'current')
+    public function get($id, $languageid = 'current')
     {
         $id = (int)$id;
         if ($id > 0) {
             $sql = $this->_selectQuery(new \Criteria('categoryid', $id));
 
-            //echo "<br>$sql<br/>";
+            //echo "<br>$sql<br>";
 
             if (!$result = $this->db->query($sql)) {
                 return false;
@@ -135,13 +133,13 @@ class CategoryHandler extends \XoopsObjectHandler
     /**
      * Create a "SELECT" SQL query
      *
-     * @param  object $criteria {@link \CriteriaElement} to match
+     * @param object $criteria {@link \CriteriaElement} to match
      * @return string SQL query
      */
     public function _selectQuery($criteria = null)
     {
-        $sql = sprintf('SELECT * FROM `%s`', $this->db->prefix($this->dbtable));
-        if (isset($criteria) && is_subclass_of($criteria, 'CriteriaElement')) {
+        $sql = \sprintf('SELECT * FROM `%s`', $this->db->prefix($this->dbtable));
+        if (isset($criteria) && $criteria instanceof \CriteriaElement) {
             $sql .= ' ' . $criteria->renderWhere();
             if ('' != $criteria->getSort()) {
                 $sql .= ' ORDER BY ' . $criteria->getSort() . '
@@ -155,22 +153,22 @@ class CategoryHandler extends \XoopsObjectHandler
     /**
      * Count objects matching a criteria
      *
-     * @param  object $criteria {@link \CriteriaElement} to match
+     * @param object $criteria {@link \CriteriaElement} to match
      * @return int    count of objects
      */
     public function getCount($criteria = null)
     {
         $sql = 'SELECT COUNT(*) FROM ' . $this->db->prefix($this->dbtable);
-        if (isset($criteria) && is_subclass_of($criteria, 'CriteriaElement')) {
+        if (isset($criteria) && $criteria instanceof \CriteriaElement) {
             $sql .= ' ' . $criteria->renderWhere();
         }
 
-        //echo "<br>$sql<br/>";
+        //echo "<br>$sql<br>";
 
         if (!$result = $this->db->query($sql)) {
             return 0;
         }
-        list($count) = $this->db->fetchRow($result);
+        [$count] = $this->db->fetchRow($result);
 
         return $count;
     }
@@ -182,7 +180,7 @@ class CategoryHandler extends \XoopsObjectHandler
      * Please note that nested categories are not implemented in the module. The structure is there
      * for futur use.
      *
-     * @param  int $parentid category in which to count categories
+     * @param int $parentid category in which to count categories
      * @return int count of objects
      */
     public function getCategoriesCount($parentid = 0)
@@ -201,8 +199,8 @@ class CategoryHandler extends \XoopsObjectHandler
     /**
      * Retrieve objects from the database
      *
-     * @param  object $criteria  {@link \CriteriaElement} conditions to be met
-     * @param  bool   $id_as_key Should the category ID be used as array key
+     * @param object $criteria  {@link \CriteriaElement} conditions to be met
+     * @param bool   $id_as_key Should the category ID be used as array key
      * @return array  array of {@link Smartmedia\Category} objects
      */
     public function &getObjects($criteria = null, $id_as_key = false)
@@ -230,9 +228,9 @@ class CategoryHandler extends \XoopsObjectHandler
         while (false !== ($myrow = $this->db->fetchArray($result))) {
             $obj = new $this->classname($xoopsConfig['language'], $myrow);
             if (!$id_as_key) {
-                $ret[] =& $obj;
+                $ret[] = &$obj;
             } else {
-                $ret[$obj->getVar('categoryid')] =& $obj;
+                $ret[$obj->getVar('categoryid')] = &$obj;
             }
             unset($obj);
         }
@@ -263,7 +261,7 @@ class CategoryHandler extends \XoopsObjectHandler
 
         if (!empty($queryarray)) {
             $criteriaKeywords = new \CriteriaCompo();
-            for ($i = 0; $i < count($queryarray); ++$i) {
+            for ($i = 0, $iMax = \count($queryarray); $i < $iMax; ++$i) {
                 $criteriaKeyword = new \CriteriaCompo();
                 $criteriaKeyword->add(new \Criteria('itemtext.title', '%' . $queryarray[$i] . '%', 'LIKE'), 'OR');
                 $criteriaKeyword->add(new \Criteria('itemtext.description', '%' . $queryarray[$i] . '%', 'LIKE'), 'OR');
@@ -294,7 +292,7 @@ class CategoryHandler extends \XoopsObjectHandler
         $criteria->setSort('item.weight');
         $criteria->setOrder('ASC');
 
-        if (isset($criteria) && is_subclass_of($criteria, 'CriteriaElement')) {
+        if (isset($criteria) && $criteria instanceof \CriteriaElement) {
             $sql .= ' ' . $criteria->renderWhere();
             if ('' != $criteria->getSort()) {
                 $sql .= ' ORDER BY ' . $criteria->getSort() . '
@@ -354,13 +352,13 @@ class CategoryHandler extends \XoopsObjectHandler
      * Stores a category in the database
      *
      * @param \XoopsObject $object
-     * @param  bool        $force
+     * @param bool         $force
      * @return bool   FALSE if failed, TRUE if already present and unchanged or successful
      */
     public function insert(\XoopsObject $object, $force = false)
     {
         // Make sure object is of correct type
-        if (!is_a($object, $this->classname)) {
+        if (!\is_a($object, $this->classname)) {
             return false;
         }
 
@@ -383,7 +381,8 @@ class CategoryHandler extends \XoopsObjectHandler
         if ($object->isNew()) {
             // Determine next auto-gen ID for table
             $categoryid = $this->db->genId($this->db->prefix($this->dbtable) . '_uid_seq');
-            $sql        = sprintf('INSERT INTO `%s` (
+            $sql        = \sprintf(
+                'INSERT INTO `%s` (
             categoryid,
             parentid,
             weight,
@@ -394,9 +393,16 @@ class CategoryHandler extends \XoopsObjectHandler
             %u,
             %u,
             %s,
-            %s)', $this->db->prefix($this->dbtable), $categoryid, $parentid, $weight, $this->db->quoteString($image), $this->db->quoteString($default_languageid));
+            %s)',
+                $this->db->prefix($this->dbtable),
+                $categoryid,
+                $parentid,
+                $weight,
+                $this->db->quoteString($image),
+                $this->db->quoteString($default_languageid)
+            );
         } else {
-            $sql = sprintf('UPDATE `%s` SET parentid = %u, weight = %u, image = %s, default_languageid = %s WHERE categoryid = %u', $this->db->prefix($this->dbtable), $parentid, $weight, $this->db->quoteString($image), $this->db->quoteString($default_languageid), $categoryid);
+            $sql = \sprintf('UPDATE `%s` SET parentid = %u, weight = %u, image = %s, default_languageid = %s WHERE categoryid = %u', $this->db->prefix($this->dbtable), $parentid, $weight, $this->db->quoteString($image), $this->db->quoteString($default_languageid), $categoryid);
         }
 
         //echo "<br>" . $sql . "<br>";
@@ -423,25 +429,25 @@ class CategoryHandler extends \XoopsObjectHandler
     /**
      * Deletes a category from the database
      *
-     * @param  \XoopsObject $obj reference to the {@link Smartmedia\Category} obj to delete
-     * @param  bool   $force
+     * @param \XoopsObject $obj reference to the {@link Smartmedia\Category} obj to delete
+     * @param bool         $force
      * @return bool   FALSE if failed.
      */
     public function delete(\XoopsObject $obj, $force = false)
     {
-        if (strtolower(get_class($obj)) != $this->classname) {
+        if (mb_strtolower(\get_class($obj)) != $this->classname) {
             return false;
         }
 
         // Delete all language info for this category
-        $smartmediaCategoryTextHandler = Smartmedia\Helper::getInstance()->getHandler('CategoryText');
+        $smartmediaCategoryTextHandler = Helper::getInstance()->getHandler('CategoryText');
         $criteria                      = new \CriteriaCompo(new \Criteria('categoryid', $obj->categoryid()));
         if (!$smartmediaCategoryTextHandler->deleteAll($criteria)) {
             return false;
         }
-        $sql = sprintf('DELETE FROM `%s` WHERE categoryid = %u', $this->db->prefix($this->dbtable), $obj->getVar('categoryid'));
+        $sql = \sprintf('DELETE FROM `%s` WHERE categoryid = %u', $this->db->prefix($this->dbtable), $obj->getVar('categoryid'));
 
-        //echo "<br>$sql</br />";
+        //echo "<br>$sql</br>";
 
         if (false !== $force) {
             $result = $this->db->queryF($sql);
@@ -458,13 +464,13 @@ class CategoryHandler extends \XoopsObjectHandler
     /**
      * Deletes categories matching a set of conditions
      *
-     * @param  object $criteria {@link \CriteriaElement}
+     * @param object $criteria {@link \CriteriaElement}
      * @return bool   FALSE if deletion failed
      */
     public function deleteAll($criteria = null)
     {
         $sql = 'DELETE FROM ' . $this->db->prefix($this->dbtable);
-        if (isset($criteria) && is_subclass_of($criteria, 'CriteriaElement')) {
+        if (isset($criteria) && $criteria instanceof \CriteriaElement) {
             $sql .= ' ' . $criteria->renderWhere();
         }
         if (!$result = $this->db->query($sql)) {
@@ -477,27 +483,27 @@ class CategoryHandler extends \XoopsObjectHandler
     /**
      * Count the number of online folders within a category
      *
-     * @param  int $cat_id id of the category where to look
+     * @param int $cat_id id of the category where to look
      * @return int count of folders
      *
      * @see foldersCount()
      */
     public function onlineFoldersCount($cat_id = 0)
     {
-        return $this->foldersCount($cat_id, _SMARTMEDIA_FOLDER_STATUS_ONLINE);
+        return $this->foldersCount($cat_id, \_SMARTMEDIA_FOLDER_STATUS_ONLINE);
     }
 
     /**
      * Count the number of online folders within a category
      *
-     * @param  int   $cat_id id of the folder where to look
+     * @param int    $cat_id id of the folder where to look
      * @param string $status status of the folders to count
      * @return int count of folders
      */
     public function foldersCount($cat_id = 0, $status = '')
     {
-        $smartmediaFolderHandler = Smartmedia\Helper::getInstance()->getHandler('Folder');
+        $folderHandler = Helper::getInstance()->getHandler('Folder');
 
-        return $smartmediaFolderHandler->getCountsByParent($cat_id, $status);
+        return $folderHandler->getCountsByParent($cat_id, $status);
     }
 }

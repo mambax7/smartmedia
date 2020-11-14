@@ -11,9 +11,9 @@
 
 /**
  * @copyright    XOOPS Project https://xoops.org/
- * @license      GNU GPL 2 or later (http://www.gnu.org/licenses/gpl-2.0.html)
+ * @license      GNU GPL 2 or later (https://www.gnu.org/licenses/gpl-2.0.html)
  * @package
- * @author     XOOPS Development Team
+ * @author       XOOPS Development Team
  */
 
 /**
@@ -22,13 +22,17 @@
  * Licence: GNU
  */
 
-use XoopsModules\Smartmedia;
+use XoopsModules\Smartmedia\{
+    Helper,
+    Utility
+};
+/** @var Helper $helper */
+/** @var Utility $utility */
 
 require_once __DIR__ . '/header.php';
 require_once XOOPS_ROOT_PATH . '/header.php';
 
-/** @var Smartmedia\Helper $helper */
-$helper = Smartmedia\Helper::getInstance();
+$helper = Helper::getInstance();
 
 global $smartmediaCategoryHandler, $smartmedia_itemHandler, $xoopsUser, $xoopsConfig, $xoopsModule;
 
@@ -41,20 +45,23 @@ if (0 == $totalCategories) {
 }
 
 // Find if the user is admin of the module
+if (null === $helper) {
+    $helper = Helper::getInstance();
+}
+
 $isAdmin = $helper->isUserAdmin();
 // If the user is not admin AND we don't allow user submission, exit
-if (!($isAdmin || (null !== ($helper->getConfig('allowsubmit')) && 1 == $helper->getConfig('allowsubmit') && (is_object($xoopsUser)))
-      || (null !== ($helper->getConfig('anonpost')) && 1 == $helper->getConfig('anonpost')))) {
+if (!($isAdmin || (null !== $helper->getConfig('allowsubmit') && 1 == $helper->getConfig('allowsubmit') && is_object($xoopsUser))
+      || (null !== $helper->getConfig('anonpost') && 1 == $helper->getConfig('anonpost')))) {
     redirect_header('index.php', 1, _NOPERM);
     exit();
 }
 
-$op    = \Xmf\Request::getCmd('op', '');
+$op = \Xmf\Request::getCmd('op', '');
 switch ($op) {
     case 'preview':
 
-        global $xoopsUser, $xoopsConfig, $xoopsModule,  $xoopsDB;
-
+        global $xoopsUser, $xoopsConfig, $xoopsModule, $xoopsDB;
 
         $newItemObj = $smartmedia_itemHandler->create();
 
@@ -79,12 +86,12 @@ switch ($op) {
 
         // Storing the item object in the database
         if (!$newItemObj->store()) {
-            redirect_header('javascript:history.go(-1)', 3, _MD_SMARTMEDIA_SUBMIT_ERROR . smartmedia_formatErrors($newItemObj->getErrors()));
+            redirect_header('<script>javascript:history.go(-1)</script>', 3, _MD_SMARTMEDIA_SUBMIT_ERROR . Utility::formatErrors($newItemObj->getErrors()));
             exit();
         }
 
         // Get the cateopry object related to that item
-        $categoryObj =& $newItemObj->category();
+        $categoryObj = &$newItemObj->category();
 
         // If autoapprove_submitted
         if (1 == $helper->getConfig('autoapprove_submitted')) {
@@ -112,10 +119,9 @@ switch ($op) {
 
         exit();
         break;
-
     case 'post':
 
-        global $xoopsUser, $xoopsConfig, $xoopsModule,  $xoopsDB;
+        global $xoopsUser, $xoopsConfig, $xoopsModule, $xoopsDB;
 
         $newItemObj = $smartmedia_itemHandler->create();
 
@@ -148,12 +154,12 @@ switch ($op) {
 
         // Storing the ITEM object in the database
         if (!$newItemObj->store()) {
-            redirect_header('javascript:history.go(-1)', 2, _MD_SMARTMEDIA_SUBMIT_ERROR);
+            redirect_header('<script>javascript:history.go(-1)</script>', 2, _MD_SMARTMEDIA_SUBMIT_ERROR);
             exit();
         }
 
         // Get the cateopry object related to that item
-        $categoryObj =& $newItemObj->category();
+        $categoryObj = &$newItemObj->category();
 
         // If autoapprove_submitted
         if (1 == $helper->getConfig('autoapprove_submitted')) {
@@ -180,7 +186,6 @@ switch ($op) {
 
         exit();
         break;
-
     case 'form':
     default:
 

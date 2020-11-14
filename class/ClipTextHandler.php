@@ -1,4 +1,6 @@
-<?php namespace XoopsModules\Smartmedia;
+<?php
+
+namespace XoopsModules\Smartmedia;
 
 /**
  * Contains the classes for managing clips translations
@@ -10,6 +12,7 @@
  * @package    SmartMedia
  * @subpackage Clips
  */
+
 use XoopsModules\Smartmedia;
 
 /**
@@ -29,14 +32,12 @@ class ClipTextHandler extends \XoopsObjectHandler
      * @var object
      */
     public $db;
-
     /**
      * Name of child class
      *
      * @var string
      */
     public $classname = ClipText::class;
-
     /**
      * Related table name
      *
@@ -49,7 +50,7 @@ class ClipTextHandler extends \XoopsObjectHandler
      *
      * @param object $db reference to a xoopsDB object
      */
-    public function __construct($db)
+    public function __construct(\XoopsDatabase $db)
     {
         $this->db = $db;
     }
@@ -57,7 +58,7 @@ class ClipTextHandler extends \XoopsObjectHandler
     /**
      * Singleton - prevent multiple instances of this class
      *
-     * @param  object &$db {@link XoopsHandlerFactory}
+     * @param object &$db {@link XoopsHandlerFactory}
      * @return object Smartmedia\ClipTextHandler
      */
     public static function getInstance($db)
@@ -86,13 +87,13 @@ class ClipTextHandler extends \XoopsObjectHandler
      * will be used
      *
      * @param         $clipid
-     * @param  string $languageid language of the translation to retreive
+     * @param string  $languageid language of the translation to retreive
      * @return bool Smartmedia\ClipText
      */
-    public function &get($clipid, $languageid = 'none')
+    public function get($clipid, $languageid = 'none')
     {
         if ('none' === $languageid) {
-            $smartConfig =& smartmedia_getModuleConfig();
+            $smartConfig = Utility::getModuleConfig();
             $languageid  = $smartConfig['default_language'];
         }
 
@@ -121,13 +122,13 @@ class ClipTextHandler extends \XoopsObjectHandler
 
     /**
      * Create a "select" SQL query
-     * @param  object $criteria {@link \CriteriaElement} to match
+     * @param object $criteria {@link \CriteriaElement} to match
      * @return string SQL query
      */
     public function _selectQuery($criteria = null)
     {
-        $sql = sprintf('SELECT * FROM `%s`', $this->db->prefix($this->dbtable));
-        if (isset($criteria) && is_subclass_of($criteria, 'CriteriaElement')) {
+        $sql = \sprintf('SELECT * FROM `%s`', $this->db->prefix($this->dbtable));
+        if (isset($criteria) && $criteria instanceof \CriteriaElement) {
             $sql .= ' ' . $criteria->renderWhere();
             if ('' != $criteria->getSort()) {
                 $sql .= ' ORDER BY ' . $criteria->getSort() . '
@@ -141,19 +142,19 @@ class ClipTextHandler extends \XoopsObjectHandler
     /**
      * Count objects matching a criteria
      *
-     * @param  object $criteria {@link \CriteriaElement} to match
+     * @param object $criteria {@link \CriteriaElement} to match
      * @return int    count of objects
      */
     public function getCount($criteria = null)
     {
         $sql = 'SELECT COUNT(*) FROM ' . $this->db->prefix($this->dbtable);
-        if (isset($criteria) && is_subclass_of($criteria, 'CriteriaElement')) {
+        if (isset($criteria) && $criteria instanceof \CriteriaElement) {
             $sql .= ' ' . $criteria->renderWhere();
         }
         if (!$result = $this->db->query($sql)) {
             return 0;
         }
-        list($count) = $this->db->fetchRow($result);
+        [$count] = $this->db->fetchRow($result);
 
         return $count;
     }
@@ -161,8 +162,8 @@ class ClipTextHandler extends \XoopsObjectHandler
     /**
      * Retrieve objects from the database
      *
-     * @param  object $criteria  {@link \CriteriaElement} conditions to be met
-     * @param  bool   $id_as_key Should the clip ID be used as array key
+     * @param object $criteria  {@link \CriteriaElement} conditions to be met
+     * @param bool   $id_as_key Should the clip ID be used as array key
      * @return array  array of {@link Smartmedia\ClipText} objects
      */
     public function &getObjects($criteria = null, $id_as_key = false)
@@ -185,9 +186,9 @@ class ClipTextHandler extends \XoopsObjectHandler
         while (false !== ($myrow = $this->db->fetchArray($result))) {
             $obj = new $this->classname($myrow);
             if (!$id_as_key) {
-                $ret[] =& $obj;
+                $ret[] = &$obj;
             } else {
-                $ret[$obj->getVar('id')] =& $obj;
+                $ret[$obj->getVar('id')] = &$obj;
             }
             unset($obj);
         }
@@ -205,7 +206,7 @@ class ClipTextHandler extends \XoopsObjectHandler
     public function getCreatedLanguages($clipid)
     {
         $ret = [];
-        $sql = sprintf('SELECT languageid FROM `%s`', $this->db->prefix($this->dbtable));
+        $sql = \sprintf('SELECT languageid FROM `%s`', $this->db->prefix($this->dbtable));
         $sql .= " WHERE clipid = $clipid";
 
         //  echo "<br>$sql<br>";
@@ -218,7 +219,7 @@ class ClipTextHandler extends \XoopsObjectHandler
 
         // Add each returned record to the result array
         while (false !== ($myrow = $this->db->fetchArray($result))) {
-            $ret[] =& $myrow['languageid'];
+            $ret[] = &$myrow['languageid'];
         }
 
         return $ret;
@@ -228,13 +229,13 @@ class ClipTextHandler extends \XoopsObjectHandler
      * Stores a clip in the database
      *
      * @param \XoopsObject $object
-     * @param  bool        $force
+     * @param bool         $force
      * @return bool   FALSE if failed, TRUE if already present and unchanged or successful
      */
     public function insert(\XoopsObject $object, $force = false)
     {
         // Make sure object is of correct type
-        if (!is_a($object, $this->classname)) {
+        if (!\is_a($object, $this->classname)) {
             return false;
         }
 
@@ -255,7 +256,7 @@ class ClipTextHandler extends \XoopsObjectHandler
 
         // Create query for DB update
         if ($object->isNew()) {
-            $sql = sprintf(
+            $sql = \sprintf(
                 'INSERT INTO `%s` (
             clipid,
             languageid,
@@ -288,13 +289,13 @@ class ClipTextHandler extends \XoopsObjectHandler
                 $this->db->quoteString($meta_description),
                 $this->db->quoteString($tab_caption_1),
                 $this->db->quoteString($tab_text_1),
-                           $this->db->quoteString($tab_caption_2),
+                $this->db->quoteString($tab_caption_2),
                 $this->db->quoteString($tab_text_2),
                 $this->db->quoteString($tab_caption_3),
                 $this->db->quoteString($tab_text_3)
             );
         } else {
-            $sql = sprintf(
+            $sql = \sprintf(
                 'UPDATE `%s` SET
             title = %s,
             description = %s,
@@ -312,7 +313,7 @@ class ClipTextHandler extends \XoopsObjectHandler
                 $this->db->quoteString($meta_description),
                 $this->db->quoteString($tab_caption_1),
                 $this->db->quoteString($tab_text_1),
-                           $this->db->quoteString($tab_caption_2),
+                $this->db->quoteString($tab_caption_2),
                 $this->db->quoteString($tab_text_2),
                 $this->db->quoteString($tab_caption_3),
                 $this->db->quoteString($tab_text_3),
@@ -339,16 +340,16 @@ class ClipTextHandler extends \XoopsObjectHandler
      * Deletes a clip translation from the database
      *
      * @param \XoopsObject $object
-     * @param  bool        $force
+     * @param bool         $force
      * @return bool   FALSE if failed.
      */
     public function delete(\XoopsObject $object, $force = true)
     {
-        if (strtolower(get_class($obj)) != $this->classname) {
+        if (mb_strtolower(\get_class($obj)) != $this->classname) {
             return false;
         }
 
-        $sql = sprintf('DELETE FROM `%s` WHERE clipid = %u AND languageid = %s', $this->db->prefix($this->dbtable), $obj->getVar('clipid'), $this->db->quoteString($obj->getVar('languageid')));
+        $sql = \sprintf('DELETE FROM `%s` WHERE clipid = %u AND languageid = %s', $this->db->prefix($this->dbtable), $obj->getVar('clipid'), $this->db->quoteString($obj->getVar('languageid')));
 
         //echo "<br>" . $sql . "<br>";
 
@@ -367,13 +368,13 @@ class ClipTextHandler extends \XoopsObjectHandler
     /**
      * Delete clips translations matching a set of conditions
      *
-     * @param  object $criteria {@link \CriteriaElement}
+     * @param object $criteria {@link \CriteriaElement}
      * @return bool   FALSE if deletion failed
      */
     public function deleteAll($criteria = null)
     {
         $sql = 'DELETE FROM ' . $this->db->prefix($this->dbtable);
-        if (isset($criteria) && is_subclass_of($criteria, 'CriteriaElement')) {
+        if (isset($criteria) && $criteria instanceof \CriteriaElement) {
             $sql .= ' ' . $criteria->renderWhere();
         }
         if (!$result = $this->db->query($sql)) {

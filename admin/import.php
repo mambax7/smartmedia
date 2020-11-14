@@ -11,10 +11,10 @@
 
 /**
  * @copyright    XOOPS Project https://xoops.org/
- * @license      GNU GPL 2 or later (http://www.gnu.org/licenses/gpl-2.0.html)
+ * @license      GNU GPL 2 or later (https://www.gnu.org/licenses/gpl-2.0.html)
  * @package
  * @since
- * @author     XOOPS Development Team
+ * @author       XOOPS Development Team
  */
 
 /**
@@ -27,12 +27,11 @@
 // -- General Stuff -- //
 require_once __DIR__ . '/admin_header.php';
 
-$op    = \Xmf\Request::getCmd('op', '');
+$op = \Xmf\Request::getCmd('op', '');
 
 global $xoopsDB;
 
 switch ($op) {
-
     case 'importExecute':
         $importfile = isset($_POST['importfile']) ? $_POST['importfile'] : 'nonselected';
 
@@ -77,9 +76,9 @@ switch ($op) {
                 'modules',
                 'tplfile',
                 'tplset',
-                'tplsource'
+                'tplsource',
             ];
-            $msgs[]         = "SQL file found at <b>$sql_file_path</b>.<br  /> Importing Q&A";
+            $msgs[]         = "SQL file found at <b>$sql_file_path</b>.<br  > Importing Q&A";
             require_once XOOPS_ROOT_PATH . '/class/database/sqlutility.php';
             $sql_query = fread(fopen($sql_file_path, 'r'), filesize($sql_file_path));
             $sql_query = trim($sql_query);
@@ -101,13 +100,12 @@ switch ($op) {
                         $errs[] = $db->error();
                         $error  = true;
                         break;
+                    }
+                    if (!in_array($prefixed_query[4], $created_tables)) {
+                        $msgs[]           = '&nbsp;&nbsp;Updating <b>' . $db->prefix($prefixed_query[4]) . '</b> table.';
+                        $created_tables[] = $prefixed_query[4];
                     } else {
-                        if (!in_array($prefixed_query[4], $created_tables)) {
-                            $msgs[]           = '&nbsp;&nbsp;Updating <b>' . $db->prefix($prefixed_query[4]) . '</b> table.';
-                            $created_tables[] = $prefixed_query[4];
-                        } else {
-                            $msgs[] = '&nbsp;&nbsp;Data inserted to table <b>' . $db->prefix($prefixed_query[4]) . '</b>.';
-                        }
+                        $msgs[] = '&nbsp;&nbsp;Data inserted to table <b>' . $db->prefix($prefixed_query[4]) . '</b>.';
                     }
                 } else {
                     // the table name is reserved, so halt the installation
@@ -137,7 +135,6 @@ switch ($op) {
         echo "<a href='import.php'>" . _AM_SMARTMEDIA_IMPORT_BACK . '</a>';
         echo '<br><br>';
         break;
-
     case 'default':
     default:
 
@@ -146,8 +143,8 @@ switch ($op) {
         xoops_cp_header();
         //smartmedia_adminMenu(-1, _AM_SMARTMEDIA_IMPORT);
 
-        smartmedia_collapsableBar('bottomtable', 'bottomtableicon');
-        echo "<img id='bottomtableicon' src=" . XOOPS_URL . '/modules/' . $xoopsModule->dirname() . "/assets/images/icon/close12.gif alt='' /></a>&nbsp;" . _AM_SMARTMEDIA_IMPORT_TITLE . '</h3>';
+        Utility::collapsableBar('bottomtable', 'bottomtableicon');
+        echo "<img id='bottomtableicon' src=" . XOOPS_URL . '/modules/' . $xoopsModule->dirname() . "/assets/images/icon/close12.gif alt='' ></a>&nbsp;" . _AM_SMARTMEDIA_IMPORT_TITLE . '</h3>';
         echo "<div id='bottomtable'>";
         echo '<span style="color: #567; margin: 3px 0 12px 0; font-size: small; display: block; ">' . _AM_SMARTMEDIA_IMPORT_INFO . '</span>';
 
@@ -156,7 +153,7 @@ switch ($op) {
         require_once XOOPS_ROOT_PATH . '/class/xoopsformloader.php';
 
         // If there is a parameter, and the id exists, retrieve data: we're editing a request
-        $ssorm = new \XoopsThemeForm(_AM_SMARTMEDIA_IMPORT_SELECTION, 'op', xoops_getenv('PHP_SELF'));
+        $ssorm = new \XoopsThemeForm(_AM_SMARTMEDIA_IMPORT_SELECTION, 'op', xoops_getenv('SCRIPT_NAME'));
         $sform->setExtra('enctype="multipart/form-data"');
 
         // Q&A set to import
@@ -170,19 +167,19 @@ switch ($op) {
         $sform->addElement($importfile_tray);
 
         // Buttons
-        $button_tray = new \XoopsFormElementTray('', '');
-        $hidden      = new \XoopsFormHidden('op', 'importExecute');
-        $button_tray->addElement($hidden);
+        $buttonTray = new \XoopsFormElementTray('', '');
+        $hidden     = new \XoopsFormHidden('op', 'importExecute');
+        $buttonTray->addElement($hidden);
 
         $butt_import = new \XoopsFormButton('', '', _AM_SMARTMEDIA_IMPORT, 'submit');
         $butt_import->setExtra('onclick="this.form.elements.op.value=\'importExecute\'"');
-        $button_tray->addElement($butt_import);
+        $buttonTray->addElement($butt_import);
 
         $butt_cancel = new \XoopsFormButton('', '', _AM_SMARTMEDIA_CANCEL, 'button');
         $butt_cancel->setExtra('onclick="history.go(-1)"');
-        $button_tray->addElement($butt_cancel);
+        $buttonTray->addElement($butt_cancel);
 
-        $sform->addElement($button_tray);
+        $sform->addElement($buttonTray);
         $sform->display();
         unset($hidden);
 

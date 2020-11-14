@@ -1,4 +1,6 @@
-<?php namespace XoopsModules\Smartmedia;
+<?php
+
+namespace XoopsModules\Smartmedia;
 
 /**
  * Contains the classes for managing folders translations
@@ -29,23 +31,23 @@ class FolderText extends \XoopsObject
      */
     public function __construct($id = null)
     {
-        $smartConfig =& smartmedia_getModuleConfig();
+        $smartConfig = Utility::getModuleConfig();
 
-        $this->initVar('folderid', XOBJ_DTYPE_INT, 0, true);
-        $this->initVar('languageid', XOBJ_DTYPE_TXTBOX, $smartConfig['default_language'], true);
-        $this->initVar('title', XOBJ_DTYPE_TXTBOX, null, false, 100);
-        $this->initVar('short_title', XOBJ_DTYPE_TXTBOX, null, false, 50);
-        $this->initVar('summary', XOBJ_DTYPE_TXTAREA, null, false);
-        $this->initVar('description', XOBJ_DTYPE_TXTAREA, null, false);
-        $this->initVar('meta_description', XOBJ_DTYPE_TXTAREA, null, false);
+        $this->initVar('folderid', \XOBJ_DTYPE_INT, 0, true);
+        $this->initVar('languageid', \XOBJ_DTYPE_TXTBOX, $smartConfig['default_language'], true);
+        $this->initVar('title', \XOBJ_DTYPE_TXTBOX, null, false, 100);
+        $this->initVar('short_title', \XOBJ_DTYPE_TXTBOX, null, false, 50);
+        $this->initVar('summary', \XOBJ_DTYPE_TXTAREA, null, false);
+        $this->initVar('description', \XOBJ_DTYPE_TXTAREA, null, false);
+        $this->initVar('meta_description', \XOBJ_DTYPE_TXTAREA, null, false);
 
-        $this->initVar('dohtml', XOBJ_DTYPE_INT, 1, false);
-        $this->initVar('doxcode', XOBJ_DTYPE_INT, 1, false);
-        $this->initVar('dosmiley', XOBJ_DTYPE_INT, 1, false);
-        $this->initVar('doimage', XOBJ_DTYPE_INT, 0, false);
+        $this->initVar('dohtml', \XOBJ_DTYPE_INT, 1, false);
+        $this->initVar('doxcode', \XOBJ_DTYPE_INT, 1, false);
+        $this->initVar('dosmiley', \XOBJ_DTYPE_INT, 1, false);
+        $this->initVar('doimage', \XOBJ_DTYPE_INT, 0, false);
 
         if (isset($id)) {
-            if (is_array($id)) {
+            if (\is_array($id)) {
                 $this->assignVars($id);
             }
         } else {
@@ -119,7 +121,7 @@ class FolderText extends \XoopsObject
     /**
      * Stores the format's translation in the database
      *
-     * @param  bool $force
+     * @param bool $force
      * @return bool true if successfully stored false if an error occured
      * @see SmartmediaFormat_textHandler::insert()
      */

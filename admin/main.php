@@ -11,9 +11,9 @@
 
 /**
  * @copyright    XOOPS Project https://xoops.org/
- * @license      GNU GPL 2 or later (http://www.gnu.org/licenses/gpl-2.0.html)
+ * @license      GNU GPL 2 or later (https://www.gnu.org/licenses/gpl-2.0.html)
  * @package
- * @author     XOOPS Development Team
+ * @author       XOOPS Development Team
  */
 
 /**
@@ -22,7 +22,10 @@
  * Licence: GNU
  */
 
-use XoopsModules\Smartmedia;
+use XoopsModules\Smartmedia\{
+    Helper,
+    Utility
+};
 
 require_once __DIR__ . '/admin_header.php';
 $myts = \MyTextSanitizer::getInstance();
@@ -31,12 +34,12 @@ $op = \Xmf\Request::getString('op', '', 'GET');
 
 // Test de la fonction getFolders
 
-$smartmediaFolderHandler = Smartmedia\Helper::getInstance()->getHandler('Folder');
+$folderHandler = Helper::getInstance()->getHandler('Folder');
 
 /*$limit = 6;
  $start = 3;
  echo "limit : $limit -- start : $start<br><br>";
- $folders = $smartmediaFolderHandler->getfolders($limit, $start, '', '', 'parent.categoryid ASC, weight ASC, parent.folderid', 'ASC');
+ $folders = $folderHandler->getFolders($limit, $start, '', '', 'parent.categoryid ASC, weight ASC, parent.folderid', 'ASC');
  echo "<br>";
  foreach ($folders as $foldercat) {
  foreach ($foldercat as $folder) {
@@ -52,12 +55,12 @@ switch ($op) {
             if ('root' === $path) {
                 $path = '';
             }
-            $thePath = smartmedia_getUploadDir(true, $path);
-            $res     = smartmedia_admin_mkdir($thePath);
+            $thePath = Utility::getUploadDir(true, $path);
+            $res     = Utility::admin_mkdir($thePath);
             if ($res) {
                 $source = SMARTMEDIA_ROOT_PATH . 'assets/images/blank.png';
                 $dest   = $thePath . 'blank.png';
-                smartmedia_copyr($source, $dest);
+                Utility::copyr($source, $dest);
             }
             $msg = $res ? _AM_SMARTMEDIA_DIRCREATED : _AM_SMARTMEDIA_DIRNOTCREATED;
         } else {
@@ -67,15 +70,14 @@ switch ($op) {
         redirect_header('main.php', 2, $msg . ': ' . $thePath);
         exit();
         break;
-
 }
 
 function pathConfiguration()
 {
     global $xoopsModule;
     // Upload and Images Folders
-    smartmedia_collapsableBar('configtable', 'configtableicon');
-    echo "<img id='configtableicon' name='configtableicon' src=" . XOOPS_URL . '/modules/' . $xoopsModule->dirname() . "/assets/images/icon/close12.gif alt='' /></a>&nbsp;" . _AM_SMARTMEDIA_PATHCONFIGURATION . '</h3>';
+    Utility::collapsableBar('configtable', 'configtableicon');
+    echo "<img id='configtableicon' name='configtableicon' src=" . XOOPS_URL . '/modules/' . $xoopsModule->dirname() . "/assets/images/icon/close12.gif alt='' ></a>&nbsp;" . _AM_SMARTMEDIA_PATHCONFIGURATION . '</h3>';
     echo "<div id='configtable'>";
     echo '<br>';
     echo "<table width='100%' class='outer' cellspacing='1' cellpadding='3' border='0' ><tr>";
@@ -83,30 +85,30 @@ function pathConfiguration()
     echo "<td class='bg3'><b>" . _AM_SMARTMEDIA_PATH . '</b></td>';
     echo "<td class='bg3' align='center'><b>" . _AM_SMARTMEDIA_STATUS . '</b></td></tr>';
     echo "<tr><td class='odd'>" . _AM_SMARTMEDIA_PATH_FILES . '</td>';
-    $upload_path = smartmedia_getUploadDir();
+    $upload_path = Utility::getUploadDir();
 
     echo "<td class='odd'>" . $upload_path . '</td>';
-    echo "<td class='even' style='text-align: center;'>" . smartmedia_admin_getPathStatus('root') . '</td></tr>';
+    echo "<td class='even' style='text-align: center;'>" . Utility::admin_getPathStatus('root') . '</td></tr>';
 
     echo "<tr><td class='odd'>" . _AM_SMARTMEDIA_PATH_IMAGES . '</td>';
-    $image_path = smartmedia_getImageDir();
+    $image_path = Utility::getImageDir();
     echo "<td class='odd'>" . $image_path . '</td>';
-    echo "<td class='even' style='text-align: center;'>" . smartmedia_admin_getPathStatus('images') . '</td></tr>';
+    echo "<td class='even' style='text-align: center;'>" . Utility::admin_getPathStatus('images') . '</td></tr>';
 
     echo "<tr><td class='odd'>" . _AM_SMARTMEDIA_PATH_IMAGES_CATEGORY . '</td>';
-    $image_path = smartmedia_getImageDir('category');
+    $image_path = Utility::getImageDir('category');
     echo "<td class='odd'>" . $image_path . '</td>';
-    echo "<td class='even' style='text-align: center;'>" . smartmedia_admin_getPathStatus('images/category') . '</td></tr>';
+    echo "<td class='even' style='text-align: center;'>" . Utility::admin_getPathStatus('images/category') . '</td></tr>';
 
     echo "<tr><td class='odd'>" . _AM_SMARTMEDIA_PATH_IMAGES_FOLDER . '</td>';
-    $image_path = smartmedia_getImageDir('folder');
+    $image_path = Utility::getImageDir('folder');
     echo "<td class='odd'>" . $image_path . '</td>';
-    echo "<td class='even' style='text-align: center;'>" . smartmedia_admin_getPathStatus('images/folder') . '</td></tr>';
+    echo "<td class='even' style='text-align: center;'>" . Utility::admin_getPathStatus('images/folder') . '</td></tr>';
 
     echo "<tr><td class='odd'>" . _AM_SMARTMEDIA_PATH_IMAGES_CLIP . '</td>';
-    $image_path = smartmedia_getImageDir('clip');
+    $image_path = Utility::getImageDir('clip');
     echo "<td class='odd'>" . $image_path . '</td>';
-    echo "<td class='even' style='text-align: center;'>" . smartmedia_admin_getPathStatus('images/clip') . '</td></tr>';
+    echo "<td class='even' style='text-align: center;'>" . Utility::admin_getPathStatus('images/clip') . '</td></tr>';
 
     echo '</table>';
     echo '<br>';
@@ -137,23 +139,23 @@ global $xoopsUser, $xoopsUser, $xoopsConfig, $xoopsDB, $xoopsModuleConfig, $xoop
 $totalcategories = $smartmediaCategoryHandler->getCategoriesCount(-1);
 
 // Total Folders
-$totalfolders = $smartmediaFolderHandler->getFoldersCount();
+$totalfolders = $folderHandler->getFoldersCount();
 
 // Total Clips
 $totalclips = $smartmediaClipHandler->getClipsCount();
 
 // Check Path Configuration
-if ((smartmedia_admin_getPathStatus('root', true) < 0)
-    || (smartmedia_admin_getPathStatus('images', true) < 0)
-    || (smartmedia_admin_getPathStatus('images/category', true) < 0)
-    || (smartmedia_admin_getPathStatus('images/folder', true) < 0)
-    || (smartmedia_admin_getPathStatus('images/clip', true) < 0)) {
+if ((Utility::admin_getPathStatus('root', true) < 0)
+    || (Utility::admin_getPathStatus('images', true) < 0)
+    || (Utility::admin_getPathStatus('images/category', true) < 0)
+    || (Utility::admin_getPathStatus('images/folder', true) < 0)
+    || (Utility::admin_getPathStatus('images/clip', true) < 0)) {
     pathConfiguration();
 }
 
 // -- //
-smartmedia_collapsableBar('toptable', 'toptableicon');
-echo "<img id='toptableicon' name='toptableicon' src=" . XOOPS_URL . '/modules/' . $xoopsModule->dirname() . "/assets/images/icon/close12.gif alt='' /></a>&nbsp;" . _AM_SMARTMEDIA_INVENTORY . '</h3>';
+Utility::collapsableBar('toptable', 'toptableicon');
+echo "<img id='toptableicon' name='toptableicon' src=" . XOOPS_URL . '/modules/' . $xoopsModule->dirname() . "/assets/images/icon/close12.gif alt='' ></a>&nbsp;" . _AM_SMARTMEDIA_INVENTORY . '</h3>';
 echo "<div id='toptable'>";
 echo '<br>';
 echo "<table width='100%' class='outer' cellspacing='1' cellpadding='3' border='0' ><tr>";
@@ -171,11 +173,11 @@ echo '<br>';
 //echo "</div>";
 
 // Check Path Configuration
-if ((smartmedia_admin_getPathStatus('root', true) > 0)
-    && (smartmedia_admin_getPathStatus('images', true) > 0)
-    && (smartmedia_admin_getPathStatus('images/category', true) > 0)
-    && (smartmedia_admin_getPathStatus('images/folder', true) > 0)
-    && (smartmedia_admin_getPathStatus('images/clip', true) > 0)) {
+if ((Utility::admin_getPathStatus('root', true) > 0)
+    && (Utility::admin_getPathStatus('images', true) > 0)
+    && (Utility::admin_getPathStatus('images/category', true) > 0)
+    && (Utility::admin_getPathStatus('images/folder', true) > 0)
+    && (Utility::admin_getPathStatus('images/clip', true) > 0)) {
     pathConfiguration();
 }
 

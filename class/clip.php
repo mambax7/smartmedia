@@ -1,4 +1,6 @@
-<?php namespace XoopsModules\Smartmedia;
+<?php
+
+namespace XoopsModules\Smartmedia;
 
 /**
  * Contains the classes for managing clips
@@ -10,8 +12,6 @@
  * @package    SmartMedia
  * @subpackage Clips
  */
-
-use XoopsModules\Smartmedia;
 
 ///** Status of an offline clip */
 //define('_SMARTMEDIA_CLIP_STATUS_OFFLINE', 1);
@@ -34,21 +34,18 @@ class Clip extends \XoopsObject
      * @var string
      */
     public $languageid;
-
     /**
      * {@link Smartmedia\ClipText} object holding the clip's text informations
      * @var object
      * @see Smartmedia\ClipText
      */
     public $clip_text = null;
-
     /**
      * List of all the translations already created for this clip
      * @var array
      * @see getCreatedLanguages
      */
     public $_created_languages = null;
-
     /**
      * Flag indicating wheter or not a new translation can be added for this clip
      *
@@ -67,33 +64,33 @@ class Clip extends \XoopsObject
      */
     public function __construct($languageid = 'default', $id = null)
     {
-        $smartConfig =& smartmedia_getModuleConfig();
+        $smartConfig = Utility::getModuleConfig();
 
-        $this->initVar('clipid', XOBJ_DTYPE_INT, -1, true);
-        $this->initVar('languageid', XOBJ_DTYPE_TXTBOX, $smartConfig['default_language'], false);
-        $this->initVar('folderid', XOBJ_DTYPE_INT, 0, false);
-        $this->initVar('statusid', XOBJ_DTYPE_INT, _SMARTMEDIA_CLIP_STATUS_ONLINE, false);
-        $this->initVar('created_date', XOBJ_DTYPE_INT, 0, false);
-        $this->initVar('created_uid', XOBJ_DTYPE_INT, 0, false);
-        $this->initVar('modified_date', XOBJ_DTYPE_INT, 0, false);
-        $this->initVar('modified_uid', XOBJ_DTYPE_INT, 0, false);
-        $this->initVar('duration', XOBJ_DTYPE_INT, 0, false);
-        $this->initVar('formatid', XOBJ_DTYPE_INT, 0, false);
-        $this->initVar('width', XOBJ_DTYPE_INT, 320, false);
-        $this->initVar('height', XOBJ_DTYPE_INT, 260, false);
-        $this->initVar('autostart', XOBJ_DTYPE_INT, 0, false);
-        $this->initVar('weight', XOBJ_DTYPE_INT, 0, false);
-        $this->initVar('image_hr', XOBJ_DTYPE_TXTBOX, null, false, 50);
-        $this->initVar('counter', XOBJ_DTYPE_INT, 0, false);
-        $this->initVar('image_lr', XOBJ_DTYPE_TXTBOX, null, false, 50);
-        $this->initVar('file_hr', XOBJ_DTYPE_TXTBOX, null, false);
-        $this->initVar('file_lr', XOBJ_DTYPE_TXTBOX, null, false);
-        $this->initVar('default_languageid', XOBJ_DTYPE_TXTBOX, $smartConfig['default_language'], false, 50);
+        $this->initVar('clipid', \XOBJ_DTYPE_INT, -1, true);
+        $this->initVar('languageid', \XOBJ_DTYPE_TXTBOX, $smartConfig['default_language'], false);
+        $this->initVar('folderid', \XOBJ_DTYPE_INT, 0, false);
+        $this->initVar('statusid', \XOBJ_DTYPE_INT, \_SMARTMEDIA_CLIP_STATUS_ONLINE, false);
+        $this->initVar('created_date', \XOBJ_DTYPE_INT, 0, false);
+        $this->initVar('created_uid', \XOBJ_DTYPE_INT, 0, false);
+        $this->initVar('modified_date', \XOBJ_DTYPE_INT, 0, false);
+        $this->initVar('modified_uid', \XOBJ_DTYPE_INT, 0, false);
+        $this->initVar('duration', \XOBJ_DTYPE_INT, 0, false);
+        $this->initVar('formatid', \XOBJ_DTYPE_INT, 0, false);
+        $this->initVar('width', \XOBJ_DTYPE_INT, 320, false);
+        $this->initVar('height', \XOBJ_DTYPE_INT, 260, false);
+        $this->initVar('autostart', \XOBJ_DTYPE_INT, 0, false);
+        $this->initVar('weight', \XOBJ_DTYPE_INT, 0, false);
+        $this->initVar('image_hr', \XOBJ_DTYPE_TXTBOX, null, false, 50);
+        $this->initVar('counter', \XOBJ_DTYPE_INT, 0, false);
+        $this->initVar('image_lr', \XOBJ_DTYPE_TXTBOX, null, false, 50);
+        $this->initVar('file_hr', \XOBJ_DTYPE_TXTBOX, null, false);
+        $this->initVar('file_lr', \XOBJ_DTYPE_TXTBOX, null, false);
+        $this->initVar('default_languageid', \XOBJ_DTYPE_TXTBOX, $smartConfig['default_language'], false, 50);
 
-        $this->initVar('folderid', XOBJ_DTYPE_INT, 0, false);
+        $this->initVar('folderid', \XOBJ_DTYPE_INT, 0, false);
 
         if (isset($id)) {
-            if (is_array($id)) {
+            if (\is_array($id)) {
                 $this->assignVars($id);
             }
         } else {
@@ -128,14 +125,14 @@ class Clip extends \XoopsObject
     public function loadLanguage($languageid)
     {
         $this->languageid          = $languageid;
-        $smartmediaClipTextHandler = Smartmedia\Helper::getInstance()->getHandler('ClipText');
-        $this->clip_text           =& $smartmediaClipTextHandler->get($this->getVar('clipid'), $this->languageid);
+        $smartmediaClipTextHandler = Helper::getInstance()->getHandler('ClipText');
+        $this->clip_text           = $smartmediaClipTextHandler->get($this->getVar('clipid'), $this->languageid);
         if (!$this->clip_text) {
-            $this->clip_text = new Smartmedia\ClipText();
+            $this->clip_text = new ClipText();
             $this->clip_text->setVar('clipid', $this->clipid());
             $this->clip_text->setVar('languageid', $languageid);
 
-            $default_clip_text =& $smartmediaClipTextHandler->get($this->getVar('clipid'), $this->default_languageid());
+            $default_clip_text = $smartmediaClipTextHandler->get($this->getVar('clipid'), $this->default_languageid());
 
             if ($default_clip_text) {
                 //$this->clip_text =& $default_clip_text;
@@ -207,16 +204,16 @@ class Clip extends \XoopsObject
      * If no image has been set, the function will return blank.png, so a blank image can
      * be displayed
      *
-     * @param  string $format format to use for the output
+     * @param string $format format to use for the output
      * @return string high resolution image of this clip
      */
     public function image_hr($format = 'S')
     {
         if ('' != $this->getVar('image_hr')) {
             return $this->getVar('image_hr', $format);
-        } else {
-            return 'blank.png';
         }
+
+        return 'blank.png';
     }
 
     /**
@@ -225,20 +222,20 @@ class Clip extends \XoopsObject
      * If no image has been set, the function will return blank.png, so a blank image can
      * be displayed
      *
-     * @param  string $format format to use for the output
+     * @param string $format format to use for the output
      * @return string low resolution image of this clip
      */
     public function image_lr($format = 'S')
     {
         if ('' != $this->getVar('image_lr')) {
             return $this->getVar('image_lr', $format);
-        } else {
-            return 'blank.png';
         }
+
+        return 'blank.png';
     }
 
     /**
-     * @param  string $format format to use for the output
+     * @param string $format format to use for the output
      * @return string high resolution file of the clip
      */
     public function file_hr($format = 'S')
@@ -247,7 +244,7 @@ class Clip extends \XoopsObject
     }
 
     /**
-     * @param  string $format format to use for the output
+     * @param string $format format to use for the output
      * @return string low resolution file of the clip
      */
     public function file_lr($format = 'S')
@@ -281,8 +278,8 @@ class Clip extends \XoopsObject
 
     /**
      * Returns the folderid to which this clip belongs
-     * @see Smartmedia\Folder
      * @return string parent folderid of this clip
+     * @see Smartmedia\Folder
      */
     public function folderid()
     {
@@ -309,7 +306,7 @@ class Clip extends \XoopsObject
     public function created_date()
     {
         if ('none' === $dateFormat) {
-            $smartConfig =& smartmedia_getModuleConfig();
+            $smartConfig = Utility::getModuleConfig();
             if (isset($smartConfig['dateformat'])) {
                 $dateFormat = $smartConfig['dateformat'];
             } else {
@@ -317,7 +314,7 @@ class Clip extends \XoopsObject
             }
         }
 
-        return formatTimestamp($this->getVar('created_date', $format), $dateFormat);
+        return \formatTimestamp($this->getVar('created_date', $format), $dateFormat);
     }
 
     /**
@@ -337,7 +334,7 @@ class Clip extends \XoopsObject
     public function modified_date()
     {
         $ret = $this->getVar('modified_date');
-        $ret = formatTimestamp($ret, 'Y-m-d');
+        $ret = \formatTimestamp($ret, 'Y-m-d');
 
         return $ret;
     }
@@ -371,25 +368,25 @@ class Clip extends \XoopsObject
      * title is likely to be used in the page title meta tag or any other place that requires
      * "html less" text
      *
-     * @param  string $format format to use for the output
+     * @param string $format format to use for the output
      * @return string title of the clip
      */
     public function title($format = 'S')
     {
         $myts = \MyTextSanitizer::getInstance();
-        if (('s' === strtolower($format)) || ('show' === strtolower($format))) {
+        if (('s' === mb_strtolower($format)) || ('show' === mb_strtolower($format))) {
             return $myts->undoHtmlSpecialChars($this->clip_text->getVar('title', 'e'), 1);
-        } elseif ('clean' === strtolower($format)) {
-            return smartmedia_metagen_html2text($myts->undoHtmlSpecialChars($this->clip_text->getVar('title')));
-        } else {
-            return $this->clip_text->getVar('title', $format);
+        } elseif ('clean' === mb_strtolower($format)) {
+            return Utility::metagen_html2text($myts->undoHtmlSpecialChars($this->clip_text->getVar('title')));
         }
+
+        return $this->clip_text->getVar('title', $format);
     }
 
     /**
      * Returns the description of the clip
      *
-     * @param  string $format format to use for the output
+     * @param string $format format to use for the output
      * @return string description of the clip
      */
     public function description($format = 'S')
@@ -400,7 +397,7 @@ class Clip extends \XoopsObject
     /**
      * Returns the meta-description of the clip
      *
-     * @param  string $format format to use for the output
+     * @param string $format format to use for the output
      * @return string meta-description of the clip
      */
     public function meta_description($format = 'S')
@@ -414,7 +411,7 @@ class Clip extends \XoopsObject
      * Note that for the first tab to be displayed, the field {@link tab_text_1} needs to
      * ne not empty
      *
-     * @param  string $format format to use for the output
+     * @param string $format format to use for the output
      * @return string caption of the first tab of the clip
      */
     public function tab_caption_1($format = 'S')
@@ -427,7 +424,7 @@ class Clip extends \XoopsObject
      *
      * Note that for the first tab to be displayed, this field needs to  ne not empty
      *
-     * @param  string $format format to use for the output
+     * @param string $format format to use for the output
      * @return string text of the first tab of the clip
      */
     public function tab_text_1($format = 'S')
@@ -441,7 +438,7 @@ class Clip extends \XoopsObject
      * Note that for the first tab to be displayed, the field {@link tab_text_2} needs to
      * ne not empty
      *
-     * @param  string $format format to use for the output
+     * @param string $format format to use for the output
      * @return string caption of the second tab of the clip
      */
     public function tab_caption_2($format = 'S')
@@ -454,7 +451,7 @@ class Clip extends \XoopsObject
      *
      * Note that for the first tab to be displayed, this field needs to  ne not empty
      *
-     * @param  string $format format to use for the output
+     * @param string $format format to use for the output
      * @return string text of the second tab of the clip
      */
     public function tab_text_2($format = 'S')
@@ -468,7 +465,7 @@ class Clip extends \XoopsObject
      * Note that for the first tab to be displayed, the field {@link tab_text_2} needs to
      * ne not empty
      *
-     * @param  string $format format to use for the output
+     * @param string $format format to use for the output
      * @return string caption of the third tab of the clip
      */
     public function tab_caption_3($format = 'S')
@@ -481,7 +478,7 @@ class Clip extends \XoopsObject
      *
      * Note that for the first tab to be displayed, this field needs to  ne not empty
      *
-     * @param  string $format format to use for the output
+     * @param string $format format to use for the output
      * @return string text of the third tab of the clip
      */
     public function tab_text_3($format = 'S')
@@ -504,7 +501,7 @@ class Clip extends \XoopsObject
     /**
      * Get the complete URL of this clip
      *
-     * @param  int $categoryid category to which belong the parent folder of the clip
+     * @param int $categoryid category to which belong the parent folder of the clip
      * @return string complete URL of this clip
      */
     public function getItemUrl($categoryid)
@@ -515,14 +512,14 @@ class Clip extends \XoopsObject
     /**
      * Get the complete hypertext link of this clip
      *
-     * @param  int $categoryid       category to which belong the parent folder of the clip
-     * @param  int $max_title_length maximum characters allowes in the title
+     * @param int $categoryid       category to which belong the parent folder of the clip
+     * @param int $max_title_length maximum characters allowes in the title
      * @return string complete hypertext link of this clip
      */
     public function getItemLink($categoryid, $max_title_length = 0)
     {
         if ($max_title_length > 0) {
-            $title = xoops_substr($this->title(), 0, $max_title_length);
+            $title = \xoops_substr($this->title(), 0, $max_title_length);
         } else {
             $title = $this->title();
         }
@@ -536,7 +533,7 @@ class Clip extends \XoopsObject
      * This method stores the clip as well as the current translation informations for the
      * clip
      *
-     * @param  bool $force
+     * @param bool $force
      * @return bool true if successfully stored false if an error occured
      *
      * @see SmartmediaClipHandler::insert()
@@ -556,7 +553,7 @@ class Clip extends \XoopsObject
     /**
      * Get all the translations created for this clip
      *
-     * @param  bool $exceptDefault to determine if the default language should be returned or not
+     * @param bool $exceptDefault to determine if the default language should be returned or not
      * @return array array of {@link Smartmedia\ClipText}
      */
     public function getAllLanguages($exceptDefault = false)
@@ -580,7 +577,7 @@ class Clip extends \XoopsObject
      */
     public function getCreatedLanguages()
     {
-        if (null != $this->_created_languages) {
+        if (null !== $this->_created_languages) {
             return $this->_created_languages;
         }
         global $smartmediaClipTextHandler;
@@ -601,7 +598,7 @@ class Clip extends \XoopsObject
      */
     public function canAddLanguage()
     {
-        if (null != $this->_canAddLanguage) {
+        if (null !== $this->_canAddLanguage) {
             return $this->_canAddLanguage;
         }
 
@@ -609,7 +606,7 @@ class Clip extends \XoopsObject
         $languageList     = \XoopsLists::getLangList();
         $createdLanguages = $this->getCreatedLanguages();
 
-        $this->_canAddLanguage = (count($languageList) > count($createdLanguages));
+        $this->_canAddLanguage = (\count($languageList) > \count($createdLanguages));
 
         return $this->_canAddLanguage;
     }
@@ -630,13 +627,13 @@ class Clip extends \XoopsObject
         $pathIcon16 = \Xmf\Module\Admin::iconUrl('', 16);
         if ($is_smartmedia_admin) {
             $ret = '';
-            $ret .= '<a href="' . SMARTMEDIA_URL . 'admin/clip.php?op=mod&clipid=' . $this->clipid() . '&folderid=' . $this->folderid() . '"><img src="' . $pathIcon16 . '/edit.png' . '" alt="' . _MD_SMARTMEDIA_CLIP_EDIT . '" title="' . _MD_SMARTMEDIA_CLIP_EDIT . '" /></a>';
-            $ret .= '<a href="' . SMARTMEDIA_URL . 'admin/clip.php?op=del&clipid=' . $this->clipid() . '&folderid=' . $this->folderid() . '"><img src="' . $pathIcon16 . '/delete.png' . '" alt="' . _MD_SMARTMEDIA_CLIP_DELETE . '" title="' . _MD_SMARTMEDIA_CLIP_DELETE . '" /></a>';
+            $ret .= '<a href="' . SMARTMEDIA_URL . 'admin/clip.php?op=mod&clipid=' . $this->clipid() . '&folderid=' . $this->folderid() . '"><img src="' . $pathIcon16 . '/edit.png' . '" alt="' . \_MD_SMARTMEDIA_CLIP_EDIT . '" title="' . \_MD_SMARTMEDIA_CLIP_EDIT . '" ></a>';
+            $ret .= '<a href="' . SMARTMEDIA_URL . 'admin/clip.php?op=del&clipid=' . $this->clipid() . '&folderid=' . $this->folderid() . '"><img src="' . $pathIcon16 . '/delete.png' . '" alt="' . \_MD_SMARTMEDIA_CLIP_DELETE . '" title="' . \_MD_SMARTMEDIA_CLIP_DELETE . '" ></a>';
 
             return $ret;
-        } else {
-            return '';
         }
+
+        return '';
     }
 
     /**
@@ -651,7 +648,7 @@ class Clip extends \XoopsObject
      */
     public function renderTemplate()
     {
-        $smartmediaFormatHandler = Smartmedia\Helper::getInstance()->getHandler('Format');
+        $smartmediaFormatHandler = Helper::getInstance()->getHandler('Format');
         $formatObj               = $smartmediaFormatHandler->get($this->formatid());
 
         return $formatObj->render($this);
@@ -663,7 +660,7 @@ class Clip extends \XoopsObject
      * This method puts each useful informations of the clip into an array that will be used in
      * the module template
      *
-     * @param  int $categoryid category to which belong the parent folder of the clip
+     * @param int  $categoryid category to which belong the parent folder of the clip
      * @param int  $max_title_length
      * @param bool $forBlock
      * @return array array containing usfull informations of the clip
@@ -692,20 +689,20 @@ class Clip extends \XoopsObject
         $clip['counter']   = $this->counter();
 
         if ('blank.png' !== $this->getVar('image_hr')) {
-            $clip['image_hr_path'] = smartmedia_getImageDir('clip', false) . $this->image_hr();
+            $clip['image_hr_path'] = Utility::getImageDir('clip', false) . $this->image_hr();
         } else {
             $clip['image_hr_path'] = false;
         }
 
-        $smartConfig              =& smartmedia_getModuleConfig();
+        $smartConfig              = Utility::getModuleConfig();
         $clip['main_image_width'] = $smartConfig['main_image_width'];
         $clip['list_image_width'] = $smartConfig['list_image_width'];
 
-        $clip['image_lr_path'] = smartmedia_getImageDir('clip', false) . $this->image_lr();
+        $clip['image_lr_path'] = Utility::getImageDir('clip', false) . $this->image_lr();
         $clip['file_hr_path']  = $this->file_hr();
         $clip['file_lr_path']  = $this->file_lr();
 
-        $clip['file_hr_link'] = "<a href='" . $this->file_hr() . "' target='_blank'>" . _MD_SMARTMEDIA_HIGH_RES_CLIP . '</a>';
+        $clip['file_hr_link'] = "<a href='" . $this->file_hr() . "' target='_blank'>" . \_MD_SMARTMEDIA_HIGH_RES_CLIP . '</a>';
 
         $clip['adminLinks'] = $this->adminLinks();
 
@@ -725,7 +722,7 @@ class Clip extends \XoopsObject
         $highlight = true;
         if ($highlight && isset($_GET['keywords'])) {
             $myts                  = \MyTextSanitizer::getInstance();
-            $keywords              = $myts->htmlSpecialChars(trim(urldecode($_GET['keywords'])));
+            $keywords              = $myts->htmlSpecialChars(\trim(\urldecode($_GET['keywords'])));
             $h                     = new KeyHighlighter($keywords, true, 'smartmedia_highlighter');
             $clip['title']         = $h->highlight($clip['title']);
             $clip['description']   = $h->highlight($clip['description']);

@@ -6,7 +6,12 @@
  * Licence: GNU
  */
 
-use XoopsModules\Smartmedia;
+use XoopsModules\Smartmedia\{
+    Helper,
+    Utility
+};
+/** @var Helper $helper */
+/** @var Utility $utility */
 
 $categoryID = isset($categoryID) ? $categoryID : 0;
 $type       = isset($type) ? (int)$type : 3;
@@ -19,8 +24,7 @@ $searchtype = new \XoopsFormSelect(_MD_WB_LOOKON, 'type', $type);
 $searchtype->addOptionArray(['1' => _MD_WB_TERMS, '2' => _MD_WB_DEFINS, '3' => _MD_WB_TERMSDEFS]);
 $sform->addElement($searchtype, true);
 
-/** @var Smartmedia\Helper $helper */
-$helper = Smartmedia\Helper::getInstance();
+$helper = Helper::getInstance();
 
 if (1 == $helper->getConfig('multicats')) {
     $searchcat = new \XoopsFormSelect(_MD_WB_CATEGORY, 'categoryID', $categoryID);
@@ -28,7 +32,7 @@ if (1 == $helper->getConfig('multicats')) {
 
     $resultcat = $xoopsDB->query('SELECT categoryID, name FROM ' . $xoopsDB->prefix('wbcategories') . ' ORDER BY categoryID');
 
-    while (false !== (list($categoryID, $name) = $xoopsDB->fetchRow($resultcat))) {
+    while (list($categoryID, $name) = $xoopsDB->fetchRow($resultcat)) {
         $searchcat->addOption('categoryID', "$categoryID : $name");
     }
     $sform->addElement($searchcat, true);

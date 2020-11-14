@@ -7,13 +7,18 @@
  */
 
 use XoopsModules\Smartmedia;
+use XoopsModules\Smartmedia\Metagen;
+use XoopsModules\Smartmedia\{
+    Helper,
+    Utility
+};
+/** @var Helper $helper */
 
 require_once __DIR__ . '/header.php';
 
-/** @var Smartmedia\Helper $helper */
-$helper = Smartmedia\Helper::getInstance();
+$helper =Helper::getInstance();
 
-global $smartmediaCategoryHandler, $smartmediaFolderHandler;
+global $smartmediaCategoryHandler, $folderHandler;
 
 $categoryid = \Xmf\Request::getInt('categoryid', 0, 'GET');
 
@@ -22,7 +27,7 @@ $categoryObj = $smartmediaCategoryHandler->get($categoryid);
 
 // If the selected Category was not found, exit
 if (!$categoryObj) {
-    redirect_header('javascript:history.go(-1)', 1, _MD_SMARTMEDIA_CATEGORY_NOT_SELECTED);
+    redirect_header('<script>javascript:history.go(-1)</script>', 1, _MD_SMARTMEDIA_CATEGORY_NOT_SELECTED);
     exit();
 }
 
@@ -46,7 +51,7 @@ $xoopsTpl->assign('categoryPath', $categoryObj->title());
 // At which record shall we start
 $start = \Xmf\Request::getInt('start', 0, 'GET');
 
-$foldersObj =& $smartmediaFolderHandler->getfolders($helper->getConfig('folders_per_category'), $start, $categoryid, _SMARTMEDIA_FOLDER_STATUS_ONLINE, 'parent.categoryid ASC, weight ASC, parent.folderid', 'ASC', false);
+$foldersObj = &$folderHandler->getFolders($helper->getConfig('folders_per_category'), $start, $categoryid, _SMARTMEDIA_FOLDER_STATUS_ONLINE, 'parent.categoryid ASC, weight ASC, parent.folderid', 'ASC', false);
 
 $folders = [];
 $i       = 1;
@@ -61,7 +66,7 @@ foreach ($foldersObj as $folderObj) {
 
 $xoopsTpl->assign('folders', $folders);
 
-$xoopsTpl->assign('module_home', smartmedia_module_home());
+$xoopsTpl->assign('module_home', Utility::module_home());
 
 // The Navigation Bar
 if ($helper->getConfig('folders_per_category') > 0) {
@@ -75,6 +80,6 @@ if ($helper->getConfig('folders_per_category') > 0) {
 }
 
 // MetaTag Generator
-smartmedia_createMetaTags($categoryObj->title(), '', $categoryObj->description());
+Metagen::createMetaTags($categoryObj->title(), '', $categoryObj->description());
 
 require_once XOOPS_ROOT_PATH . '/footer.php';

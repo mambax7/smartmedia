@@ -1,4 +1,6 @@
-<?php namespace XoopsModules\Smartmedia;
+<?php
+
+namespace XoopsModules\Smartmedia;
 
 /**
  * Module: SmartMedia
@@ -6,9 +8,11 @@
  * Licence: GNU
  */
 
-use XoopsModules\Smartmedia;
-
-defined('XOOPS_ROOT_PATH') || die('XOOPS root path not defined');
+use XoopsModules\Smartmedia\{
+    Helper,
+    Utility
+};
+/** @var Helper $helper */
 
 /**
  * Smartmedia\About class
@@ -48,32 +52,36 @@ class About
     public function __construct($aboutTitle = 'About')
     {
         global $xoopsModule, $xoopsConfig;
-        $fileName = XOOPS_ROOT_PATH . '/modules/' . $xoopsModule->getVar('dirname') . '/language/' . $xoopsConfig['language'] . '/modinfo.php';
-        if (file_exists($fileName)) {
-            require_once $fileName;
-        } else {
-            require_once XOOPS_ROOT_PATH . '/modules/' . $xoopsModule->getVar('dirname') . '/language/english/modinfo.php';
-        }
+        //        $fileName = XOOPS_ROOT_PATH . '/modules/' . $xoopsModule->getVar('dirname') . '/language/' . $xoopsConfig['language'] . '/modinfo.php';
+        //        if (file_exists($fileName)) {
+        //            require_once $fileName;
+        //        } else {
+        //            require_once XOOPS_ROOT_PATH . '/modules/' . $xoopsModule->getVar('dirname') . '/language/english/modinfo.php';
+        //        }
+
+        $helper = Helper::getInstance();
+        $helper->loadLanguage('modinfo');
+
         $this->_aboutTitle                 = $aboutTitle;
-        $this->_lang_author_info           = _MI_SMARTMEDIA_AUTHOR_INFO;
-        $this->_lang_developer_lead        = _MI_SMARTMEDIA_DEVELOPER_LEAD;
-        $this->_lang_developer_contributor = _MI_SMARTMEDIA_DEVELOPER_CONTRIBUTOR;
-        $this->_lang_developer_website     = _MI_SMARTMEDIA_DEVELOPER_WEBSITE;
-        $this->_lang_developer_email       = _MI_SMARTMEDIA_DEVELOPER_EMAIL;
-        $this->_lang_developer_credits     = _MI_SMARTMEDIA_DEVELOPER_CREDITS;
-        $this->_lang_module_info           = _MI_SMARTMEDIA_MODULE_INFO;
-        $this->_lang_module_status         = _MI_SMARTMEDIA_MODULE_STATUS;
-        $this->_lang_module_release_date   = _MI_SMARTMEDIA_MODULE_RELEASE_DATE;
-        $this->_lang_module_demo           = _MI_SMARTMEDIA_MODULE_DEMO;
-        $this->_lang_module_support        = _MI_SMARTMEDIA_MODULE_SUPPORT;
-        $this->_lang_module_bug            = _MI_SMARTMEDIA_MODULE_BUG;
-        $this->_lang_module_submit_bug     = _MI_SMARTMEDIA_MODULE_SUBMIT_BUG;
-        $this->_lang_module_feature        = _MI_SMARTMEDIA_MODULE_FEATURE;
-        $this->_lang_module_submit_feature = _MI_SMARTMEDIA_MODULE_SUBMIT_FEATURE;
-        $this->_lang_module_disclaimer     = _MI_SMARTMEDIA_MODULE_DISCLAIMER;
-        $this->_lang_author_word           = _MI_SMARTMEDIA_AUTHOR_WORD;
-        $this->_lang_version_history       = _MI_SMARTMEDIA_VERSION_HISTORY;
-        $this->_lang_by                    = _MI_SMARTMEDIA_BY;
+        $this->_lang_author_info           = \_MI_SMARTMEDIA_AUTHOR_INFO;
+        $this->_lang_developer_lead        = \_MI_SMARTMEDIA_DEVELOPER_LEAD;
+        $this->_lang_developer_contributor = \_MI_SMARTMEDIA_DEVELOPER_CONTRIBUTOR;
+        $this->_lang_developer_website     = \_MI_SMARTMEDIA_DEVELOPER_WEBSITE;
+        $this->_lang_developer_email       = \_MI_SMARTMEDIA_DEVELOPER_EMAIL;
+        $this->_lang_developer_credits     = \_MI_SMARTMEDIA_DEVELOPER_CREDITS;
+        $this->_lang_module_info           = \_MI_SMARTMEDIA_MODULE_INFO;
+        $this->_lang_module_status         = \_MI_SMARTMEDIA_MODULE_STATUS;
+        $this->_lang_module_release_date   = \_MI_SMARTMEDIA_MODULE_RELEASE_DATE;
+        $this->_lang_module_demo           = \_MI_SMARTMEDIA_MODULE_DEMO;
+        $this->_lang_module_support        = \_MI_SMARTMEDIA_MODULE_SUPPORT;
+        $this->_lang_module_bug            = \_MI_SMARTMEDIA_MODULE_BUG;
+        $this->_lang_module_submit_bug     = \_MI_SMARTMEDIA_MODULE_SUBMIT_BUG;
+        $this->_lang_module_feature        = \_MI_SMARTMEDIA_MODULE_FEATURE;
+        $this->_lang_module_submit_feature = \_MI_SMARTMEDIA_MODULE_SUBMIT_FEATURE;
+        $this->_lang_module_disclaimer     = \_MI_SMARTMEDIA_MODULE_DISCLAIMER;
+        $this->_lang_author_word           = \_MI_SMARTMEDIA_AUTHOR_WORD;
+        $this->_lang_version_history       = \_MI_SMARTMEDIA_VERSION_HISTORY;
+        $this->_lang_by                    = \_MI_SMARTMEDIA_BY;
     }
 
     public function render()
@@ -82,15 +90,15 @@ class About
 
         global $xoopsModule;
 
-        xoops_cp_header();
+        \xoops_cp_header();
 
-        $moduleHandler = xoops_getHandler('module');
+        $moduleHandler = \xoops_getHandler('module');
         $versioninfo   = $moduleHandler->get($xoopsModule->getVar('mid'));
 
         $adminMenu = $versioninfo->getInfo('adminMenu');
 
-        if (false !== $adminMenu && '' != trim($adminMenu)) {
-            if (function_exists($adminMenu)) {
+        if (false !== $adminMenu && '' != \trim($adminMenu)) {
+            if (\function_exists($adminMenu)) {
                 $func = $adminMenu;
                 if (!$func(-1, $this->_aboutTitle . ' ' . $versioninfo->getInfo('name'))) {
                 }
@@ -98,7 +106,7 @@ class About
         }
 
         // Left headings...
-        echo "<img src='" . XOOPS_URL . '/modules/' . $xoopsModule->getVar('dirname') . '/' . $versioninfo->getInfo('image') . "' alt='' hspace='0' vspace='0' align='left' style='margin-right: 10px;'/></a>";
+        echo "<img src='" . XOOPS_URL . '/modules/' . $xoopsModule->getVar('dirname') . '/' . $versioninfo->getInfo('image') . "' alt='' hspace='0' vspace='0' align='left' style='margin-right: 10px;'></a>";
         echo "<div style='margin-top: 10px; color: #33538e; margin-bottom: 4px; font-size: 18px; line-height: 18px; font-weight: bold; display: block;'>" . $versioninfo->getInfo('name') . ' version ' . $versioninfo->getInfo('version') . ' (' . $versioninfo->getInfo('status_version') . ')</div>';
         if ('' != $versioninfo->getInfo('author_realname')) {
             $author_name = $versioninfo->getInfo('author') . ' (' . $versioninfo->getInfo('author_realname') . ')';
@@ -239,13 +247,13 @@ class About
 
         $modFooter = $versioninfo->getInfo('modFooter');
 
-        if (false !== $adminMenu && '' != trim($modFooter)) {
-            if (function_exists($modFooter)) {
+        if (false !== $adminMenu && '' != \trim($modFooter)) {
+            if (\function_exists($modFooter)) {
                 $func = $modFooter;
                 echo "<div align='center'>" . $func() . '</div>';
             }
         }
 
-        xoops_cp_footer();
+        \xoops_cp_footer();
     }
 }

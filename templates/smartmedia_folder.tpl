@@ -9,7 +9,7 @@
         <tr>
           <td class="folder_description">
             <{if $folder.image_hr_path}>
-              <img class="main_image" src="<{$folder.image_hr_path}>" alt="<{$folder.clean_title}>" align="left" width="<{$folder.main_image_width}>"/>
+              <img class="main_image" src="<{$folder.image_hr_path}>" alt="<{$folder.clean_title}>" align="left" width="<{$folder.main_image_width}>">
             <{/if}>
             <{$folder.description}>
             <{if $folder.adminLinks}>
@@ -31,7 +31,7 @@
         <tr>
           <td class="clip_description">
             <{if $clip.image_hr_path}>
-              <a href="<{$clip.itemurl}>"><img class="main_image" src="<{$clip.image_hr_path}>" align="left" alt="<{$clip.title}>" width="<{$clip.list_image_width}>"/></a>
+              <a href="<{$clip.itemurl}>"><img class="main_image" src="<{$clip.image_hr_path}>" align="left" alt="<{$clip.title}>" width="<{$clip.list_image_width}>"></a>
             <{/if}>
             <{$clip.description}>
             <{if $folder.adminLinks}>
@@ -41,7 +41,7 @@
        </tr>
       </table>
     </td>
-    <{if $clip.id is div by 2}>
+    <{if $clip.id % 2 == 0}>
       </tr>
       <tr>
     <{/if}>

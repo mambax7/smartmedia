@@ -8,7 +8,6 @@
  * @param $item_id
  * @return null
  */
-
 function smartmedia_notify_iteminfo($category, $item_id)
 {
     global $xoopsModule, $xoopsModuleConfig, $xoopsConfig;
@@ -17,6 +16,7 @@ function smartmedia_notify_iteminfo($category, $item_id)
         /** @var \XoopsModuleHandler $moduleHandler */
         $moduleHandler = xoops_getHandler('module');
         $module        = $moduleHandler->getByDirname('smartmedia');
+        /** @var \XoopsConfigHandler $configHandler */
         $configHandler = xoops_getHandler('config');
         $config        = &$configHandler->getConfigsByCat(0, $module->getVar('mid'));
     } else {

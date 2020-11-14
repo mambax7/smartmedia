@@ -10,14 +10,17 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  */
 
-
-use XoopsModules\Smartmedia;
+use XoopsModules\Smartmedia\{
+    Helper,
+    Utility,
+    Tree
+};
+/** @var Helper $helper */
 
 require_once __DIR__ . '/admin_header.php';
 //xoops_cp_header();
 
-/** @var Smartmedia\Helper $helper */
-$helper = Smartmedia\Helper::getInstance();
+$helper = Helper::getInstance();
 
 /**
  * @param $item
@@ -26,8 +29,8 @@ function displayClipItem($item)
 {
     global $xoopsModule, $pathIcon16;
     //var_dump($folderObj);
-    $modify = "<a href='clip.php?op=mod&clipid=" . $item['clipid'] . '&folderid=' . $item['folderid'] . "'><img src='" . $pathIcon16 . '/edit.png' . "' title='" . _AM_SMARTMEDIA_CLIP_EDIT . "' alt='" . _AM_SMARTMEDIA_CLIP_EDIT . "' /></a>";
-    $delete = "<a href='clip.php?op=del&clipid=" . $item['clipid'] . '&folderid=' . $item['folderid'] . "'><img src='" . $pathIcon16 . '/delete.png' . "' title='" . _AM_SMARTMEDIA_CLIP_DELETE . "' alt='" . _AM_SMARTMEDIA_CLIP_DELETE . "' /></a>";
+    $modify = "<a href='clip.php?op=mod&clipid=" . $item['clipid'] . '&folderid=' . $item['folderid'] . "'><img src='" . $pathIcon16 . '/edit.png' . "' title='" . _AM_SMARTMEDIA_CLIP_EDIT . "' alt='" . _AM_SMARTMEDIA_CLIP_EDIT . "'></a>";
+    $delete = "<a href='clip.php?op=del&clipid=" . $item['clipid'] . '&folderid=' . $item['folderid'] . "'><img src='" . $pathIcon16 . '/delete.png' . "' title='" . _AM_SMARTMEDIA_CLIP_DELETE . "' alt='" . _AM_SMARTMEDIA_CLIP_DELETE . "'></a>";
 
     echo '<tr>';
     echo "<td class='even' align='left'>&nbsp;&nbsp;</td>";
@@ -44,7 +47,7 @@ function displayClipItem($item)
          . $item['clipid']
          . "'><img src='"
          . SMARTMEDIA_URL
-         . "images/icon/clip.gif' alt='' />&nbsp;"
+         . "images/icon/clip.gif' alt=''>&nbsp;"
          . $item['title']
          . '</a></td>';
     echo "<td class='even' align='left'>" . $item['foldertitle'] . '</td>';
@@ -57,7 +60,7 @@ require_once __DIR__ . '/admin_header.php';
 
 global $smartmediaClipHandler;
 
-$op    = \Xmf\Request::getCmd('op', '');
+$op = \Xmf\Request::getCmd('op', '');
 
 /* Possible $op :
  mod : Displaying the form to edit or add a clip
@@ -79,8 +82,8 @@ function displayClip_text($clip_textObj)
 {
     global $xoopsModule, $smartmediaClipHandler, $pathIcon16;
 
-    $modify = "<a href='clip.php?op=modtext&clipid=" . $clip_textObj->clipid() . '&languageid=' . $clip_textObj->languageid() . "'><img src='" . $pathIcon16 . '/edit.png' . "' title='" . _AM_SMARTMEDIA_CLIP_EDIT . "' alt='" . _AM_SMARTMEDIA_CLIP_EDIT . "' /></a>";
-    $delete = "<a href='clip.php?op=deltext&clipid=" . $clip_textObj->clipid() . '&languageid=' . $clip_textObj->languageid() . "'><img src='" . $pathIcon16 . '/delete.png' . "' title='" . _AM_SMARTMEDIA_CLIP_DELETE . "' alt='" . _AM_SMARTMEDIA_CLIP_DELETE . "' /></a>";
+    $modify = "<a href='clip.php?op=modtext&clipid=" . $clip_textObj->clipid() . '&languageid=' . $clip_textObj->languageid() . "'><img src='" . $pathIcon16 . '/edit.png' . "' title='" . _AM_SMARTMEDIA_CLIP_EDIT . "' alt='" . _AM_SMARTMEDIA_CLIP_EDIT . "'></a>";
+    $delete = "<a href='clip.php?op=deltext&clipid=" . $clip_textObj->clipid() . '&languageid=' . $clip_textObj->languageid() . "'><img src='" . $pathIcon16 . '/delete.png' . "' title='" . _AM_SMARTMEDIA_CLIP_DELETE . "' alt='" . _AM_SMARTMEDIA_CLIP_DELETE . "'></a>";
     echo '<tr>';
     echo "<td class='even' align='left'>" . $clip_textObj->languageid() . '</td>';
     echo "<td class='even' align='left'> " . $clip_textObj->title() . ' </td>';
@@ -94,22 +97,21 @@ function displayClip_text($clip_textObj)
  */
 function addClip($language_text = false)
 {
-    global $xoopsUser, $xoopsConfig, $xoopsModule,  $myts, $smartmediaClipHandler;
-    /** @var Smartmedia\Helper $helper */
-    $helper = Smartmedia\Helper::getInstance();
+    global $xoopsUser, $xoopsConfig, $xoopsModule, $myts, $smartmediaClipHandler;
+    $helper = Helper::getInstance();
     require_once XOOPS_ROOT_PATH . '/class/uploader.php';
 
     $max_size          = 10000000;
     $max_imgwidth      = 1000;
     $max_imgheight     = 1000;
-    $allowed_mimetypes = smartmedia_getAllowedMimeTypes();
+    $allowed_mimetypes = Utility::getAllowedMimeTypes();
     $upload_msgs       = [];
 
     $clipid = \Xmf\Request::getInt('clipid', 0, 'POST');
 
-    if (isset($_POST['languageid'])) {
+    if (\Xmf\Request::hasVar('languageid', 'POST')) {
         $languageid = $_POST['languageid'];
-    } elseif (isset($_POST['default_languageid'])) {
+    } elseif (\Xmf\Request::hasVar('default_languageid', 'POST')) {
         $languageid = $_POST['default_languageid'];
     } else {
         $languageid = $helper->getConfig('default_language');
@@ -130,7 +132,7 @@ function addClip($language_text = false)
          if ( $_FILES[$filename]['tmp_name'] == "" || ! is_readable( $_FILES[$filename]['tmp_name'] ) ) {
          $upload_msgs[_AM_SMARTMEDIA_FILEUPLOAD_ERROR];
          } else {
-         $uploader = new \XoopsMediaUploader(smartmedia_getImageDir('clip'), $allowed_mimetypes, $max_size, $max_imgwidth, $max_imgheight);
+         $uploader = new \XoopsMediaUploader(Utility::getImageDir('clip'), $allowed_mimetypes, $max_size, $max_imgwidth, $max_imgheight);
 
          if ( $uploader->fetchMedia( $filename ) && $uploader->upload() ) {
          $clipObj->setVar('image_lr', $uploader->getSavedFileName());
@@ -150,7 +152,7 @@ function addClip($language_text = false)
                 if ('' == $_FILES[$filename]['tmp_name'] || !is_readable($_FILES[$filename]['tmp_name'])) {
                     $upload_msgs[_AM_SMARTMEDIA_FILEUPLOAD_ERROR];
                 } else {
-                    $uploader = new \XoopsMediaUploader(smartmedia_getImageDir('clip'), $allowed_mimetypes, $max_size, $max_imgwidth, $max_imgheight);
+                    $uploader = new \XoopsMediaUploader(Utility::getImageDir('clip'), $allowed_mimetypes, $max_size, $max_imgwidth, $max_imgheight);
 
                     if ($uploader->fetchMedia($filename) && $uploader->upload()) {
                         $clipObj->setVar('image_hr', $uploader->getSavedFileName());
@@ -166,10 +168,10 @@ function addClip($language_text = false)
         //var_dump($uploader->errors);
         //exit;
 
-        $clipObj->setVar('width',\Xmf\Request::getInt('width', 320, 'POST'));
-        $clipObj->setVar('height',\Xmf\Request::getInt('height', 260, 'POST'));
-        $clipObj->setVar('folderid',\Xmf\Request::getInt('folderid', 0, 'POST'));
-        $clipObj->setVar('weight',\Xmf\Request::getInt('weight', 1, 'POST'));
+        $clipObj->setVar('width', \Xmf\Request::getInt('width', 320, 'POST'));
+        $clipObj->setVar('height', \Xmf\Request::getInt('height', 260, 'POST'));
+        $clipObj->setVar('folderid', \Xmf\Request::getInt('folderid', 0, 'POST'));
+        $clipObj->setVar('weight', \Xmf\Request::getInt('weight', 1, 'POST'));
         $clipObj->setVar('file_hr', $_POST['file_hr']);
         $clipObj->setVar('file_lr', $_POST['file_lr']);
         $clipObj->setVar('formatid', $_POST['formatid']);
@@ -206,7 +208,7 @@ function addClip($language_text = false)
         if ($language_text) {
             $redirect_to = 'clip.php?op=mod&clipid=' . $clipObj->clipid();
         } else {
-            if (isset($_GET['from_within'])) {
+            if (\Xmf\Request::hasVar('from_within', 'GET')) {
                 // To come...
             }
             $redirect_to = 'clip.php';
@@ -215,7 +217,7 @@ function addClip($language_text = false)
     }
 
     if (!$clipObj->store()) {
-        redirect_header('javascript:history.go(-1)', 3, _AM_SMARTMEDIA_CLIP_SAVE_ERROR . smartmedia_formatErrors($clipObj->getErrors()));
+        redirect_header('<script>javascript:history.go(-1)</script>', 3, _AM_SMARTMEDIA_CLIP_SAVE_ERROR . Utility::formatErrors($clipObj->getErrors()));
         exit;
     }
 
@@ -232,9 +234,8 @@ function addClip($language_text = false)
  */
 function editclip($showmenu = false, $clipid = 0, $folderid = 0)
 {
-    global $xoopsDB, $smartmediaClipHandler, $xoopsUser, $myts, $xoopsConfig,  $xoopsModule;
-    /** @var Smartmedia\Helper $helper */
-    $helper = Smartmedia\Helper::getInstance();
+    global $xoopsDB, $smartmediaClipHandler, $xoopsUser, $myts, $xoopsConfig, $xoopsModule;
+    $helper = Helper::getInstance();
     require_once XOOPS_ROOT_PATH . '/class/xoopsformloader.php';
 
     // if $clipid == 0 then we are adding a new clip
@@ -264,8 +265,8 @@ function editclip($showmenu = false, $clipid = 0, $folderid = 0)
             redirect_header('clip.php', 1, _AM_SMARTMEDIA_NOCLIPTOEDIT);
             exit();
         }
-        smartmedia_collapsableBar('bottomtable', 'bottomtableicon');
-        echo "<img id='bottomtableicon' src=" . XOOPS_URL . '/modules/' . $xoopsModule->dirname() . "/assets/images/icon/close12.gif alt='' /></a>&nbsp;" . _AM_SMARTMEDIA_CLIP_EDIT . '</h3>';
+        Utility::collapsableBar('bottomtable', 'bottomtableicon');
+        echo "<img id='bottomtableicon' src=" . XOOPS_URL . '/modules/' . $xoopsModule->dirname() . "/assets/images/icon/close12.gif alt=''></a>&nbsp;" . _AM_SMARTMEDIA_CLIP_EDIT . '</h3>';
         echo "<div id='bottomtable'>";
         echo '<span style="color: #567; margin: 3px 0 18px 0; font-size: small; display: block; ">' . _AM_SMARTMEDIA_CLIP_EDIT_INFO . '</span>';
     } else {
@@ -276,8 +277,8 @@ function editclip($showmenu = false, $clipid = 0, $folderid = 0)
             //smartmedia_adminMenu(3, _AM_SMARTMEDIA_CLIPS . " > " . _AM_SMARTMEDIA_CREATINGNEW);
         }
         echo "<br>\n";
-        smartmedia_collapsableBar('bottomtable', 'bottomtableicon');
-        echo "<img id='bottomtableicon' src=" . XOOPS_URL . '/modules/' . $xoopsModule->dirname() . "/assets/images/icon/close12.gif alt='' /></a>&nbsp;" . _AM_SMARTMEDIA_CLIP_CREATE . '</h3>';
+        Utility::collapsableBar('bottomtable', 'bottomtableicon');
+        echo "<img id='bottomtableicon' src=" . XOOPS_URL . '/modules/' . $xoopsModule->dirname() . "/assets/images/icon/close12.gif alt=''></a>&nbsp;" . _AM_SMARTMEDIA_CLIP_CREATE . '</h3>';
         echo "<div id='bottomtable'>";
         echo '<span style="color: #567; margin: 3px 0 18px 0; font-size: small; display: block; ">' . _AM_SMARTMEDIA_CLIP_CREATE_INFO . '</span>';
     }
@@ -317,12 +318,13 @@ function editclip($showmenu = false, $clipid = 0, $folderid = 0)
             echo '</tr>';
         }
 
-        echo "</table>\n<br/>";
+        echo "</table>\n<br>";
+
     }
 
     // Start clip form
 
-    $sform = new \XoopsThemeForm(_AM_SMARTMEDIA_CLIP, 'op', xoops_getenv('PHP_SELF'));
+    $sform = new \XoopsThemeForm(_AM_SMARTMEDIA_CLIP, 'op', xoops_getenv('SCRIPT_NAME'));
     $sform->setExtra('enctype="multipart/form-data"');
     $sform->addElement(new \XoopsFormHidden('clipid', $clipid));
 
@@ -375,8 +377,8 @@ function editclip($showmenu = false, $clipid = 0, $folderid = 0)
     $sform->addElement($tab3_text);
 
     // Folder
-//    require_once SMARTMEDIA_ROOT_PATH . "class/Tree.php";
-    $mySmartTree = new Smartmedia\Tree($xoopsDB->prefix('smartmedia_folders'), 'folderid', '');
+    //    require_once SMARTMEDIA_ROOT_PATH . "class/Tree.php";
+    $mySmartTree = new Tree($xoopsDB->prefix('smartmedia_folders'), 'folderid', '');
     ob_start();
     $mySmartTree->makeMySelBox('title', 'weight', $folderid, 0, 'folderid');
 
@@ -410,14 +412,14 @@ function editclip($showmenu = false, $clipid = 0, $folderid = 0)
     $sform->addElement($height_text);
 
     /*  // LR IMAGE
-     $lr_image_array = & XoopsLists :: getImgListAsArray( smartmedia_getImageDir('clip') );
+     $lr_image_array = & XoopsLists :: getImgListAsArray(Utility::getImageDir('clip') );
      $lr_image_select = new \XoopsFormSelect( '', 'image_lr', $clipObj->image_lr() );
      $lr_image_select -> addOption ('-1', '---------------');
      $lr_image_select -> addOptionArray( $lr_image_array );
      $lr_image_select -> setExtra( "onchange='showImgSelected(\"the_image_lr\", \"image_lr\", \"" . 'uploads/smartmedia/images/clip' . "\", \"\", \"" . XOOPS_URL . "\")'" );
      $lr_image_tray = new \XoopsFormElementTray( _AM_SMARTMEDIA_CLIP_IMAGE_LR, '&nbsp;' );
      $lr_image_tray -> addElement( $lr_image_select );
-     $lr_image_tray -> addElement( new \XoopsFormLabel( '', "<br><br><img src='" . smartmedia_getImageDir('clip', false) .$clipObj->image_lr() . "' name='the_image_lr' id='the_image_lr' alt='' />" ) );
+     $lr_image_tray -> addElement( new \XoopsFormLabel( '', "<br><br><img src='" .Utility::getImageDir('clip', false) .$clipObj->image_lr() . "' name='the_image_lr' id='the_image_lr' alt=''>" ) );
      $lr_image_tray->setDescription(_AM_SMARTMEDIA_CLIP_IMAGE_LR_DSC);
      $sform -> addElement( $lr_image_tray );
 
@@ -429,14 +431,14 @@ function editclip($showmenu = false, $clipid = 0, $folderid = 0)
      $sform->addElement($lr_file_box);
      */
     // HR IMAGE
-    $hr_image_array  = \XoopsLists:: getImgListAsArray(smartmedia_getImageDir('clip'));
+    $hr_image_array  = \XoopsLists:: getImgListAsArray(Utility::getImageDir('clip'));
     $hr_image_select = new \XoopsFormSelect('', 'image_hr', $clipObj->image_hr());
     $hr_image_select->addOption('-1', '---------------');
     $hr_image_select->addOptionArray($hr_image_array);
     $hr_image_select->setExtra("onchange='showImgSelected(\"the_image_hr\", \"image_hr\", \"" . 'uploads/smartmedia/images/clip' . '", "", "' . XOOPS_URL . "\")'");
     $hr_image_tray = new \XoopsFormElementTray(_AM_SMARTMEDIA_CLIP_IMAGE_HR, '&nbsp;');
     $hr_image_tray->addElement($hr_image_select);
-    $hr_image_tray->addElement(new XoopsFormLabel('', "<br><br><img src='" . smartmedia_getImageDir('clip', false) . $clipObj->image_hr() . "' name='the_image_hr' id='the_image_hr' alt='' />"));
+    $hr_image_tray->addElement(new XoopsFormLabel('', "<br><br><img src='" . Utility::getImageDir('clip', false) . $clipObj->image_hr() . "' name='the_image_hr' id='the_image_hr' alt=''>"));
     $hr_image_tray->setDescription(sprintf(_AM_SMARTMEDIA_CLIP_IMAGE_HR_DSC, $helper->getConfig('main_image_width')));
     $sform->addElement($hr_image_tray);
 
@@ -452,42 +454,41 @@ function editclip($showmenu = false, $clipid = 0, $folderid = 0)
 
     $sform->addElement(new XoopsFormHidden('itemType', 'item'));
 
-    if (isset($_GET['from_within'])) {
+    if (\Xmf\Request::hasVar('from_within', 'GET')) {
         $sform->addElement(new XoopsFormHidden('from_within', 1));
     }
 
     // Action buttons tray
-    $button_tray = new \XoopsFormElementTray('', '');
+    $buttonTray = new \XoopsFormElementTray('', '');
 
     $hidden = new \XoopsFormHidden('op', 'addclip');
-    $button_tray->addElement($hidden);
+    $buttonTray->addElement($hidden);
 
     if ($newClip) {
         // We are creating a new clip
 
         $butt_create = new \XoopsFormButton('', '', _AM_SMARTMEDIA_CREATE, 'submit');
         $butt_create->setExtra('onclick="this.form.elements.op.value=\'addclip\'"');
-        $button_tray->addElement($butt_create);
+        $buttonTray->addElement($butt_create);
 
         $butt_clear = new \XoopsFormButton('', '', _AM_SMARTMEDIA_CLEAR, 'reset');
-        $button_tray->addElement($butt_clear);
+        $buttonTray->addElement($butt_clear);
 
         $butt_cancel = new \XoopsFormButton('', '', _AM_SMARTMEDIA_CANCEL, 'button');
         $butt_cancel->setExtra('onclick="history.go(-1)"');
-        $button_tray->addElement($butt_cancel);
+        $buttonTray->addElement($butt_cancel);
     } else {
-
         // We are editing a clip
         $butt_create = new \XoopsFormButton('', '', _AM_SMARTMEDIA_MODIFY, 'submit');
         $butt_create->setExtra('onclick="this.form.elements.op.value=\'addclip\'"');
-        $button_tray->addElement($butt_create);
+        $buttonTray->addElement($butt_create);
 
         $butt_cancel = new \XoopsFormButton('', '', _AM_SMARTMEDIA_CANCEL, 'button');
         $butt_cancel->setExtra('onclick="history.go(-1)"');
-        $button_tray->addElement($butt_cancel);
+        $buttonTray->addElement($butt_cancel);
     }
 
-    $sform->addElement($button_tray);
+    $sform->addElement($buttonTray);
     $sform->display();
     echo '</div>';
     unset($hidden);
@@ -499,12 +500,10 @@ function editclip($showmenu = false, $clipid = 0, $folderid = 0)
  * @param      $clipid
  * @param      $languageid
  */
-
-function editclip_text($showmenu = false, $clipid, $languageid)
+function editclip_text($showmenu, $clipid, $languageid)
 {
-    global $xoopsDB, $smartmediaClipHandler, $xoopsUser, $myts, $xoopsConfig,  $xoopsModule;
-    /** @var Smartmedia\Helper $helper */
-    $helper = Smartmedia\Helper::getInstance();
+    global $xoopsDB, $smartmediaClipHandler, $xoopsUser, $myts, $xoopsConfig, $xoopsModule;
+    $helper = Helper::getInstance();
     require_once XOOPS_ROOT_PATH . '/class/xoopsformloader.php';
 
     echo '<script type="text/javascript" src="../assets/js/funcs.js"></script>';
@@ -528,13 +527,13 @@ function editclip_text($showmenu = false, $clipid, $languageid)
         //smartmedia_adminMenu(3, _AM_SMARTMEDIA_CLIPS . " > " . _AM_SMARTMEDIA_LANGUAGE_INFO . " > " . $bread_lang);
     }
     echo "<br>\n";
-    smartmedia_collapsableBar('bottomtable', 'bottomtableicon');
-    echo "<img id='bottomtableicon' src=" . XOOPS_URL . '/modules/' . $xoopsModule->dirname() . "/assets/images/icon/close12.gif alt='' /></a>&nbsp;" . _AM_SMARTMEDIA_CLIP_LANGUAGE_INFO_EDITING . '</h3>';
+    Utility::collapsableBar('bottomtable', 'bottomtableicon');
+    echo "<img id='bottomtableicon' src=" . XOOPS_URL . '/modules/' . $xoopsModule->dirname() . "/assets/images/icon/close12.gif alt=''></a>&nbsp;" . _AM_SMARTMEDIA_CLIP_LANGUAGE_INFO_EDITING . '</h3>';
     echo "<div id='bottomtable'>";
     echo '<span style="color: #567; margin: 3px 0 18px 0; font-size: small; display: block; ">' . _AM_SMARTMEDIA_CLIP_LANGUAGE_INFO_EDITING_INFO . '</span>';
 
     // Start clip form
-    $sform = new \XoopsThemeForm(_AM_SMARTMEDIA_CLIP, 'op', xoops_getenv('PHP_SELF'));
+    $sform = new \XoopsThemeForm(_AM_SMARTMEDIA_CLIP, 'op', xoops_getenv('SCRIPT_NAME'));
     $sform->setExtra('enctype="multipart/form-data"');
     $sform->addElement(new XoopsFormHidden('clipid', $clipid));
 
@@ -593,36 +592,36 @@ function editclip_text($showmenu = false, $clipid, $languageid)
     $tab3_text->setDescription(_AM_SMARTMEDIA_CLIP_TABDSC);
     $sform->addElement($tab3_text);
     // Action buttons tray
-    $button_tray = new \XoopsFormElementTray('', '');
+    $buttonTray = new \XoopsFormElementTray('', '');
 
     $hidden = new \XoopsFormHidden('op', 'addclip_text');
-    $button_tray->addElement($hidden);
+    $buttonTray->addElement($hidden);
 
     if ('new' === $languageid) {
         // We are creating a new clip language info
 
         $butt_create = new \XoopsFormButton('', '', _AM_SMARTMEDIA_CREATE, 'submit');
         $butt_create->setExtra('onclick="this.form.elements.op.value=\'addclip_text\'"');
-        $button_tray->addElement($butt_create);
+        $buttonTray->addElement($butt_create);
 
         $butt_clear = new \XoopsFormButton('', '', _AM_SMARTMEDIA_CLEAR, 'reset');
-        $button_tray->addElement($butt_clear);
+        $buttonTray->addElement($butt_clear);
 
         $butt_cancel = new \XoopsFormButton('', '', _AM_SMARTMEDIA_CANCEL, 'button');
         $butt_cancel->setExtra('onclick="history.go(-1)"');
-        $button_tray->addElement($butt_cancel);
+        $buttonTray->addElement($butt_cancel);
     } else {
         // We are editing a clip language info
 
         $butt_create = new \XoopsFormButton('', '', _AM_SMARTMEDIA_MODIFY, 'submit');
         $butt_create->setExtra('onclick="this.form.elements.op.value=\'addclip_text\'"');
-        $button_tray->addElement($butt_create);
+        $buttonTray->addElement($butt_create);
 
         $butt_cancel = new \XoopsFormButton('', '', _AM_SMARTMEDIA_CANCEL, 'button');
         $butt_cancel->setExtra('onclick="history.go(-1)"');
-        $button_tray->addElement($butt_cancel);
+        $buttonTray->addElement($butt_cancel);
     }
-    $sform->addElement($button_tray);
+    $sform->addElement($buttonTray);
     $sform->display();
     echo '</div>';
     unset($hidden);
@@ -639,7 +638,6 @@ switch ($op) {
         $adminObject->displayNavigation('clip.php');
         editclip(true, $clipid, $folderid);
         break;
-
     // Displaying the form to edit a clip language info
     case 'modtext':
         $clipid     = \Xmf\Request::getInt('clipid', 0, 'GET');
@@ -650,22 +648,20 @@ switch ($op) {
         $adminObject->displayNavigation('clip.php');
         editclip_text(true, $clipid, $languageid);
         break;
-
     // Adding or editing a clip in the db
     case 'addclip':
         addClip(false);
         break;
-
     // Adding or editing a clip language info in the db
     case 'addclip_text':
         addClip(true);
         break;
-
     // deleting a clip
     case 'del':
         global $smartmediaClipHandler, $xoopsUser, $xoopsConfig, $xoopsDB, $_GET;
 
-        $module_id    = $xoopsModule->getVar('mid');
+        $module_id = $xoopsModule->getVar('mid');
+        /** @var \XoopsGroupPermHandler $grouppermHandler */
         $grouppermHandler = xoops_getHandler('groupperm');
 
         $clipid = \Xmf\Request::getInt('clipid', 0, 'POST');
@@ -673,7 +669,7 @@ switch ($op) {
 
         $clipObj = $smartmediaClipHandler->get($clipid);
 
-        $confirm = \Xmf\Request::getInt('confirm', 0, POST);
+        $confirm = \Xmf\Request::getInt('confirm', 0, 'POST');
         $name    = \Xmf\Request::getString('name', '', 'POST');
 
         if ($confirm) {
@@ -684,19 +680,18 @@ switch ($op) {
 
             redirect_header('clip.php', 1, sprintf(_AM_SMARTMEDIA_CLIP_DELETE_SUCCESS, $name));
             exit();
-        } else {
-            // no confirm: show deletion condition
-            xoops_cp_header();
-            xoops_confirm(['op' => 'del', 'clipid' => $clipObj->clipid(), 'confirm' => 1, 'name' => $clipObj->title()], 'clip.php', _AM_SMARTMEDIA_CLIP_DELETE . " '" . $clipObj->title() . "' ?", _AM_SMARTMEDIA_DELETE);
-            xoops_cp_footer();
         }
+        // no confirm: show deletion condition
+        xoops_cp_header();
+        xoops_confirm(['op' => 'del', 'clipid' => $clipObj->clipid(), 'confirm' => 1, 'name' => $clipObj->title()], 'clip.php', _AM_SMARTMEDIA_CLIP_DELETE . " '" . $clipObj->title() . "' ?", _AM_SMARTMEDIA_DELETE);
+        xoops_cp_footer();
+
         exit();
         break;
-
     case 'deltext':
         global $xoopsUser, $xoopsUser, $xoopsConfig, $xoopsDB, $_GET;
 
-        $smartsection_clip_textHandler = Smartmedia\Helper::getInstance()->getHandler('ClipText');
+        $cliptextHandler = Helper::getInstance()->getHandler('ClipText');
 
         $module_id = $xoopsModule->getVar('mid');
 
@@ -706,30 +701,29 @@ switch ($op) {
         $languageid = isset($_POST['languageid']) ? $_POST['languageid'] : null;
         $languageid = isset($_GET['languageid']) ? $_GET['languageid'] : $languageid;
 
-        $clip_textObj = $smartsection_clip_textHandler->get($clipid, $languageid);
+        $clip_textObj = $cliptextHandler->get($clipid, $languageid);
 
-        $confirm = \Xmf\Request::getInt('confirm', 0, POST);
+        $confirm = \Xmf\Request::getInt('confirm', 0, 'POST');
         $name    = \Xmf\Request::getString('name', '', 'POST');
 
         if ($confirm) {
-            if (!$smartsection_clip_textHandler->delete($clip_textObj)) {
+            if (!$cliptextHandler->delete($clip_textObj)) {
                 redirect_header('clip.php?op=mod&clipid=' . $clip_textObj->clipid(), 1, _AM_SMARTMEDIA_CLIP_TEXT_DELETE_ERROR);
                 exit;
             }
 
             redirect_header('clip.php?op=mod&clipid=' . $clip_textObj->clipid(), 1, sprintf(_AM_SMARTMEDIA_CLIP_TEXT_DELETE_SUCCESS, $name));
             exit();
-        } else {
-            // no confirm: show deletion condition
-            $clipid     = \Xmf\Request::getInt('clipid', 0, 'GET');
-            $languageid = isset($_GET['languageid']) ? $_GET['languageid'] : null;
-            xoops_cp_header();
-            xoops_confirm(['op' => 'deltext', 'clipid' => $clip_textObj->clipid(), 'languageid' => $clip_textObj->languageid(), 'confirm' => 1, 'name' => $clip_textObj->languageid()], 'clip.php?op=mod&clipid=' . $clip_textObj->clipid(), _AM_SMARTMEDIA_CLIP_TEXT_DELETE, _AM_SMARTMEDIA_DELETE);
-            xoops_cp_footer();
         }
+        // no confirm: show deletion condition
+        $clipid     = \Xmf\Request::getInt('clipid', 0, 'GET');
+        $languageid = isset($_GET['languageid']) ? $_GET['languageid'] : null;
+        xoops_cp_header();
+        xoops_confirm(['op' => 'deltext', 'clipid' => $clip_textObj->clipid(), 'languageid' => $clip_textObj->languageid(), 'confirm' => 1, 'name' => $clip_textObj->languageid()], 'clip.php?op=mod&clipid=' . $clip_textObj->clipid(), _AM_SMARTMEDIA_CLIP_TEXT_DELETE, _AM_SMARTMEDIA_DELETE);
+        xoops_cp_footer();
+
         exit();
         break;
-
     case 'cancel':
         redirect_header('clip.php', 1, sprintf(_AM_SMARTMEDIA_BACK2IDX, ''));
         exit();
@@ -742,7 +736,7 @@ switch ($op) {
         $folderid   = \Xmf\Request::getInt('folderid', 0, 'GET');
         $categoryid = \Xmf\Request::getInt('categoryid', 0, 'GET');
 
-        $folderObj =& $smartmediaFolderHandler->get($folderid);
+        $folderObj = $folderHandler->get($folderid);
 
         //smartmedia_adminMenu(3, sprintf(_AM_SMARTMEDIA_CLIPS_WITHIN_FOLDER, $folderObj->title('clean')));
 
@@ -758,8 +752,8 @@ switch ($op) {
         }
         $criteria = new \CriteriaCompo();
         $criteria->add($criteria_id);
-        smartmedia_collapsableBar('toptable', 'toptableicon');
-        echo "<img id='toptableicon' src=" . XOOPS_URL . '/modules/' . $xoopsModule->dirname() . "/assets/images/icon/close12.gif alt='' /></a>&nbsp;" . _AM_SMARTMEDIA_CLIPS_TITLE . '</h3>';
+        Utility::collapsableBar('toptable', 'toptableicon');
+        echo "<img id='toptableicon' src=" . XOOPS_URL . '/modules/' . $xoopsModule->dirname() . "/assets/images/icon/close12.gif alt=''></a>&nbsp;" . _AM_SMARTMEDIA_CLIPS_TITLE . '</h3>';
         echo "<div id='toptable'>";
         echo '<span style="color: #567; margin: 3px 0 12px 0; font-size: small; display: block; ">' . sprintf(_AM_SMARTMEDIA_CLIPS_DSC, $folderObj->title('clean')) . '</span>';
 
@@ -777,7 +771,7 @@ switch ($op) {
         echo '</tr>';
         $level = 0;
 
-        $foldersObj = $smartmediaFolderHandler->getObjects(0, $criteria, false);
+        $foldersObj = $folderHandler->getObjects(0, $criteria, false);
         if (count($foldersObj) > 0) {
             foreach ($foldersObj as $folderObj) {
                 //var_dump($folderObj);
@@ -795,7 +789,6 @@ switch ($op) {
 
         //  editclip(false);
         break;
-
     case 'show':
     default:
         xoops_cp_header();
@@ -813,9 +806,9 @@ switch ($op) {
         $ordersel = isset($_GET['ordersel']) ? $_GET['ordersel'] : 'ASC';
         $ordersel = isset($_POST['ordersel']) ? $_POST['ordersel'] : $ordersel;
 
-        $limitsel = isset($_GET['limitsel']) ? $_GET['limitsel'] : smartmedia_getCookieVar('smartmedia_clip_limitsel', '15');
+        $limitsel = isset($_GET['limitsel']) ? $_GET['limitsel'] : Utility::getCookieVar('smartmedia_clip_limitsel', '15');
         $limitsel = isset($_POST['limitsel']) ? $_POST['limitsel'] : $limitsel;
-        smartmedia_setCookieVar('smartmedia_clip_limitsel', $limitsel);
+        Utility::setCookieVar('smartmedia_clip_limitsel', $limitsel);
 
         $startsel = \Xmf\Request::getInt('startsel', 0, 'GET');
         $startsel = isset($_POST['startsel']) ? $_POST['startsel'] : $startsel;
@@ -835,15 +828,12 @@ switch ($op) {
             case 'clips.clipid':
                 $sorttxtclipid = "selected='selected'";
                 break;
-
             case 'clips.weight':
                 $sorttxtweight = "selected='selected'";
                 break;
-
             case 'folders_text.title':
                 $sorttxtfolder = "selected='selected'";
                 break;
-
             default:
                 $sorttxttitle = "selected='selected'";
                 break;
@@ -853,7 +843,6 @@ switch ($op) {
             case 'DESC':
                 $ordertxtdesc = "selected='selected'";
                 break;
-
             default:
                 $ordertxtasc = "selected='selected'";
                 break;
@@ -871,35 +860,27 @@ switch ($op) {
             case 'all':
                 $limittxtall = "selected='selected'";
                 break;
-
             case '5':
                 $limittxt5 = "selected='selected'";
                 break;
-
             case '10':
                 $limittxt10 = "selected='selected'";
                 break;
-
             default:
                 $limittxt15 = "selected='selected'";
                 break;
-
             case '20':
                 $limittxt20 = "selected='selected'";
                 break;
-
             case '25':
                 $limittxt25 = "selected='selected'";
                 break;
-
             case '30':
                 $limittxt30 = "selected='selected'";
                 break;
-
             case '35':
                 $limittxt35 = "selected='selected'";
                 break;
-
             case '40':
                 $limittxt40 = "selected='selected'";
                 break;
@@ -921,8 +902,8 @@ switch ($op) {
         }
         $criteria = new \CriteriaCompo();
         $criteria->add($criteria_id);
-        smartmedia_collapsableBar('toptable', 'toptableicon');
-        echo "<img id='toptableicon' src=" . XOOPS_URL . '/modules/' . $xoopsModule->dirname() . "/assets/images/icon/close12.gif alt='' /></a>&nbsp;" . _AM_SMARTMEDIA_CLIPS_TITLE . '</h3>';
+        Utility::collapsableBar('toptable', 'toptableicon');
+        echo "<img id='toptableicon' src=" . XOOPS_URL . '/modules/' . $xoopsModule->dirname() . "/assets/images/icon/close12.gif alt=''></a>&nbsp;" . _AM_SMARTMEDIA_CLIPS_TITLE . '</h3>';
         echo "<div id='toptable'>";
         echo '<span style="color: #567; margin: 3px 0 12px 0; font-size: small; display: block; ">' . _AM_SMARTMEDIA_CLIPS_ALL_DSC . '</span>';
 
@@ -931,7 +912,7 @@ switch ($op) {
         //        echo "</div></form>";
 
         /* -- Code to show selected terms -- */
-        echo "<form name='pick' id='pick' action='" . $_SERVER['PHP_SELF'] . "' method='POST' style='margin: 0;'>";
+        echo "<form name='pick' id='pick' action='" . $_SERVER['SCRIPT_NAME'] . "' method='POST' style='margin: 0;'>";
 
         echo "
         <table width='100%' cellspacing='1' cellpadding='2' border='0' style='border-left: 1px solid silver; border-top: 1px solid silver; border-right: 1px solid silver;'>
@@ -998,7 +979,7 @@ switch ($op) {
         } else {
             $thelimit = $limitsel;
         }
-        $clipsItems =& $smartmediaClipHandler->getClipsFromAdmin($startsel, $thelimit, $sortsel, $ordersel, $languagesel);
+        $clipsItems = &$smartmediaClipHandler->getClipsFromAdmin($startsel, $thelimit, $sortsel, $ordersel, $languagesel);
         if (count($clipsItems) > 0) {
             foreach ($clipsItems as $item) {
                 //var_dump($folderObj);
@@ -1017,7 +998,6 @@ switch ($op) {
         if (0 != $thelimit) {
             $pagenav = new \XoopsPageNav($smartmediaClipHandler->getClipsCountFromAdmin($languagesel), $thelimit, $startsel, 'startsel', "languagesel=$languagesel&sortsel=$sortsel&ordersel=$ordersel&limitsel=$limitsel");
             echo '<div style="text-align:right;">' . $pagenav->renderNav() . '</div>';
-        } else {
         }
 
         echo '</div>';

@@ -11,9 +11,9 @@
 
 /**
  * @copyright    XOOPS Project https://xoops.org/
- * @license      GNU GPL 2 or later (http://www.gnu.org/licenses/gpl-2.0.html)
+ * @license      GNU GPL 2 or later (https://www.gnu.org/licenses/gpl-2.0.html)
  * @package
- * @author     XOOPS Development Team
+ * @author       XOOPS Development Team
  */
 
 /**
@@ -22,6 +22,8 @@
  * Licence: GNU
  */
 
+use XoopsModules\Smartmedia;
+
 require_once __DIR__ . '/header.php';
 
 global $smartmedia_itemHandler;
@@ -29,7 +31,7 @@ global $smartmedia_itemHandler;
 $itemid = \Xmf\Request::getInt('itemid', 0, 'GET');
 
 if (0 == $itemid) {
-    redirect_header('javascript:history.go(-1)', 1, _MD_SMARTMEDIA_NOITEMSELECTED);
+    redirect_header('<script>javascript:history.go(-1)</script>', 1, _MD_SMARTMEDIA_NOITEMSELECTED);
     exit();
 }
 
@@ -38,16 +40,16 @@ $itemObj = new ssItem($itemid);
 
 // If the selected ITEM was not found, exit
 if ($itemObj->notLoaded()) {
-    redirect_header('javascript:history.go(-1)', 1, _MD_SMARTMEDIA_NOITEMSELECTED);
+    redirect_header('<script>javascript:history.go(-1)</script>', 1, _MD_SMARTMEDIA_NOITEMSELECTED);
     exit();
 }
 
 // Creating the category object that holds the selected ITEM
-$categoryObj =& $itemObj->category();
+$categoryObj = &$itemObj->category();
 
 // Check user permissions to access that category of the selected ITEM
 if (!smartmedia_itemAccessGranted($itemObj->getVar('itemid'), $itemObj->getVar('categoryid'))) {
-    redirect_header('javascript:history.go(-1)', 1, _NOPERM);
+    redirect_header('<script>javascript:history.go(-1)</script>', 1, _NOPERM);
     exit;
 }
 
@@ -55,18 +57,18 @@ global $xoopsConfig, $xoopsDB, $xoopsModule, $myts;
 
 $who_where = sprintf(_MD_SMARTMEDIA_WHO_WHEN, $itemObj->posterName(), $itemObj->datesub());
 
-echo "<!DOCTYPE HTML PUBLIC '-//W3C//DTD HTML 4.01 Transitional//EN'>\n";
+echo "<!DOCTYPE HTML>\n";
 echo "<html>\n<head>\n";
 echo '<title>' . _MD_SMARTMEDIA_ITEMCOMEFROM . ' ' . $xoopsConfig['sitename'] . "</title>\n";
-echo "<meta http-equiv='Content-Type' content='text/html; charset=" . _CHARSET . "' />\n";
-echo "<meta name='AUTHOR' content='" . $xoopsConfig['sitename'] . "' />\n";
-echo "<meta name='COPYRIGHT' content='Copyright (c) 2001 by " . $xoopsConfig['sitename'] . "' />\n";
-echo "<meta name='DESCRIPTION' content='" . $xoopsConfig['slogan'] . "' />\n";
-echo "<meta name='GENERATOR' content='" . XOOPS_VERSION . "' />\n\n\n";
+echo "<meta http-equiv='Content-Type' content='text/html; charset=" . _CHARSET . "' >\n";
+echo "<meta name='AUTHOR' content='" . $xoopsConfig['sitename'] . "' >\n";
+echo "<meta name='COPYRIGHT' content='Copyright (c) 2001 by " . $xoopsConfig['sitename'] . "' >\n";
+echo "<meta name='DESCRIPTION' content='" . $xoopsConfig['slogan'] . "' >\n";
+echo "<meta name='GENERATOR' content='" . XOOPS_VERSION . "' >\n\n\n";
 
 echo "<body bgcolor='#ffffff' text='#000000' onload='window.print()'>
      <div style='width: 650px; border: 1px solid #000; padding: 20px;'>
-     <div style='text-align: center; display: block; margin: 0 0 6px 0;'><img src='" . XOOPS_URL . "/modules/smartmedia/assets/images/smartmedia_logo.gif' border='0' alt='' /><h2 style='margin: 0;'>" . $itemObj->title() . "</h2></div>
+     <div style='text-align: center; display: block; margin: 0 0 6px 0;'><img src='" . XOOPS_URL . "/modules/smartmedia/assets/images/smartmedia_logo.gif' border='0' alt='' ><h2 style='margin: 0;'>" . $itemObj->title() . "</h2></div>
      <div align='center'>" . $who_where . "</div>
                 <div style='text-align: center; display: block; padding-bottom: 12px; margin: 0 0 6px 0; border-bottom: 2px solid #ccc;'></div>
                 <div></div>

@@ -15,7 +15,6 @@
  * Licence: GNU
  */
 
-
 use XoopsModules\Smartmedia;
 
 require_once __DIR__ . '/admin_header.php';

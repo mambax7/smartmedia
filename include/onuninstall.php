@@ -9,6 +9,7 @@
  but WITHOUT ANY WARRANTY; without even the implied warranty of
  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 */
+
 /**
  * uninstall.php - cleanup on module uninstall
  *
@@ -18,15 +19,18 @@
  * @link            https://xoops.org XOOPS
  */
 
-use XoopsModules\Smartmedia;
+use XoopsModules\Smartmedia\{
+    Helper,
+    Utility
+};
+/** @var Helper $helper */
 
 /**
  * Prepares system prior to attempting to uninstall module
- * @param XoopsModule $module {@link XoopsModule}
+ * @param \XoopsModule $module {@link XoopsModule}
  *
  * @return bool true if ready to uninstall, false if not
  */
-
 function xoops_module_pre_uninstall_smartmedia(\XoopsModule $module)
 {
     // Do some synchronization if needed
@@ -34,22 +38,20 @@ function xoops_module_pre_uninstall_smartmedia(\XoopsModule $module)
 }
 
 /**
- *
  * Performs tasks required during uninstallation of the module
- * @param XoopsModule $module {@link XoopsModule}
+ * @param \XoopsModule $module {@link XoopsModule}
  *
  * @return bool true if uninstallation successful, false if not
  */
 function xoops_module_uninstall_smartmedia(\XoopsModule $module)
 {
-    include __DIR__ . '/common.php';
-    $moduleDirName = basename(dirname(__DIR__));
-    $moduleDirNameUpper = strtoupper($moduleDirName);
+    require_once __DIR__ . '/common.php';
+    $moduleDirName      = basename(dirname(__DIR__));
+    $moduleDirNameUpper = mb_strtoupper($moduleDirName);
 
-    /** @var Smartmedia\Helper $helper */
-    $helper = Smartmedia\Helper::getInstance();
-    $utility      = new Smartmedia\Utility();
-//    $configurator = new Smartmedia\Common\Configurator();
+    $helper  = Helper::getInstance();
+    $utility = new Utility();
+    //    $configurator = new Smartmedia\Common\Configurator();
     // Load language files
     $helper->loadLanguage('admin');
     $helper->loadLanguage('common');

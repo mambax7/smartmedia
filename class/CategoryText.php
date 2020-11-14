@@ -1,4 +1,6 @@
-<?php namespace XoopsModules\Smartmedia;
+<?php
+
+namespace XoopsModules\Smartmedia;
 
 /**
  * Contains the classes for managing categories translations
@@ -29,21 +31,21 @@ class CategoryText extends \XoopsObject
      */
     public function __construct($id = null)
     {
-        $smartConfig =& smartmedia_getModuleConfig();
+        $smartConfig = Utility::getModuleConfig();
 
-        $this->initVar('categoryid', XOBJ_DTYPE_INT, 0, true);
-        $this->initVar('languageid', XOBJ_DTYPE_TXTBOX, $smartConfig['default_language'], true);
-        $this->initVar('title', XOBJ_DTYPE_TXTBOX, null, false, 100);
-        $this->initVar('description', XOBJ_DTYPE_TXTAREA, null, false);
-        $this->initVar('meta_description', XOBJ_DTYPE_TXTAREA, null, false);
+        $this->initVar('categoryid', \XOBJ_DTYPE_INT, 0, true);
+        $this->initVar('languageid', \XOBJ_DTYPE_TXTBOX, $smartConfig['default_language'], true);
+        $this->initVar('title', \XOBJ_DTYPE_TXTBOX, null, false, 100);
+        $this->initVar('description', \XOBJ_DTYPE_TXTAREA, null, false);
+        $this->initVar('meta_description', \XOBJ_DTYPE_TXTAREA, null, false);
 
-        $this->initVar('dohtml', XOBJ_DTYPE_INT, 1, false);
-        $this->initVar('doxcode', XOBJ_DTYPE_INT, 1, false);
-        $this->initVar('dosmiley', XOBJ_DTYPE_INT, 1, false);
-        $this->initVar('doimage', XOBJ_DTYPE_INT, 0, false);
+        $this->initVar('dohtml', \XOBJ_DTYPE_INT, 1, false);
+        $this->initVar('doxcode', \XOBJ_DTYPE_INT, 1, false);
+        $this->initVar('dosmiley', \XOBJ_DTYPE_INT, 1, false);
+        $this->initVar('doimage', \XOBJ_DTYPE_INT, 0, false);
 
         if (isset($id)) {
-            if (is_array($id)) {
+            if (\is_array($id)) {
                 $this->assignVars($id);
             }
         } else {
@@ -99,7 +101,7 @@ class CategoryText extends \XoopsObject
     /**
      * Stores the category's translation in the database
      *
-     * @param  bool $force
+     * @param bool $force
      * @return bool true if successfully stored false if an error occured
      * @see Smartmedia\CategoryTextHandler::insert()
      */

@@ -6,12 +6,12 @@
  * Licence: GNU
  */
 
-
 use XoopsModules\Smartmedia;
+use XoopsModules\Smartmedia\Metagen;
 
 require_once __DIR__ . '/header.php';
 
-global $smartmediaCategoryHandler, $smartmediaFolderHandler, $smartmediaClipHandler;
+global $smartmediaCategoryHandler, $folderHandler, $smartmediaClipHandler;
 
 $clipid     = \Xmf\Request::getInt('clipid', 0, 'GET');
 $folderid   = \Xmf\Request::getInt('folderid', 0, 'GET');
@@ -19,12 +19,12 @@ $categoryid = \Xmf\Request::getInt('categoryid', 0, 'GET');
 
 // Creating the clip object for the selected clip
 //patche pour navpage defectueux
-$clipsObj = $smartmediaClipHandler->getclips(0, 0, $folderid, 'weight', 'ASC', false);
+$clipsObj = $smartmediaClipHandler->getClips(0, 0, $folderid, 'weight', 'ASC', false);
 //$clipsObj =& $smartmediaClipHandler->getclips($helper->getConfig('clips_per_folder'), $start, $folderid, 'weight', 'ASC', false);
 $theClipObj = $clipsObj[$clipid];
 
 $array_keys    = array_keys($clipsObj);
-$current_clip  = array_search($clipid, $array_keys);
+$current_clip  = array_search($clipid, $array_keys, true);
 $clips_count   = count($array_keys);
 $previous_clip = $current_clip - 1;
 $next_clip     = $current_clip + 1;
@@ -43,7 +43,7 @@ if ($next_clip < $clips_count) {
 
 // If the selected clip was not found, exit
 if (!$theClipObj) {
-    redirect_header('javascript:history.go(-1)', 1, _MD_SMARTMEDIA_CLIP_NOT_SELECTED);
+    redirect_header('<script>javascript:history.go(-1)</script>', 1, _MD_SMARTMEDIA_CLIP_NOT_SELECTED);
     exit();
 }
 
@@ -56,7 +56,7 @@ require_once __DIR__ . '/footer.php';
 $theClipObj->updateCounter();
 
 // Retreiving the parent folder object to this clip
-$folderObj = $smartmediaFolderHandler->get($folderid);
+$folderObj = $folderHandler->get($folderid);
 $folderObj->setVar('categoryid', $categoryid);
 
 // Retreiving the parent category object to this clip
@@ -72,7 +72,7 @@ $xoopsTpl->assign('categoryPath', $categoryObj->getItemLink() . ' &gt; ' . $fold
 $start = \Xmf\Request::getInt('start', 0, 'GET');
 
 //patche pour navpage defectueux
-$clipsObj =& $smartmediaClipHandler->getclips(0, 0, $clipid, 'weight', 'ASC', false);
+$clipsObj = &$smartmediaClipHandler->getClips(0, 0, $clipid, 'weight', 'ASC', false);
 //$clipsObj =& $smartmediaClipHandler->getclips($helper->getConfig('clips_per_folder'), $start, $clipid, 'weight', 'ASC', false);
 
 $clips = [];
@@ -95,7 +95,7 @@ require_once SMARTMEDIA_ROOT_PATH . 'include/browser_detect.php';
 $browser = browser_detection('browser');
 
 $xoopsTpl->assign('tabs', $tabsObj->getTabs($browser));
-$xoopsTpl->assign('module_home', smartmedia_module_home());
+$xoopsTpl->assign('module_home', Utility::module_home());
 $xoopsTpl->assign('size', 'width: 256px; height: 248px;');
 
 $xoopsTpl->assign('previous_clip_url', $previous_clip_url);
@@ -120,6 +120,6 @@ $xoopsTpl->assign('clip', $clip);
 */
 
 // MetaTag Generator
-smartmedia_createMetaTags($theClipObj->title('clean'), $folderObj->title('clean') . ' - ' . $categoryObj->title('clean'), $theClipObj->description());
+Metagen::createMetaTags($theClipObj->title('clean'), $folderObj->title('clean') . ' - ' . $categoryObj->title('clean'), $theClipObj->description());
 
 require_once XOOPS_ROOT_PATH . '/footer.php';

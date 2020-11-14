@@ -16,7 +16,7 @@ require_once __DIR__ . '/functions.php';
 
 $categoryid = \Xmf\Request::getInt('categoryid', 0, 'GET');
 $mytree     = new \XoopsTree($xoopsDB->prefix('smartmedia_categories'), 'categoryid', 'parentid');
-$sform      = new \XoopsThemeForm(_MD_SMARTMEDIA_SUB_SMNAME, 'storyform', xoops_getenv('PHP_SELF'));
+$sform      = new \XoopsThemeForm(_MD_SMARTMEDIA_SUB_SMNAME, 'storyform', xoops_getenv('SCRIPT_NAME'));
 
 // Category
 ob_start();
@@ -47,17 +47,17 @@ if (is_object($xoopsUser)) {
     $sform->addElement($notify_checkbox);
 }
 
-$button_tray = new \XoopsFormElementTray('', '');
+$buttonTray = new \XoopsFormElementTray('', '');
 
 $hidden = new \XoopsFormHidden('op', 'post');
-$button_tray->addElement($hidden);
-$button_tray->addElement(new XoopsFormButton('', 'post', _MD_SMARTMEDIA_CREATE, 'submit'));
+$buttonTray->addElement($hidden);
+$buttonTray->addElement(new XoopsFormButton('', 'post', _MD_SMARTMEDIA_CREATE, 'submit'));
 
 //$hidden2 = new \XoopsFormHidden('op', 'preview');
-//$button_tray->addElement($hidden2);
-//$button_tray->addElement(new XoopsFormButton('', 'preview', _MD_SMARTMEDIA_PREVIEW, 'submit'));
+//$buttonTray->addElement($hidden2);
+//$buttonTray->addElement(new XoopsFormButton('', 'preview', _MD_SMARTMEDIA_PREVIEW, 'submit'));
 
-$sform->addElement($button_tray);
+$sform->addElement($buttonTray);
 $sform->display();
 
 unset($hidden);

@@ -12,7 +12,12 @@
  * @return array
  */
 
-use XoopsModules\Smartmedia;
+use XoopsModules\Smartmedia\{
+    Helper,
+    Utility
+};
+/** @var Helper $helper */
+/** @var Utility $utility */
 
 function smartmedia_search($queryarray, $andor, $limit, $offset, $userid)
 {
@@ -21,7 +26,7 @@ function smartmedia_search($queryarray, $andor, $limit, $offset, $userid)
     $ret = [];
 
     // Searching the categories
-    $smartmediaCategoryHandler = Smartmedia\Helper::getInstance()->getHandler('Category');
+    $smartmediaCategoryHandler = Helper::getInstance()->getHandler('Category');
     $categories_result         = $smartmediaCategoryHandler->getObjectsForSearch($queryarray, $andor, $limit, $offset, $userid);
 
     foreach ($categories_result as $result) {
@@ -35,8 +40,8 @@ function smartmedia_search($queryarray, $andor, $limit, $offset, $userid)
     }
 
     // Searching the folders
-    $smartmediaFolderHandler = Smartmedia\Helper::getInstance()->getHandler('Folder');
-    $folders_result          = $smartmediaFolderHandler->getObjectsForSearch($queryarray, $andor, $limit, $offset, $userid);
+    $folderHandler  = Helper::getInstance()->getHandler('Folder');
+    $folders_result = $folderHandler->getObjectsForSearch($queryarray, $andor, $limit, $offset, $userid);
 
     foreach ($folders_result as $result) {
         $item['image'] = 'images/icon/folder.gif';
@@ -49,7 +54,7 @@ function smartmedia_search($queryarray, $andor, $limit, $offset, $userid)
     }
 
     // Searching the clipd
-    $smartmediaClipHandler = Smartmedia\Helper::getInstance()->getHandler('Clip');
+    $smartmediaClipHandler = Helper::getInstance()->getHandler('Clip');
     $clips_result          = $smartmediaClipHandler->getObjectsForSearch($queryarray, $andor, $limit, $offset, $userid);
 
     foreach ($clips_result as $result) {

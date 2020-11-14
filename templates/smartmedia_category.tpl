@@ -9,7 +9,7 @@
         <tr>
           <td class="category_description">
           <{if $category.image_path}>
-            <img class="main_image" src="<{$category.image_path}>" align="left" alt="<{$category.clean_title}>" width="<{$category.main_image_width}>"/>
+            <img class="main_image" src="<{$category.image_path}>" align="left" alt="<{$category.clean_title}>" width="<{$category.main_image_width}>">
           <{/if}>
           <{$category.description}>
             <{if $category.adminLinks}>
@@ -31,7 +31,7 @@
         <tr>
           <td class="folder_summary">
             <{if $folder.image_hr_path}>
-                <a href="<{$folder.itemurl}>"><img class="list_image" src="<{$folder.image_hr_path}>" align="left" alt="<{$folder.title}>" width="<{$folder.list_image_width}>"/></a>
+                <a href="<{$folder.itemurl}>"><img class="list_image" src="<{$folder.image_hr_path}>" align="left" alt="<{$folder.title}>" width="<{$folder.list_image_width}>"></a>
             <{/if}>
             <{$folder.summary}>
             <{if $folder.adminLinks}>
@@ -41,7 +41,7 @@
        </tr>
       </table>
     </td>
-    <{if $folder.id is div by 2}>
+    <{if $folder.id % 2 == 0}>
       </tr>
       <tr>
     <{/if}>

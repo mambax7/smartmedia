@@ -1,4 +1,6 @@
-<?php namespace XoopsModules\Smartmedia;
+<?php
+
+namespace XoopsModules\Smartmedia;
 
 /**
  * Contains the classe for managing tabs
@@ -12,8 +14,6 @@
  */
 
 use XoopsModules\Smartmedia;
-
-defined('XOOPS_ROOT_PATH') || die('XOOPS root path not defined');
 
 /**
  * SmartMedia Tabs class
@@ -42,7 +42,7 @@ class Tabs
     public function __construct($clipObj)
     {
         // Make sure object is of correct type
-        if ('smartmediaclip' !== strtolower(get_class($clipObj))) {
+        if ('smartmediaclip' !== mb_strtolower(\get_class($clipObj))) {
             return false;
         }
         $tab_i            = 1;
@@ -51,7 +51,7 @@ class Tabs
         $highlight = true;
         if ($highlight && isset($_GET['keywords'])) {
             $myts     = \MyTextSanitizer::getInstance();
-            $keywords = $myts->htmlSpecialChars(trim(urldecode($_GET['keywords'])));
+            $keywords = $myts->htmlSpecialChars(\trim(\urldecode($_GET['keywords'])));
             $h        = new KeyHighlighter($keywords, true, 'smartmedia_highlighter');
         }
 
@@ -90,7 +90,7 @@ class Tabs
     /**
      * Building the tabs
      *
-     * @param  string $browser browser of the user
+     * @param string $browser browser of the user
      * @return array
      */
     public function getTabs($browser = '')
@@ -99,7 +99,7 @@ class Tabs
             $ie         = false;
             $javascript = 'href="javascript:;"';
             $curseur    = '';
-        //} elseif ($browser == 'ie') {
+            //} elseif ($browser == 'ie') {
         } else {
             $ie         = true;
             $javascript = '';
@@ -114,8 +114,8 @@ class Tabs
             $tab['id']          = $tab_i;
             $tab['first_layer'] = 'layer' . $tab_i . '1';
             $tab['caption']     = $tab_text['caption'];
-            $subtabs_text       = explode('[pagebreak]', $tab_text['text']);
-            $tab['count']       = count($subtabs_text);
+            $subtabs_text       = \explode('[pagebreak]', $tab_text['text']);
+            $tab['count']       = \count($subtabs_text);
             $tab['curseur']     = $curseur;
             $tab['javascript']  = $javascript;
 

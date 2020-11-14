@@ -20,7 +20,7 @@
  Lesser General Public License for more details.
 
  Lesser GPL license text:
- http://www.gnu.org/licenses/lgpl.txt
+ https://www.gnu.org/licenses/lgpl.txt
 
  Coding conventions:
  http://cvs.sourceforge.net/viewcvs.py/phpbb/phpBB2/docs/codingstandards.htm?rev=1.3
@@ -70,7 +70,7 @@ function browser_detection($which_test)
     if (!$b_repeat) {
         //initialize all variables with default values to prevent error
         $dom_browser         = false;
-        $type                = 'bot';// default to bot since you never know with bots
+        $type                = 'bot'; // default to bot since you never know with bots
         $safe_browser        = false;
         $os                  = '';
         $os_number           = '';
@@ -84,10 +84,10 @@ function browser_detection($which_test)
         $moz_rv              = '';
         $moz_rv_full         = '';
         $moz_release         = '';
-        $b_success           = false;// boolean for if browser found in main test
+        $b_success           = false; // boolean for if browser found in main test
 
         //make navigator user agent string lower case to make sure all versions get caught
-        $browser_user_agent = strtolower($_SERVER['HTTP_USER_AGENT']);
+        $browser_user_agent = mb_strtolower($_SERVER['HTTP_USER_AGENT']);
 
         /*
          pack the browser type array, in this order
@@ -110,63 +110,63 @@ function browser_detection($which_test)
          */
         // known browsers, list will be updated routinely, check back now and then
         $a_browser_types[] = ['opera', true, 'op', 'bro'];
-        $a_browser_types[] = ['omniweb', true, 'omni', 'bro'];// mac osx browser, now uses khtml engine:
+        $a_browser_types[] = ['omniweb', true, 'omni', 'bro']; // mac osx browser, now uses khtml engine:
         $a_browser_types[] = ['msie', true, 'ie', 'bro'];
         $a_browser_types[] = ['konqueror', true, 'konq', 'bro'];
         $a_browser_types[] = ['safari', true, 'saf', 'bro'];
         // covers Netscape 6-7, K-Meleon, Most linux versions, uses moz array below
         $a_browser_types[] = ['gecko', true, 'moz', 'bro'];
-        $a_browser_types[] = ['netpositive', false, 'netp', 'bbro'];// beos browser
+        $a_browser_types[] = ['netpositive', false, 'netp', 'bbro']; // beos browser
         $a_browser_types[] = ['lynx', false, 'lynx', 'bbro']; // command line browser
         $a_browser_types[] = ['links ', false, 'links', 'bbro']; // another command line browser
         $a_browser_types[] = ['links', false, 'links', 'bbro']; // alternate id for it
         $a_browser_types[] = ['w3m', false, 'w3m', 'bbro']; // open source browser, more features than lynx/links
-        $a_browser_types[] = ['webtv', false, 'webtv', 'bbro'];// junk ms webtv
-        $a_browser_types[] = ['amaya', false, 'amaya', 'bbro'];// w3c browser
-        $a_browser_types[] = ['dillo', false, 'dillo', 'bbro'];// linux browser, basic table support
-        $a_browser_types[] = ['ibrowse', false, 'ibrowse', 'bbro'];// amiga browser
-        $a_browser_types[] = ['icab', false, 'icab', 'bro'];// mac browser
-        $a_browser_types[] = ['crazy browser', true, 'ie', 'bro'];// uses ie rendering engine
-        $a_browser_types[] = ['sonyericssonp800', false, 'sonyericssonp800', 'bbro'];// sony ericsson handheld
+        $a_browser_types[] = ['webtv', false, 'webtv', 'bbro']; // junk ms webtv
+        $a_browser_types[] = ['amaya', false, 'amaya', 'bbro']; // w3c browser
+        $a_browser_types[] = ['dillo', false, 'dillo', 'bbro']; // linux browser, basic table support
+        $a_browser_types[] = ['ibrowse', false, 'ibrowse', 'bbro']; // amiga browser
+        $a_browser_types[] = ['icab', false, 'icab', 'bro']; // mac browser
+        $a_browser_types[] = ['crazy browser', true, 'ie', 'bro']; // uses ie rendering engine
+        $a_browser_types[] = ['sonyericssonp800', false, 'sonyericssonp800', 'bbro']; // sony ericsson handheld
 
         // search engine spider bots:
-        $a_browser_types[] = ['googlebot', false, 'google', 'bot'];// google
-        $a_browser_types[] = ['mediapartners-google', false, 'adsense', 'bot'];// google adsense
-        $a_browser_types[] = ['yahoo-verticalcrawler', false, 'yahoo', 'bot'];// old yahoo bot
+        $a_browser_types[] = ['googlebot', false, 'google', 'bot']; // google
+        $a_browser_types[] = ['mediapartners-google', false, 'adsense', 'bot']; // google adsense
+        $a_browser_types[] = ['yahoo-verticalcrawler', false, 'yahoo', 'bot']; // old yahoo bot
         $a_browser_types[] = ['yahoo! slurp', false, 'yahoo', 'bot']; // new yahoo bot
         $a_browser_types[] = ['yahoo-mm', false, 'yahoomm', 'bot']; // gets Yahoo-MMCrawler and Yahoo-MMAudVid bots
         $a_browser_types[] = ['inktomi', false, 'inktomi', 'bot']; // inktomi bot
         $a_browser_types[] = ['slurp', false, 'inktomi', 'bot']; // inktomi bot
-        $a_browser_types[] = ['fast-webcrawler', false, 'fast', 'bot'];// Fast AllTheWeb
-        $a_browser_types[] = ['msnbot', false, 'msn', 'bot'];// msn search
+        $a_browser_types[] = ['fast-webcrawler', false, 'fast', 'bot']; // Fast AllTheWeb
+        $a_browser_types[] = ['msnbot', false, 'msn', 'bot']; // msn search
         $a_browser_types[] = ['ask jeeves', false, 'ask', 'bot']; //jeeves/teoma
-        $a_browser_types[] = ['teoma', false, 'ask', 'bot'];//jeeves teoma
-        $a_browser_types[] = ['scooter', false, 'scooter', 'bot'];// altavista
-        $a_browser_types[] = ['openbot', false, 'openbot', 'bot'];// openbot, from taiwan
-        $a_browser_types[] = ['ia_archiver', false, 'ia_archiver', 'bot'];// ia archiver
-        $a_browser_types[] = ['zyborg', false, 'looksmart', 'bot'];// looksmart
-        $a_browser_types[] = ['almaden', false, 'ibm', 'bot'];// ibm almaden web crawler
-        $a_browser_types[] = ['baiduspider', false, 'baidu', 'bot'];// Baiduspider asian search spider
-        $a_browser_types[] = ['psbot', false, 'psbot', 'bot'];// psbot image crawler
-        $a_browser_types[] = ['gigabot', false, 'gigabot', 'bot'];// gigabot crawler
-        $a_browser_types[] = ['naverbot', false, 'naverbot', 'bot'];// naverbot crawler, bad bot, block
-        $a_browser_types[] = ['surveybot', false, 'surveybot', 'bot'];//
-        $a_browser_types[] = ['boitho.com-dc', false, 'boitho', 'bot'];//norwegian search engine
-        $a_browser_types[] = ['objectssearch', false, 'objectsearch', 'bot'];// open source search engine
-        $a_browser_types[] = ['answerbus', false, 'answerbus', 'bot'];// http://www.answerbus.com/, web questions
-        $a_browser_types[] = ['sohu-search', false, 'sohu', 'bot'];// chinese media company, search component
+        $a_browser_types[] = ['teoma', false, 'ask', 'bot']; //jeeves teoma
+        $a_browser_types[] = ['scooter', false, 'scooter', 'bot']; // altavista
+        $a_browser_types[] = ['openbot', false, 'openbot', 'bot']; // openbot, from taiwan
+        $a_browser_types[] = ['ia_archiver', false, 'ia_archiver', 'bot']; // ia archiver
+        $a_browser_types[] = ['zyborg', false, 'looksmart', 'bot']; // looksmart
+        $a_browser_types[] = ['almaden', false, 'ibm', 'bot']; // ibm almaden web crawler
+        $a_browser_types[] = ['baiduspider', false, 'baidu', 'bot']; // Baiduspider asian search spider
+        $a_browser_types[] = ['psbot', false, 'psbot', 'bot']; // psbot image crawler
+        $a_browser_types[] = ['gigabot', false, 'gigabot', 'bot']; // gigabot crawler
+        $a_browser_types[] = ['naverbot', false, 'naverbot', 'bot']; // naverbot crawler, bad bot, block
+        $a_browser_types[] = ['surveybot', false, 'surveybot', 'bot'];
+        $a_browser_types[] = ['boitho.com-dc', false, 'boitho', 'bot']; //norwegian search engine
+        $a_browser_types[] = ['objectssearch', false, 'objectsearch', 'bot']; // open source search engine
+        $a_browser_types[] = ['answerbus', false, 'answerbus', 'bot']; // http://www.answerbus.com/, web questions
+        $a_browser_types[] = ['sohu-search', false, 'sohu', 'bot']; // chinese media company, search component
         $a_browser_types[] = ['iltrovatore-setaccio', false, 'il-set', 'bot'];
 
         // various http utility libaries
         $a_browser_types[] = ['w3c_validator', false, 'w3c', 'lib']; // uses libperl, make first
-        $a_browser_types[] = ['wdg_validator', false, 'wdg', 'lib']; //
+        $a_browser_types[] = ['wdg_validator', false, 'wdg', 'lib'];
         $a_browser_types[] = ['libwww-perl', false, 'libwww-perl', 'lib'];
         $a_browser_types[] = ['jakarta commons-httpclient', false, 'jakarta', 'lib'];
         $a_browser_types[] = ['python-urllib', false, 'python-urllib', 'lib'];
 
         // download apps
         $a_browser_types[] = ['getright', false, 'getright', 'dow'];
-        $a_browser_types[] = ['wget', false, 'wget', 'dow'];// open source downloader, obeys robots.txt
+        $a_browser_types[] = ['wget', false, 'wget', 'dow']; // open source downloader, obeys robots.txt
 
         // netscape 4 and earlier tests, put last so spiders don't get caught
         $a_browser_types[] = ['mozilla/4.', false, 'ns', 'bbro'];
@@ -191,27 +191,27 @@ function browser_detection($which_test)
             'netscape6',
             'netscape',
             'multizilla',
-            'rv'
+            'rv',
         ];
 
         /*
          run through the browser_types array, break if you hit a match, if no match, assume old browser
          or non dom browser, assigns false value to $b_success.
          */
-        for ($i = 0; $i < count($a_browser_types); ++$i) {
+        for ($i = 0, $iMax = count($a_browser_types); $i < $iMax; ++$i) {
             //unpacks browser array, assigns to variables
-            $s_browser = $a_browser_types[$i][0];// text string to id browser from array
+            $s_browser = $a_browser_types[$i][0]; // text string to id browser from array
 
-            if (false !== stripos($browser_user_agent, $s_browser)) {
+            if (false !== mb_stripos($browser_user_agent, $s_browser)) {
                 // it defaults to true, will become false below if needed
                 // this keeps it easier to keep track of what is safe, only
                 //explicit false assignment will make it false.
                 $safe_browser = true;
 
                 // assign values based on match of user agent string
-                $dom_browser  = $a_browser_types[$i][1];// hardcoded dom support from array
-                $browser_name = $a_browser_types[$i][2];// working name for browser
-                $type         = $a_browser_types[$i][3];// sets whether bot or browser
+                $dom_browser  = $a_browser_types[$i][1]; // hardcoded dom support from array
+                $browser_name = $a_browser_types[$i][2]; // working name for browser
+                $type         = $a_browser_types[$i][3]; // sets whether bot or browser
 
                 switch ($browser_name) {
                     // this is modified quite a bit, now will return proper netscape version number
@@ -232,11 +232,11 @@ function browser_detection($which_test)
                         // this will return alpha and beta version numbers, if present
                         $moz_rv_full = browser_version($browser_user_agent, 'rv');
                         // this slices them back off for math comparisons
-                        $moz_rv = substr($moz_rv_full, 0, 3);
+                        $moz_rv = mb_substr($moz_rv_full, 0, 3);
 
                         // this is to pull out specific mozilla versions, firebird, netscape etc..
-                        for ($j = 0; $j < count($moz_types); ++$j) {
-                            if (false !== stripos($browser_user_agent, $moz_types[$j])) {
+                        for ($j = 0, $jMax = count($moz_types); $j < $jMax; ++$j) {
+                            if (false !== mb_stripos($browser_user_agent, $moz_types[$j])) {
                                 $moz_version        = $moz_types[$j];
                                 $moz_version_number = browser_version($browser_user_agent, $moz_version);
                                 break;
@@ -245,7 +245,7 @@ function browser_detection($which_test)
                         // this is necesary to protect against false id'ed moz'es and new moz'es.
                         // this corrects for galeon, or any other moz browser without an rv number
                         if (!$moz_rv) {
-                            $moz_rv      = substr($moz_version_number, 0, 3);
+                            $moz_rv      = mb_substr($moz_version_number, 0, 3);
                             $moz_rv_full = $moz_version_number;
                             /*
                              // you can use this instead if you are running php >= 4.2
@@ -274,7 +274,7 @@ function browser_detection($which_test)
                     case 'ie':
                         $version_number = browser_version($browser_user_agent, $s_browser);
                         // first test for IE 5x mac, that's the most problematic IE out there
-                        if (false !== stripos($browser_user_agent, 'mac')) {
+                        if (false !== mb_stripos($browser_user_agent, 'mac')) {
                             $ie_version = 'ieMac';
                         } // this assigns a general ie id to the $ie_version variable
                         elseif ($version_number >= 5) {
@@ -304,17 +304,15 @@ function browser_detection($which_test)
                      Uncomment this section if you want omniweb to return the safari value
                      Omniweb uses khtml/safari rendering engine, so you can treat it like
                      safari if you want.
-                     */
-                    /*
+                     */ /*
                      case 'omni':
                      $s_browser = 'safari';
                      $browser_name = 'saf';
                      $version_number = browser_version( $browser_user_agent, 'applewebkit' );
                      break;
-                     */
-                    default:
-                        $version_number = browser_version($browser_user_agent, $s_browser);
-                        break;
+                     */ default:
+                    $version_number = browser_version($browser_user_agent, $s_browser);
+                    break;
                 }
                 // the browser was id'ed
                 $b_success = true;
@@ -334,7 +332,7 @@ function browser_detection($which_test)
              the browser_name is '', you can always test for that
              */
             // delete this part if you want an unknown browser returned
-            $s_browser = substr($browser_user_agent, 0, strcspn($browser_user_agent, '();'));
+            $s_browser = mb_substr($browser_user_agent, 0, strcspn($browser_user_agent, '();'));
             // this extracts just the browser name from the string
             preg_match('/[^0-9][a-z]*-*\ *[a-z]*\ *[a-z]*/', $s_browser, $r);
             $s_browser      = $r[0];
@@ -345,8 +343,8 @@ function browser_detection($which_test)
         }
         // get os data, mac os x test requires browser/version information, this is a change from older scripts
         $a_os_data = which_os($browser_user_agent, $browser_name, $version_number);
-        $os        = $a_os_data[0];// os name, abbreviated
-        $os_number = $a_os_data[1];// os number or version if available
+        $os        = $a_os_data[0]; // os name, abbreviated
+        $os_number = $a_os_data[1]; // os number or version if available
 
         // this ends the run through once if clause, set the boolean
         //to true so the function won't retest everything
@@ -411,7 +409,7 @@ function browser_detection($which_test)
                 $os_number,
                 $s_browser,
                 $type,
-                $math_version_number
+                $math_version_number,
             ];
 
             return $full_array;
@@ -448,7 +446,7 @@ function which_os($browser_string, $browser_name, $version_number)
      use this order since some navigator user agents will put 'macintosh' in the navigator user agent string
      which would make the nt test register true
      */
-    $a_mac = ['mac68k', 'macppc'];// this is not used currently
+    $a_mac = ['mac68k', 'macppc']; // this is not used currently
     // same logic, check in order to catch the os's in order, last is always default item
     $a_unix = [
         'unixware',
@@ -481,69 +479,69 @@ function which_os($browser_string, $browser_name, $version_number)
         'reliant',
         'dec',
         'sinix',
-        'unix'
+        'unix',
     ];
     // only sometimes will you get a linux distro to id itself...
     $a_linux         = ['debian', 'suse', 'redhat', 'slackware', 'mandrake', 'gentoo', 'lin'];
-    $a_linux_process = ['i386', 'i586', 'i686'];// not use currently
+    $a_linux_process = ['i386', 'i586', 'i686']; // not use currently
     // note, order of os very important in os array, you will get failed ids if changed
     $a_os = ['beos', 'os2', 'amiga', 'webtv', 'mac', 'nt', 'win', $a_unix, $a_linux];
 
     //os tester
-    for ($i = 0; $i < count($a_os); ++$i) {
+    for ($i = 0, $iMax = count($a_os); $i < $iMax; ++$i) {
         //unpacks os array, assigns to variable
         $s_os = $a_os[$i];
 
         //assign os to global os variable, os flag true on success
-        if (!is_array($s_os) && false !== stripos($browser_string, $s_os)) {
+        if (!is_array($s_os) && false !== mb_stripos($browser_string, $s_os)) {
             $os = $s_os;
 
             switch ($os) {
                 case 'win':
-                    if (false !== strpos($browser_string, '95')) {
+                    if (false !== mb_strpos($browser_string, '95')) {
                         $os_version = '95';
-                    } elseif (false !== strpos($browser_string, '9x 4.9') || false !== strpos($browser_string, 'me')) {
+                    } elseif (false !== mb_strpos($browser_string, '9x 4.9') || false !== mb_strpos($browser_string, 'me')) {
                         $os_version = 'me';
-                    } elseif (false !== strpos($browser_string, '98')) {
+                    } elseif (false !== mb_strpos($browser_string, '98')) {
                         $os_version = '98';
-                    } elseif (false !== strpos($browser_string, '2000')) {
+                    } elseif (false !== mb_strpos($browser_string, '2000')) {
                         // windows 2000, for opera ID
                         $os_version = 5.0;
                         $os         = 'nt';
-                    } elseif (false !== strpos($browser_string, 'xp')) {
+                    } elseif (false !== mb_strpos($browser_string, 'xp')) {
                         // windows 2000, for opera ID
                         $os_version = 5.1;
                         $os         = 'nt';
-                    } elseif (false !== strpos($browser_string, '2003')) {
+                    } elseif (false !== mb_strpos($browser_string, '2003')) {
                         // windows server 2003, for opera ID
                         $os_version = 5.2;
                         $os         = 'nt';
-                    } elseif (false !== strpos($browser_string, 'ce')) {
+                    } elseif (false !== mb_strpos($browser_string, 'ce')) {
                         // windows CE
                         $os_version = 'ce';
                     }
                     break;
                 case 'nt':
-                    if (false !== strpos($browser_string, 'nt 5.2')) {
+                    if (false !== mb_strpos($browser_string, 'nt 5.2')) {
                         // windows server 2003
                         $os_version = 5.2;
                         $os         = 'nt';
-                    } elseif (false !== strpos($browser_string, 'nt 5.1') || false !== strpos($browser_string, 'xp')) {
+                    } elseif (false !== mb_strpos($browser_string, 'nt 5.1') || false !== mb_strpos($browser_string, 'xp')) {
                         // windows xp
-                        $os_version = 5.1;//
-                    } elseif (false !== strpos($browser_string, 'nt 5') || false !== strpos($browser_string, '2000')) {
+                        $os_version = 5.1;
+                    } elseif (false !== mb_strpos($browser_string, 'nt 5') || false !== mb_strpos($browser_string, '2000')) {
                         // windows 2000
                         $os_version = 5.0;
-                    } elseif (false !== strpos($browser_string, 'nt 4')) {
+                    } elseif (false !== mb_strpos($browser_string, 'nt 4')) {
                         // nt 4
                         $os_version = 4;
-                    } elseif (false !== strpos($browser_string, 'nt 3')) {
+                    } elseif (false !== mb_strpos($browser_string, 'nt 3')) {
                         // nt 4
                         $os_version = 3;
                     }
                     break;
                 case 'mac':
-                    if (false !== strpos($browser_string, 'os x')) {
+                    if (false !== mb_strpos($browser_string, 'os x')) {
                         $os_version = 10;
                     }
                     //this is a crude test for os x, since safari, camino, ie 5.2, & moz >= rv 1.3
@@ -562,10 +560,10 @@ function which_os($browser_string, $browser_name, $version_number)
         // check that it's an array, check it's the second to last item
         //in the main os array, the unix one that is
         elseif (is_array($s_os) && ($i == (count($a_os) - 2))) {
-            for ($j = 0; $j < count($s_os); ++$j) {
-                if (false !== stripos($browser_string, $s_os[$j])) {
+            for ($j = 0, $jMax = count($s_os); $j < $jMax; ++$j) {
+                if (false !== mb_stripos($browser_string, $s_os[$j])) {
                     $os         = 'unix'; //if the os is in the unix array, it's unix, obviously...
-                    $os_version = ('unix' !== $s_os[$j]) ? $s_os[$j] : '';// assign sub unix version from the unix array
+                    $os_version = ('unix' !== $s_os[$j]) ? $s_os[$j] : ''; // assign sub unix version from the unix array
                     break;
                 }
             }
@@ -573,8 +571,8 @@ function which_os($browser_string, $browser_name, $version_number)
         // check that it's an array, check it's the last item
         //in the main os array, the linux one that is
         elseif (is_array($s_os) && ($i == (count($a_os) - 1))) {
-            for ($j = 0; $j < count($s_os); ++$j) {
-                if (false !== stripos($browser_string, $s_os[$j])) {
+            for ($j = 0, $jMax = count($s_os); $j < $jMax; ++$j) {
+                if (false !== mb_stripos($browser_string, $s_os[$j])) {
                     $os = 'lin';
                     // assign linux distro from the linux array, there's a default
                     //search for 'lin', if it's that, set version to ''
@@ -615,9 +613,9 @@ function browser_version($browser_user_agent, $search_string)
 
     for ($i = 0; $i < 4; ++$i) {
         //start the search after the first string occurrence
-        if (false !== strpos($browser_user_agent, $search_string, $start_pos)) {
+        if (false !== mb_strpos($browser_user_agent, $search_string, $start_pos)) {
             //update start position if position found
-            $start_pos = strpos($browser_user_agent, $search_string, $start_pos) + strlen($search_string);
+            $start_pos = mb_strpos($browser_user_agent, $search_string, $start_pos) + mb_strlen($search_string);
             if ('msie' !== $search_string) {
                 break;
             }
@@ -630,21 +628,21 @@ function browser_version($browser_user_agent, $search_string)
     // also corrects for the omniweb 'v'
     if ('gecko/' !== $search_string) {
         if ('omniweb' === $search_string) {
-            $start_pos += 2;// handles the v in 'omniweb/v532.xx
+            $start_pos += 2; // handles the v in 'omniweb/v532.xx
         } else {
             ++$start_pos;
         }
     }
 
     // Initial trimming
-    $browser_number = substr($browser_user_agent, $start_pos, $substring_length);
+    $browser_number = mb_substr($browser_user_agent, $start_pos, $substring_length);
 
     // Find the space, ;, or parentheses that ends the number
-    $browser_number = substr($browser_number, 0, strcspn($browser_number, ' );'));
+    $browser_number = mb_substr($browser_number, 0, strcspn($browser_number, ' );'));
 
     //make sure the returned value is actually the id number and not a string
     // otherwise return ''
-    if (!is_numeric(substr($browser_number, 0, 1))) {
+    if (!is_numeric(mb_substr($browser_number, 0, 1))) {
         $browser_number = '';
     }
 

@@ -1,4 +1,6 @@
-<?php namespace XoopsModules\Smartmedia;
+<?php
+
+namespace XoopsModules\Smartmedia;
 
 /*
  * You may not change or alter any portion of this comment or credits
@@ -12,9 +14,9 @@
 
 /**
  * @copyright    XOOPS Project https://xoops.org/
- * @license      GNU GPL 2 or later (http://www.gnu.org/licenses/gpl-2.0.html)
+ * @license      GNU GPL 2 or later (https://www.gnu.org/licenses/gpl-2.0.html)
  * @package
- * @author     XOOPS Development Team
+ * @author       XOOPS Development Team
  */
 
 //  ------------------------------------------------------------------------ //
@@ -22,8 +24,6 @@
 // URL: http://www.myweb.ne.jp/, https://xoops.org/, http://jp.xoops.org/ //
 // Project: The XOOPS Project                                                //
 // ------------------------------------------------------------------------- //
-
-use XoopsModules\Smartmedia;
 
 require_once XOOPS_ROOT_PATH . '/class/xoopsform/formelement.php';
 require_once XOOPS_ROOT_PATH . '/class/xoopsform/formhidden.php';
@@ -126,10 +126,10 @@ class GroupPermForm extends \XoopsForm
         if (!empty($this->_itemTree[$itemId]['children'])) {
             $first_child = $this->_itemTree[$itemId]['children'];
             foreach ($first_child as $fcid) {
-                array_push($childIds, $fcid);
+                \array_push($childIds, $fcid);
                 if (!empty($this->_itemTree[$fcid]['children'])) {
                     foreach ($this->_itemTree[$fcid]['children'] as $_fcid) {
-                        array_push($childIds, $_fcid);
+                        \array_push($childIds, $_fcid);
                         $this->_loadAllChildItemIds($_fcid, $childIds);
                     }
                 }
@@ -148,13 +148,13 @@ class GroupPermForm extends \XoopsForm
         //mis en comment pcq array_keys($this->_itemTree) === null
         // load all child ids for javascript codes
         /*foreach (array_keys($this->_itemTree) as $item_id) {
-         $this->_itemTree[$item_id]['allchild'] = array();
+         $this->_itemTree[$item_id]['allchild'] = [];
          $this->_loadAllChildItemIds($item_id, $this->_itemTree[$item_id]['allchild']);
          }*/
-        $grouppermHandler  = xoops_getHandler('groupperm');
-        $memberHandler = xoops_getHandler('member');
-        $glist         = $memberHandler->getGroupList();
-        foreach (array_keys($glist) as $i) {
+        $grouppermHandler = \xoops_getHandler('groupperm');
+        $memberHandler    = \xoops_getHandler('member');
+        $glist            = $memberHandler->getGroupList();
+        foreach (\array_keys($glist) as $i) {
             // get selected item id(s) for each group
             $selected = $grouppermHandler->getItemIds($this->_permName, $i, $this->_modid);
             $ele      = new GroupFormCheckBox($glist[$i], 'perms[' . $this->_permName . ']', $i, $selected);
@@ -186,9 +186,9 @@ class GroupPermForm extends \XoopsForm
 
         $ret      = '<h4>' . $this->getTitle() . '</h4>' . $this->_permDesc . '<br>';
         $ret      .= "<form name='" . $this->getName() . "' id='" . $this->getName() . "' action='" . $this->getAction() . "' method='" . $this->getMethod() . "'" . $this->getExtra() . ">\n<table width='100%' class='outer' cellspacing='1'>\n";
-        $elements =& $this->getElements();
-        foreach (array_keys($elements) as $i) {
-            if (!is_object($elements[$i])) {
+        $elements = &$this->getElements();
+        foreach (\array_keys($elements) as $i) {
+            if (!\is_object($elements[$i])) {
                 $ret .= $elements[$i];
             } elseif (!$elements[$i]->isHidden()) {
                 $ret .= "<tr valign='top' align='left'><td class='head'>" . $elements[$i]->getCaption();

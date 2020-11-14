@@ -11,17 +11,20 @@
 
 /**
  * @copyright     {@link https://xoops.org/ XOOPS Project}
- * @license       {@link http://www.gnu.org/licenses/gpl-2.0.html GNU GPL 2 or later}
+ * @license       {@link https://www.gnu.org/licenses/gpl-2.0.html GNU GPL 2 or later}
  * @package
  * @since
- * @author       XOOPS Development Team
+ * @author        XOOPS Development Team
  */
 
-use XoopsModules\Smartmedia;
-use XoopsModules\Smartmedia\Common;
+use XoopsModules\Smartmedia\{
+    Common,
+    Helper,
+    Utility
+};
+/** @var Helper $helper */
 
 /**
- *
  * Prepares system prior to attempting to install module
  * @param \XoopsModule $module {@link XoopsModule}
  *
@@ -29,19 +32,18 @@ use XoopsModules\Smartmedia\Common;
  */
 function xoops_module_pre_install_smartmedia(\XoopsModule $module)
 {
-
-//    include  dirname(__DIR__) . '/preloads/autoloader.php';
-    include __DIR__ . '/common.php';
-    /** @var Smartmedia\Utility $utility */
-    $utility = new \XoopsModules\Smartmedia\Utility();
+    //    require_once dirname(__DIR__) . '/preloads/autoloader.php';
+    require_once __DIR__ . '/common.php';
+    /** @var Utility $utility */
+    $utility = new Utility();
     //check for minimum XOOPS version
     $xoopsSuccess = $utility::checkVerXoops($module);
-    
-    // check for minimum PHP version
-    $phpSuccess   = $utility::checkVerPhp($module);
 
-    if (false !== $xoopsSuccess && false !==  $phpSuccess) {
-        $moduleTables =& $module->getInfo('tables');
+    // check for minimum PHP version
+    $phpSuccess = $utility::checkVerPhp($module);
+
+    if (false !== $xoopsSuccess && false !== $phpSuccess) {
+        $moduleTables = &$module->getInfo('tables');
         foreach ($moduleTables as $table) {
             $GLOBALS['xoopsDB']->queryF('DROP TABLE IF EXISTS ' . $GLOBALS['xoopsDB']->prefix($table) . ';');
         }
@@ -51,7 +53,6 @@ function xoops_module_pre_install_smartmedia(\XoopsModule $module)
 }
 
 /**
- *
  * Performs tasks required during installation of the module
  * @param \XoopsModule $module {@link XoopsModule}
  *
@@ -59,14 +60,14 @@ function xoops_module_pre_install_smartmedia(\XoopsModule $module)
  */
 function xoops_module_install_smartmedia(\XoopsModule $module)
 {
-    include  dirname(__DIR__) . '/preloads/autoloader.php';
+    require_once dirname(__DIR__) . '/preloads/autoloader.php';
 
     $moduleDirName = basename(dirname(__DIR__));
 
-    /** @var Smartmedia\Helper $helper */
-    /** @var Smartmedia\Utility $utility */
-    /** @var Smartmedia\Common\Configurator $configurator */
-    $helper = Smartmedia\Helper::getInstance();
+    /** @var Helper $helper */
+    /** @var Utility $utility */
+    /** @var Common\Configurator $configurator */
+    $helper       = Helper::getInstance();
     $utility      = new Smartmedia\Utility();
     $configurator = new Common\Configurator();
     // Load language files
@@ -74,10 +75,11 @@ function xoops_module_install_smartmedia(\XoopsModule $module)
     $helper->loadLanguage('modinfo');
 
     // default Permission Settings ----------------------
-    
-    $moduleId     = $module->getVar('mid');
-    $moduleId2    = $helper->getModule()->mid();
+
+    $moduleId = $module->getVar('mid');
+
     //$moduleName = $module->getVar('name');
+    /** @var \XoopsGroupPermHandler $grouppermHandler */
     $grouppermHandler = xoops_getHandler('groupperm');
     // access rights ------------------------------------------
     $grouppermHandler->addRight($moduleDirName . '_approve', 1, XOOPS_GROUP_ADMIN, $moduleId);
@@ -96,13 +98,13 @@ function xoops_module_install_smartmedia(\XoopsModule $module)
 
     //  ---  COPY blank.png FILES ---------------
     if (count($configurator->copyBlankFiles) > 0) {
-        $file =  dirname(__DIR__) . '/assets/images/blank.png';
+        $file = dirname(__DIR__) . '/assets/images/blank.png';
         foreach (array_keys($configurator->copyBlankFiles) as $i) {
             $dest = $configurator->copyBlankFiles[$i] . '/blank.png';
             $utility::copyFile($file, $dest);
         }
     }
-    
+
     /*
         //  ---  COPY test folder files ---------------
     if (count($configurator->copyTestFolders) > 0) {
@@ -110,12 +112,11 @@ function xoops_module_install_smartmedia(\XoopsModule $module)
         foreach (array_keys($configurator->copyTestFolders) as $i) {
             $src  = $configurator->copyTestFolders[$i][0];
             $dest = $configurator->copyTestFolders[$i][1];
-            $utility::xcopy($src, $dest);
+            $utility::rcopy($src, $dest);
         }
     }
     */
 
-    
     //delete .html entries from the tpl table
     $sql = 'DELETE FROM ' . $GLOBALS['xoopsDB']->prefix('tplfile') . " WHERE `tpl_module` = '" . $module->getVar('dirname', 'n') . "' AND `tpl_file` LIKE '%.html%'";
     $GLOBALS['xoopsDB']->queryF($sql);

@@ -11,7 +11,7 @@
 
 /**
  * @copyright    XOOPS Project https://xoops.org/
- * @license      GNU GPL 2 or later (http://www.gnu.org/licenses/gpl-2.0.html)
+ * @license      GNU GPL 2 or later (https://www.gnu.org/licenses/gpl-2.0.html)
  * @package
  * @author       XOOPS Development Team
  */
@@ -21,11 +21,10 @@
  * Author: The SmartFactory <www.smartfactory.ca>
  * Licence: GNU
  */
-
 $moduleDirName      = basename(__DIR__);
-$moduleDirNameUpper = strtoupper($moduleDirName);
+$moduleDirNameUpper = mb_strtoupper($moduleDirName);
 
-defined('XOOPS_ROOT_PATH') || die('XOOPS root path not defined');
+defined('XOOPS_ROOT_PATH') || exit('XOOPS root path not defined');
 
 $modversion = [
     'version'             => 0.87,
@@ -49,8 +48,8 @@ $modversion = [
 
     'manual'              => 'Installation.txt',
     'manual_file'         => XOOPS_URL . "/modules/{$moduleDirName}/docs/link to manual file",
-    'min_php'             => '5.5',
-    'min_xoops'           => '2.5.9',
+    'min_php'             => '7.2',
+    'min_xoops'           => '2.5.10',
     'min_admin'           => '1.2',
     'min_db'              => ['mysql' => '5.5'],
     'image'               => 'assets/images/logoModule.png',
@@ -100,7 +99,6 @@ $modversion['helpsection'] = [
     ['name' => _MI_SMARTMEDIA_LICENSE, 'link' => 'page=license'],
     ['name' => _MI_SMARTMEDIA_SUPPORT, 'link' => 'page=support'],
 ];
-
 
 // Added by marcan for the About page in admin section
 $modversion['adminMenu']              = 'smartmedia_adminMenu';

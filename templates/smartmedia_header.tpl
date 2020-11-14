@@ -3,7 +3,7 @@
 
 <div class="smartmedia_headertable">
     <span class="smartmedia_modulename"><{$module_home}></span>
-    <{if $categoryPath}>
+    <{if $categoryPath|default:''}>
       <span class="smartmedia_breadcrumb"> &gt; <{$categoryPath}></span>
     <{/if}>
 </div>

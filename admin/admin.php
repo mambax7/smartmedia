@@ -15,16 +15,21 @@
 // Project: The XOOPS Project                                                //
 // ------------------------------------------------------------------------- //
 
-if (isset($_POST['fct'])) {
+use Xmf\Request;
+
+require __DIR__ . '/admin_header.php';
+xoops_cp_header();
+
+if (Request::hasVar('fct', 'POST')) {
     $fct = trim($_POST['fct']);
 }
-if (isset($_GET['fct'])) {
+if (Request::hasVar('fct', 'GET')) {
     $fct = trim($_GET['fct']);
 }
 if (empty($fct)) {
     $fct = 'preferences';
 }
-require_once  dirname(dirname(dirname(__DIR__))) . '/mainfile.php';
+require_once dirname(dirname(dirname(__DIR__))) . '/mainfile.php';
 require_once XOOPS_ROOT_PATH . '/include/cp_functions.php';
 
 require_once XOOPS_ROOT_PATH . '/kernel/module.php';
@@ -57,14 +62,15 @@ if (0 != $admintest) {
                 require_once XOOPS_ROOT_PATH . '/modules/system/language/english/admin/' . $fct . '.php';
             }
             require_once XOOPS_ROOT_PATH . '/modules/system/admin/' . $fct . '/xoops_version.php';
-            $syspermHandler = xoops_getHandler('groupperm');
-            $category       = !empty($modversion['category']) ? (int)$modversion['category'] : 0;
+            /** @var \XoopsGroupPermHandler $grouppermHandler */
+            $grouppermHandler = xoops_getHandler('groupperm');
+            $category         = !empty($modversion['category']) ? (int)$modversion['category'] : 0;
             unset($modversion);
             if ($category > 0) {
-                $groups =& $xoopsUser->getGroups();
-                if (in_array(XOOPS_GROUP_ADMIN, $groups) || false !== $syspermHandler->checkRight('system_admin', $category, $groups, $xoopsModule->getVar('mid'))) {
+                $groups = &$xoopsUser->getGroups();
+                if (in_array(XOOPS_GROUP_ADMIN, $groups) || false !== $grouppermHandler->checkRight('system_admin', $category, $groups, $xoopsModule->getVar('mid'))) {
                     if (file_exists("../include/{$fct}.inc.php")) {
-                        require_once "../include/{$fct}.inc.php";
+                        require_once dirname(__DIR__) . "/include/{$fct}.inc.php";
                     } else {
                         $error = true;
                     }
@@ -96,8 +102,9 @@ if (false !== $error) {
     $groups = $xoopsUser->getGroups();
     $all_ok = false;
     if (!in_array(XOOPS_GROUP_ADMIN, $groups)) {
-        $syspermHandler = xoops_getHandler('groupperm');
-        $ok_syscats     =& $syspermHandler->getItemIds('system_admin', $groups);
+        /** @var \XoopsGroupPermHandler $grouppermHandler */
+        $grouppermHandler = xoops_getHandler('groupperm');
+        $ok_syscats       = $grouppermHandler->getItemIds('system_admin', $groups);
     } else {
         $all_ok = true;
     }
@@ -106,8 +113,8 @@ if (false !== $error) {
     $counter   = 0;
     $class     = 'even';
     while ($file = readdir($handle)) {
-        if ('cvs' !== strtolower($file) && !preg_match('/[.]/', $file) && is_dir($admin_dir . '/' . $file)) {
-            require_once $admin_dir . '/' . $file . '/xoops_version.php';
+        if ('cvs' !== mb_strtolower($file) && !preg_match('/[.]/', $file) && is_dir($admin_dir . '/' . $file)) {
+            require $admin_dir . '/' . $file . '/xoops_version.php';
             if ($modversion['hasAdmin']) {
                 $category = isset($modversion['category']) ? (int)$modversion['category'] : 0;
                 if (false !== $all_ok || in_array($modversion['category'], $ok_syscats)) {

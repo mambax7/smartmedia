@@ -11,9 +11,9 @@
 
 /**
  * @copyright    XOOPS Project https://xoops.org/
- * @license      GNU GPL 2 or later (http://www.gnu.org/licenses/gpl-2.0.html)
+ * @license      GNU GPL 2 or later (https://www.gnu.org/licenses/gpl-2.0.html)
  * @package
- * @author     XOOPS Development Team
+ * @author       XOOPS Development Team
  */
 
 /**
@@ -22,13 +22,19 @@
  * Licence: GNU
  */
 
-use XoopsModules\Smartmedia;
+use XoopsModules\Smartmedia\{
+    Helper,
+    Metagen,
+    Utility
+};
+/** @var Helper $helper */
+/** @var Utility $utility */
+
 
 require_once __DIR__ . '/header.php';
 
 global $smartmediaCategoryHandler;
-/** @var Smartmedia\Helper $helper */
-$helper = Smartmedia\Helper::getInstance();
+$helper = Helper::getInstance();
 
 // At which record shall we start for the Categories
 $catstart = \Xmf\Request::getInt('catstart', 0, 'GET');
@@ -57,7 +63,7 @@ foreach ($categoriesObj as $categoryObj) {
 
 $xoopsTpl->assign('categories', $categories);
 
-$xoopsTpl->assign('module_home', smartmedia_module_home(false));
+$xoopsTpl->assign('module_home', Utility::module_home(false));
 $index_msg = $myts->displayTarea($helper->getConfig('index_msg'), 1);
 $xoopsTpl->assign('index_msg', $index_msg);
 
@@ -73,6 +79,6 @@ if ($helper->getConfig('categories_on_index') > 0) {
 }
 
 // MetaTag Generator
-smartmedia_createMetaTags($smartmedia_moduleName, '', $index_msg);
+Metagen::createMetaTags($smartmedia_moduleName, '', $index_msg);
 
 require_once XOOPS_ROOT_PATH . '/footer.php';

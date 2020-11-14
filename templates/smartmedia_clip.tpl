@@ -29,7 +29,7 @@
               <tr>
                 <td align="left" width="50%">
                   <{if $previous_clip_url}>
-                    <a href="<{$previous_clip_url}>"><img src="<{$smartmedia_images_url}>400d_flechg.gif" alt="<{$lang_previous_clip}>" /></a>
+                    <a href="<{$previous_clip_url}>"><img src="<{$smartmedia_images_url}>400d_flechg.gif" alt="<{$lang_previous_clip}>" ></a>
                     <a href="<{$previous_clip_url}>"><{$lang_previous_clip}></a>
                   <{else}>
                     &nbsp
@@ -38,7 +38,7 @@
                 <td align="right" width="50%">
                   <{if $next_clip_url}>
                     <a href="<{$next_clip_url}>"><{$lang_next_clip}></a>
-                    <a href="<{$next_clip_url}>"><img src="<{$smartmedia_images_url}>400d_flechd.gif" alt="<{$lang_next_clip}>" /></a>
+                    <a href="<{$next_clip_url}>"><img src="<{$smartmedia_images_url}>400d_flechd.gif" alt="<{$lang_next_clip}>" ></a>
                   <{else}>
                     &nbsp
                   <{/if}>

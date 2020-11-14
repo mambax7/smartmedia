@@ -11,9 +11,9 @@
 
 /**
  * @copyright    XOOPS Project https://xoops.org/
- * @license      GNU GPL 2 or later (http://www.gnu.org/licenses/gpl-2.0.html)
+ * @license      GNU GPL 2 or later (https://www.gnu.org/licenses/gpl-2.0.html)
  * @package
- * @author     XOOPS Development Team
+ * @author       XOOPS Development Team
  */
 
 /**
@@ -25,13 +25,19 @@
 // ------------------------------------------------------------------------- //
 //                            myblocksadmin.php                              //
 //                - XOOPS block admin for each modules -                     //
-//                          GIJOE <http://www.peak.ne.jp/>                   //
+//                          GIJOE <http://www.peak.ne.jp>                   //
 // ------------------------------------------------------------------------- //
 
-use XoopsModules\Smartmedia;
+use XoopsModules\Smartmedia\{
+    Helper,
+    Utility,
+    GroupPermForm
+};
+/** @var Helper $helper */
+/** @var Utility $utility */
 
 require_once __DIR__ . '/admin_header.php';
-require_once  dirname(dirname(dirname(__DIR__))) . '/include/cp_header.php';
+
 //require_once __DIR__ . '/mygrouppermform.php';
 require_once XOOPS_ROOT_PATH . '/class/xoopsblock.php';
 require_once XOOPS_ROOT_PATH . '/modules/' . $xoopsModule->dirname() . '/include/functions.php';
@@ -54,7 +60,7 @@ error_reporting($error_reporting_level);
 
 $group_defs = file("$xoops_system_path/language/$language/admin/groups.php");
 foreach ($group_defs as $def) {
-    if (false !== strpos($def, '_AM_ACCESSRIGHTS') || false !== strpos($def, '_AM_ACTIVERIGHTS')) {
+    if (false !== mb_strpos($def, '_AM_ACCESSRIGHTS') || false !== mb_strpos($def, '_AM_ACTIVERIGHTS')) {
         eval($def);
     }
 }
@@ -65,8 +71,9 @@ if (!is_object($xoopsModule)) {
 }
 
 // check access right (needs system_admin of BLOCK)
-$syspermHandler = xoops_getHandler('groupperm');
-if (!$syspermHandler->checkRight('system_admin', XOOPS_SYSTEM_BLOCK, $xoopsUser->getGroups())) {
+/** @var \XoopsGroupPermHandler $grouppermHandler */
+$grouppermHandler = xoops_getHandler('groupperm');
+if (!$grouppermHandler->checkRight('system_admin', XOOPS_SYSTEM_BLOCK, $xoopsUser->getGroups())) {
     redirect_header(XOOPS_URL . '/user.php', 1, _NOPERM);
 }
 
@@ -81,8 +88,8 @@ function list_blocks()
     $cachetimes = ['0' => _NOCACHE, '30' => sprintf(_SECONDS, 30), '60' => _MINUTE, '300' => sprintf(_MINUTES, 5), '1800' => sprintf(_MINUTES, 30), '3600' => _HOUR, '18000' => sprintf(_HOURS, 5), '86400' => _DAY, '259200' => sprintf(_DAYS, 3), '604800' => _WEEK, '2592000' => _MONTH];
 
     // displaying TH
-    smartmedia_collapsableBar('toptable', 'toptableicon');
-    echo "<img id='toptableicon' src=" . XOOPS_URL . '/modules/' . $xoopsModule->dirname() . "/assets/images/icon/close12.gif alt='' /></a>&nbsp;" . _AM_SMARTMEDIA_BLOCKS . '</h3>';
+    Utility::collapsableBar('toptable', 'toptableicon');
+    echo "<img id='toptableicon' src=" . XOOPS_URL . '/modules/' . $xoopsModule->dirname() . "/assets/images/icon/close12.gif alt=''></a>&nbsp;" . _AM_SMARTMEDIA_BLOCKS . '</h3>';
     echo "<div id='toptable'>";
     echo '<span style="color: #567; margin: 3px 0 12px 0; font-size: small; display: block; ">' . _AM_SMARTMEDIA_BLOCKSTXT . '</span>';
 
@@ -101,7 +108,8 @@ function list_blocks()
     // blocks displaying loop
     $class = 'even';
     foreach (array_keys($block_arr) as $i) {
-        $sseln = $ssel0 = $ssel1 = $ssel2 = $ssel3 = $ssel4 = '';
+        $sseln = $ssel0 = $ssel1 = $ssel2 = $ssel3 = $ssel4 = $ssel5 = $ssel6 = $ssel7 = '';
+        $scoln = $scol0 = $scol1 = $scol2 = $scol3 = $scol4 = $ssel5 = $ssel6 = $ssel7 = '';
 
         $weight     = $block_arr[$i]->getVar('weight');
         $title      = $block_arr[$i]->getVar('title');
@@ -130,6 +138,18 @@ function list_blocks()
                 case XOOPS_CENTERBLOCK_CENTER:
                     $ssel3 = " checked style='background-color:#00FF00;'";
                     break;
+                case XOOPS_CENTERBLOCK_BOTTOMLEFT:
+                    $ssel5 = ' checked';
+                    $scol5 = '#00FF00';
+                    break;
+                case XOOPS_CENTERBLOCK_BOTTOMRIGHT:
+                    $ssel6 = ' checked';
+                    $scol6 = '#00FF00';
+                    break;
+                case XOOPS_CENTERBLOCK_BOTTOM:
+                    $ssel7 = ' checked';
+                    $scol7 = '#00FF00';
+                    break;
             }
         }
 
@@ -147,9 +167,10 @@ function list_blocks()
         $db            = \XoopsDatabaseFactory::getDatabaseConnection();
         $result        = $db->query('SELECT module_id FROM ' . $db->prefix('block_module_link') . " WHERE block_id='$bid'");
         $selected_mids = [];
-        while (false !== (list($selected_mid) = $db->fetchRow($result))) {
+        while (list($selected_mid) = $db->fetchRow($result)) {
             $selected_mids[] = (int)$selected_mid;
         }
+        /** @var \XoopsModuleHandler $moduleHandler */
         $moduleHandler = xoops_getHandler('module');
         $criteria      = new \CriteriaCompo(new \Criteria('hasmain', 1));
         $criteria->add(new \Criteria('isactive', 1));
@@ -172,29 +193,29 @@ function list_blocks()
             <td class='$class'>
             $name
                 <br>
-                <input type='text' name='title[$bid]' value='$title' size='20' />
+                <input type='text' name='title[$bid]' value='$title' size='20'>
             </td>
             <td class='$class' align='center' nowrap='nowrap'>
                 <input type='radio' name='side[$bid]' value='"
              . XOOPS_SIDEBLOCK_LEFT
-             . "'$ssel0 />-<input type='radio' name='side[$bid]' value='"
+             . "'$ssel0>-<input type='radio' name='side[$bid]' value='"
              . XOOPS_CENTERBLOCK_LEFT
-             . "'$ssel2 /><input type='radio' name='side[$bid]' value='"
+             . "'$ssel2><input type='radio' name='side[$bid]' value='"
              . XOOPS_CENTERBLOCK_CENTER
-             . "'$ssel3 /><input type='radio' name='side[$bid]' value='"
+             . "'$ssel3><input type='radio' name='side[$bid]' value='"
              . XOOPS_CENTERBLOCK_RIGHT
-             . "'$ssel4 />-<input type='radio' name='side[$bid]' value='"
+             . "'$ssel4>-<input type='radio' name='side[$bid]' value='"
              . XOOPS_SIDEBLOCK_RIGHT
-             . "'$ssel1 />
+             . "'$ssel1>
                 <br>
                 <br>
-                <input type='radio' name='side[$bid]' value='-1'$sseln />
+                <input type='radio' name='side[$bid]' value='-1'$sseln>
                 "
              . _NONE
              . "
             </td>
             <td class='$class' align='center'>
-                <input type='text' name=weight[$bid] value='$weight' size='5' maxlength='5' style='text-align:right;' />
+                <input type='text' name=weight[$bid] value='$weight' size='5' maxlength='5' style='text-align:right;'>
             </td>
             <td class='$class' align='center'>
                 <select name='bmodule[$bid][]' size='5' multiple='multiple'>
@@ -210,7 +231,7 @@ function list_blocks()
                 <a href='admin.php?fct=blocksadmin&amp;op=edit&amp;bid=$bid'>"
              . _EDIT
              . "</a>
-                <input type='hidden' name='bid[$bid]' value='$bid' />
+                <input type='hidden' name='bid[$bid]' value='$bid'>
             </td>
         </tr>\n";
 
@@ -220,9 +241,9 @@ function list_blocks()
     echo "
         <tr>
             <td class='foot' align='center' colspan='6'>
-                <input type='hidden' name='fct' value='blocksadmin' />
-                <input type='hidden' name='op' value='order' />
-                <input type='submit' name='submit' value='" . _SUBMIT . "' />
+                <input type='hidden' name='fct' value='blocksadmin'>
+                <input type='hidden' name='op' value='order'>
+                <input type='submit' name='submit' value='" . _SUBMIT . "'>
             </td>
         </tr>
         </table>
@@ -234,21 +255,26 @@ function list_groups()
 {
     global $xoopsModule, $block_arr;
 
-    smartmedia_collapsableBar('bottomtable', 'bottomtableicon');
+    Utility::collapsableBar('bottomtable', 'bottomtableicon');
 
     foreach (array_keys($block_arr) as $i) {
         $item_list[$block_arr[$i]->getVar('bid')] = $block_arr[$i]->getVar('title');
     }
 
-    $form = new Smartmedia\GroupPermForm('', 1, 'block_read', "<img id='bottomtableicon' src="
-                                                          . XOOPS_URL
-                                                          . '/modules/'
-                                                          . $xoopsModule->dirname()
-                                                          . "/assets/images/icon/close12.gif alt='' /></a>&nbsp;"
-                                                          . _AM_SMARTMEDIA_GROUPS
-                                                          . "</h3><div id='bottomtable'><span style=\"color: #567; margin: 3px 0 0 0; font-size: small; display: block; \">"
-                                                          . _AM_SMARTMEDIA_GROUPSINFO
-                                                          . '</span>');
+    $form = new GroupPermForm(
+        '',
+        1,
+        'block_read',
+        "<img id='bottomtableicon' src="
+        . XOOPS_URL
+        . '/modules/'
+        . $xoopsModule->dirname()
+        . "/assets/images/icon/close12.gif alt=''></a>&nbsp;"
+        . _AM_SMARTMEDIA_GROUPS
+        . "</h3><div id='bottomtable'><span style=\"color: #567; margin: 3px 0 0 0; font-size: small; display: block; \">"
+        . _AM_SMARTMEDIA_GROUPSINFO
+        . '</span>'
+    );
     $form->addAppendix('module_admin', $xoopsModule->mid(), $xoopsModule->name() . ' ' . _AM_ACTIVERIGHTS);
     $form->addAppendix('module_read', $xoopsModule->mid(), $xoopsModule->name() . ' ' . _AM_ACCESSRIGHTS);
     //mis en commentaire pcq $item_list === null
@@ -261,12 +287,12 @@ function list_groups()
 
 if (!empty($_POST['submit'])) {
     require_once __DIR__ . '/mygroupperm.php';
-    redirect_header(XOOPS_URL . '/modules/' . $xoopsModule->dirname() . '/admin/myblocksadmin.php', 1, _MD_AM_DBUPDATED);
+    redirect_header(XOOPS_URL . '/modules/' . $xoopsModule->dirname() . '/admin/myblocksadmin.php', 1, _MD_SMARTMEDIA_DBUPDATED);
 }
 
 xoops_cp_header();
 if (file_exists('./mymenu.php')) {
-    include __DIR__ . '/mymenu.php';
+    require_once __DIR__ . '/mymenu.php';
 }
 //smartmedia_adminMenu(5, _AM_SMARTMEDIA_BLOCKSANDGROUPS);
 

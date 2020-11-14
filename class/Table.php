@@ -1,4 +1,6 @@
-<?php namespace XoopsModules\Smartmedia;
+<?php
+
+namespace XoopsModules\Smartmedia;
 
 /**
  * Contains the classes for updating database tables
@@ -28,32 +30,26 @@ class Table
      * @var string $_name name of the table
      */
     public $_name;
-
     /**
      * @var string $_structure structure of the table
      */
     public $_structure;
-
     /**
      * @var array $_data containing valued of each records to be added
      */
     public $_data;
-
     /**
      * @var array $_alteredFields containing fields to be altered
      */
     public $_alteredFields;
-
     /**
      * @var array $_dropedFields containing fields to be droped
      */
     public $_dropedFields;
-
     /**
      * @var array $_flagForDrop flag table to drop it
      */
     public $_flagForDrop = false;
-
     /**
      * @var array $_updatedFields containing fields which values will be updated
      */
@@ -63,7 +59,6 @@ class Table
      * Constructor
      *
      * @param string $name name of the table
-     *
      */
     public function __construct($name)
     {
@@ -75,7 +70,6 @@ class Table
      * Return the table name, prefixed with site table prefix
      *
      * @return string table name
-     *
      */
     public function name()
     {
@@ -88,7 +82,6 @@ class Table
      * Set the table structure
      *
      * @param string $structure table structure
-     *
      */
     public function setStructure($structure)
     {
@@ -99,18 +92,16 @@ class Table
      * Return the table structure
      *
      * @return string table structure
-     *
      */
     public function getStructure()
     {
-        return sprintf($this->_structure, $this->name());
+        return \sprintf($this->_structure, $this->name());
     }
 
     /**
      * Add values of a record to be added
      *
      * @param string $data values of a record
-     *
      */
     public function setData($data)
     {
@@ -121,7 +112,6 @@ class Table
      * Get the data array
      *
      * @return array containing the records values to be added
-     *
      */
     public function getData()
     {
@@ -132,19 +122,18 @@ class Table
      * Use to insert data in a table
      *
      * @return bool true if success, false if an error occured
-     *
      */
     public function addData()
     {
         global $xoopsDB;
 
         foreach ($this->getData() as $data) {
-            $query = sprintf('INSERT INTO `%s` VALUES (%s)', $this->name(), $data);
+            $query = \sprintf('INSERT INTO `%s` VALUES (%s)', $this->name(), $data);
             $ret   = $xoopsDB->query($query);
             if (!$ret) {
-                echo "<li class='err'>" . sprintf(_AM_SMARTMEDIA_DB_MSG_ADD_DATA_ERR, $this->name()) . '</li>';
+                echo "<li class='err'>" . \sprintf(\_AM_SMARTMEDIA_DB_MSG_ADD_DATA_ERR, $this->name()) . '</li>';
             } else {
-                echo "<li class='ok'>" . sprintf(_AM_SMARTMEDIA_DB_MSG_ADD_DATA, $this->name()) . '</li>';
+                echo "<li class='ok'>" . \sprintf(\_AM_SMARTMEDIA_DB_MSG_ADD_DATA, $this->name()) . '</li>';
             }
         }
 
@@ -156,7 +145,6 @@ class Table
      *
      * @param string $name       name of the field
      * @param string $properties properties of the field
-     *
      */
     public function addAlteredField($name, $properties)
     {
@@ -169,7 +157,6 @@ class Table
      * Get fields that need to be altered
      *
      * @return array fields that need to be altered
-     *
      */
     public function getAlteredFields()
     {
@@ -181,7 +168,6 @@ class Table
      *
      * @param string $name  name of the field
      * @param string $value value to be set
-     *
      */
     public function addUpdatedField($name, $value)
     {
@@ -194,7 +180,6 @@ class Table
      * Get fields which values need to be updated
      *
      * @return array fields which values need to be updated
-     *
      */
     public function getUpdatedFields()
     {
@@ -205,7 +190,6 @@ class Table
      * Add values of a record to be added
      *
      * @param string $name name of the field
-     *
      */
     public function addDropedField($name)
     {
@@ -216,7 +200,6 @@ class Table
      * Get fields that need to be droped
      *
      * @return array fields that need to be droped
-     *
      */
     public function getDropedFields()
     {
@@ -225,7 +208,6 @@ class Table
 
     /**
      * Set the flag to drop the table
-     *
      */
     public function setFlagForDrop()
     {
@@ -236,7 +218,6 @@ class Table
      * Use to create a table
      *
      * @return bool true if success, false if an error occured
-     *
      */
     public function createTable()
     {
@@ -245,9 +226,9 @@ class Table
         $query = $this->getStructure();
         $ret   = $xoopsDB->query($query);
         if (!$ret) {
-            echo "<li class='err'>" . sprintf(_AM_SMARTMEDIA_DB_MSG_CREATE_TABLE_ERR, $this->name()) . '</li>';
+            echo "<li class='err'>" . \sprintf(\_AM_SMARTMEDIA_DB_MSG_CREATE_TABLE_ERR, $this->name()) . '</li>';
         } else {
-            echo "<li class='ok'>" . sprintf(_AM_SMARTMEDIA_DB_MSG_CREATE_TABLE, $this->name()) . '</li>';
+            echo "<li class='ok'>" . \sprintf(\_AM_SMARTMEDIA_DB_MSG_CREATE_TABLE, $this->name()) . '</li>';
         }
 
         return $ret;
@@ -257,30 +238,27 @@ class Table
      * Use to drop a table
      *
      * @return bool true if success, false if an error occured
-     *
      */
     public function dropTable()
     {
         global $xoopsDB;
 
-        $query = sprintf('DROP TABLE %s', $this->name());
+        $query = \sprintf('DROP TABLE %s', $this->name());
         $ret   = $xoopsDB->query($query);
         if (!$ret) {
-            echo "<li class='err'>" . sprintf(_AM_SMARTMEDIA_DB_MSG_DROP_TABLE_ERR, $this->name()) . '</li>';
+            echo "<li class='err'>" . \sprintf(\_AM_SMARTMEDIA_DB_MSG_DROP_TABLE_ERR, $this->name()) . '</li>';
 
             return false;
-        } else {
-            echo "<li class='ok'>" . sprintf(_AM_SMARTMEDIA_DB_MSG_DROP_TABLE, $this->name()) . '</li>';
-
-            return true;
         }
+        echo "<li class='ok'>" . \sprintf(\_AM_SMARTMEDIA_DB_MSG_DROP_TABLE, $this->name()) . '</li>';
+
+        return true;
     }
 
     /**
      * Use to alter a table
      *
      * @return bool true if success, false if an error occured
-     *
      */
     public function alterTable()
     {
@@ -289,12 +267,12 @@ class Table
         $ret = true;
 
         foreach ($this->getAlteredFields() as $alteredField) {
-            $query = sprintf('ALTER TABLE %s ADD %s %s', $this->name(), $alteredField['name'], $alteredField['properties']);
+            $query = \sprintf('ALTER TABLE %s ADD %s %s', $this->name(), $alteredField['name'], $alteredField['properties']);
             $ret   = $ret && $xoopsDB->query($query);
             if (!$ret) {
-                echo "<li class='err'>" . sprintf(_AM_SMARTMEDIA_DB_MSG_ADDFIELD_ERR, $alteredField['name'], $this->name()) . '</li>';
+                echo "<li class='err'>" . \sprintf(\_AM_SMARTMEDIA_DB_MSG_ADDFIELD_ERR, $alteredField['name'], $this->name()) . '</li>';
             } else {
-                echo "<li class='ok'>" . sprintf(_AM_SMARTMEDIA_DB_MSG_ADDFIELD, $alteredField['name'], $this->name()) . '</li>';
+                echo "<li class='ok'>" . \sprintf(\_AM_SMARTMEDIA_DB_MSG_ADDFIELD, $alteredField['name'], $this->name()) . '</li>';
             }
         }
 
@@ -305,7 +283,6 @@ class Table
      * Use to update fields values
      *
      * @return bool true if success, false if an error occured
-     *
      */
     public function updateFieldsValues()
     {
@@ -314,12 +291,12 @@ class Table
         $ret = true;
 
         foreach ($this->getUpdatedFields() as $updatedField) {
-            $query = sprintf('UPDATE `%s` SET %s = %s', $this->name(), $updatedField['name'], $updatedField['value']);
+            $query = \sprintf('UPDATE `%s` SET %s = %s', $this->name(), $updatedField['name'], $updatedField['value']);
             $ret   = $ret && $xoopsDB->query($query);
             if (!$ret) {
-                echo "<li class='err'>" . sprintf(_AM_SMARTMEDIA_DB_MSG_UPDATE_TABLE_ERR, $this->name()) . '</li>';
+                echo "<li class='err'>" . \sprintf(\_AM_SMARTMEDIA_DB_MSG_UPDATE_TABLE_ERR, $this->name()) . '</li>';
             } else {
-                echo "<li class='ok'>" . sprintf(_AM_SMARTMEDIA_DB_MSG_UPDATE_TABLE, $this->name()) . '</li>';
+                echo "<li class='ok'>" . \sprintf(\_AM_SMARTMEDIA_DB_MSG_UPDATE_TABLE, $this->name()) . '</li>';
             }
         }
 
@@ -330,7 +307,6 @@ class Table
      * Use to drop fields
      *
      * @return bool true if success, false if an error occured
-     *
      */
     public function dropFields()
     {
@@ -339,12 +315,12 @@ class Table
         $ret = true;
 
         foreach ($this->getDropedFields() as $dropedField) {
-            $query = sprintf('ALTER TABLE %s DROP %s', $this->name(), $dropedField);
+            $query = \sprintf('ALTER TABLE %s DROP %s', $this->name(), $dropedField);
             $ret   = $ret && $xoopsDB->query($query);
             if (!$ret) {
-                echo "<li class='err'>" . sprintf(_AM_SMARTMEDIA_DB_MSG_DROPFIELD_ERR, $dropedField, $this->name()) . '</li>';
+                echo "<li class='err'>" . \sprintf(\_AM_SMARTMEDIA_DB_MSG_DROPFIELD_ERR, $dropedField, $this->name()) . '</li>';
             } else {
-                echo "<li class='ok'>" . sprintf(_AM_SMARTMEDIA_DB_MSG_DROPFIELD, $dropedField, $this->name()) . '</li>';
+                echo "<li class='ok'>" . \sprintf(\_AM_SMARTMEDIA_DB_MSG_DROPFIELD, $dropedField, $this->name()) . '</li>';
             }
         }
 

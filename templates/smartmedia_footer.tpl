@@ -2,7 +2,7 @@
   <div class="smartmedia_adminlink"><{$smartmedia_adminpage}></div>
 <{/if}>
 
-<br />
+<br >
 
 <!--Pas de notification pour l'instant...
 <{include file='db:system_notification_select.tpl'}>

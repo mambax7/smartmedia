@@ -11,30 +11,17 @@
 
 /**
  * @copyright    XOOPS Project https://xoops.org/
- * @license      GNU GPL 2 or later (http://www.gnu.org/licenses/gpl-2.0.html)
+ * @license      GNU GPL 2 or later (https://www.gnu.org/licenses/gpl-2.0.html)
  * @package
- * @author     XOOPS Development Team
+ * @author       XOOPS Development Team
  */
-
-use XoopsModules\Smartmedia;
-
 require_once __DIR__ . '/admin_header.php';
 
-//defined('XOOPS_ROOT_PATH') || die('XOOPS root path not defined');
-
 /**
- * @param      $db
- * @param      $gperm_modid
- * @param null $gperm_name
- * @param null $gperm_itemid
- * @return bool
- */
-
-/**
- * @param \XoopsDatabase  $db
- * @param      $gperm_modid
- * @param null $gperm_name
- * @param null $gperm_itemid
+ * @param \XoopsDatabase $db
+ * @param                $gperm_modid
+ * @param null           $gperm_name
+ * @param null           $gperm_itemid
  * @return bool
  */
 function myDeleteByModule(\XoopsDatabase $db, $gperm_modid, $gperm_name = null, $gperm_itemid = null)
@@ -54,7 +41,6 @@ function myDeleteByModule(\XoopsDatabase $db, $gperm_modid, $gperm_name = null, 
     return true;
 }
 
-
 global $xoopsUser;
 // require_once  dirname(__DIR__) . '/.include_onceclude/cp_header.php'; GIJ
 $modid = \Xmf\Request::getInt('modid', 1, 'POST');
@@ -63,7 +49,7 @@ if ($modid <= 0 || !is_object($xoopsUser) || !$xoopsUser->isAdmin($modid)) {
     redirect_header(XOOPS_URL . '/user.php', 1, _NOPERM);
     exit();
 }
-/** @var XoopsModuleHandler $moduleHandler */
+/** @var \XoopsModuleHandler $moduleHandler */
 $moduleHandler = xoops_getHandler('module');
 $module        = $moduleHandler->get($modid);
 if (!is_object($module) || !$module->getVar('isactive')) {
@@ -71,19 +57,19 @@ if (!is_object($module) || !$module->getVar('isactive')) {
     exit();
 }
 
-
-
+/** @var \XoopsMemberHandler $memberHandler */
 $memberHandler = xoops_getHandler('member');
 $group_list    = $memberHandler->getGroupList();
-if (is_array($_POST['perms']) && !empty($_POST['perms'])) {
+if (isset($_POST['perms']) && is_array($_POST['perms']) && !empty($_POST['perms'])) {
+    /** @var \XoopsGroupPermHandler $grouppermHandler */
     $grouppermHandler = xoops_getHandler('groupperm');
-
 
     //$memberHandler = xoops_getHandler('member');
     //$groupList    = $memberHandler->getGroupList();
     //if (is_array($_POST['perms'])   && !empty($_POST['perms'])) {
-//    $grouppermHandler = xoops_getHandler('groupperm');
-//
+    //    /** @var \XoopsGroupPermHandler $grouppermHandler */
+    $grouppermHandler = xoops_getHandler('groupperm');
+    //
     foreach ($_POST['perms'] as $perm_name => $perm_data) {
         foreach ($perm_data['itemname'] as $item_id => $item_name) {
             // checking code
@@ -128,6 +114,7 @@ if (is_array($_POST['perms']) && !empty($_POST['perms'])) {
         }
     }
 }
+
 /*
  $backlink = XOOPS_URL.'/admin.php';
  if ($module->getVar('hasadmin')) {

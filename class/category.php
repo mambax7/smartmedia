@@ -1,4 +1,6 @@
-<?php namespace XoopsModules\Smartmedia;
+<?php
+
+namespace XoopsModules\Smartmedia;
 
 /**
  * Contains the classes for managing categories
@@ -29,21 +31,18 @@ class Category extends \XoopsObject
      * @var string
      */
     public $languageid;
-
     /**
      * {@link Smartmedia\CategoryText} object holding the category's text informations
      * @var object
      * @see Smartmedia\CategoryText
      */
     public $category_text = null;
-
     /**
      * List of all the translations already created for this category
      * @var array
      * @see getCreatedLanguages
      */
     public $_created_languages = null;
-
     /**
      * Flag indicating wheter or not a new translation can be added for this category
      *
@@ -57,21 +56,21 @@ class Category extends \XoopsObject
     /**
      * Constructor
      *
-     * @param string  $languageid language of the category
-     * @param integer $id         id of the category to be retreieved OR array containing values to be assigned
+     * @param string $languageid language of the category
+     * @param int    $id         id of the category to be retreieved OR array containing values to be assigned
      */
     public function __construct($languageid = 'default', $id = null)
     {
-        $smartConfig =& smartmedia_getModuleConfig();
+        $smartConfig = Utility::getModuleConfig();
 
-        $this->initVar('categoryid', XOBJ_DTYPE_INT, -1, true);
-        $this->initVar('parentid', XOBJ_DTYPE_INT, 0, false);
-        $this->initVar('weight', XOBJ_DTYPE_INT, 0, false);
-        $this->initVar('image', XOBJ_DTYPE_TXTBOX, null, false, 50);
-        $this->initVar('default_languageid', XOBJ_DTYPE_TXTBOX, $smartConfig['default_language'], false, 50);
+        $this->initVar('categoryid', \XOBJ_DTYPE_INT, -1, true);
+        $this->initVar('parentid', \XOBJ_DTYPE_INT, 0, false);
+        $this->initVar('weight', \XOBJ_DTYPE_INT, 0, false);
+        $this->initVar('image', \XOBJ_DTYPE_TXTBOX, null, false, 50);
+        $this->initVar('default_languageid', \XOBJ_DTYPE_TXTBOX, $smartConfig['default_language'], false, 50);
 
         if (isset($id)) {
-            if (is_array($id)) {
+            if (\is_array($id)) {
                 $this->assignVars($id);
             }
         } else {
@@ -106,7 +105,7 @@ class Category extends \XoopsObject
     public function loadLanguage($languageid)
     {
         $this->languageid              = $languageid;
-        $smartmediaCategoryTextHandler = Smartmedia\Helper::getInstance()->getHandler('CategoryText');
+        $smartmediaCategoryTextHandler = Helper::getInstance()->getHandler('CategoryText');
         $this->category_text           = $smartmediaCategoryTextHandler->get($this->getVar('categoryid'), $this->languageid);
 
         if (!$this->category_text) {
@@ -155,16 +154,16 @@ class Category extends \XoopsObject
      * If no image has been set, the function will return blank.png, so a blank image can
      * be displayed
      *
-     * @param  string $format format to use for the output
+     * @param string $format format to use for the output
      * @return string low resolution image of this category
      */
     public function image($format = 'S')
     {
         if ('' != $this->getVar('image')) {
             return $this->getVar('image', $format);
-        } else {
-            return 'blank.png';
         }
+
+        return 'blank.png';
     }
 
     /**
@@ -188,25 +187,25 @@ class Category extends \XoopsObject
      * title is likely to be used in the page title meta tag or any other place that requires
      * "html less" text
      *
-     * @param  string $format format to use for the output
+     * @param string $format format to use for the output
      * @return string title of the category
      */
     public function title($format = 'S')
     {
         $myts = \MyTextSanitizer::getInstance();
-        if (('s' === strtolower($format)) || ('show' === strtolower($format))) {
+        if (('s' === mb_strtolower($format)) || ('show' === mb_strtolower($format))) {
             return $myts->undoHtmlSpecialChars($this->category_text->getVar('title', 'e'), 1);
-        } elseif ('clean' === strtolower($format)) {
-            return smartmedia_metagen_html2text($myts->undoHtmlSpecialChars($this->category_text->getVar('title')));
-        } else {
-            return $this->category_text->getVar('title', $format);
+        } elseif ('clean' === mb_strtolower($format)) {
+            return Utility::metagen_html2text($myts->undoHtmlSpecialChars($this->category_text->getVar('title')));
         }
+
+        return $this->category_text->getVar('title', $format);
     }
 
     /**
      * Returns the description of the category
      *
-     * @param  string $format format to use for the output
+     * @param string $format format to use for the output
      * @return string description of the category
      */
     public function description($format = 'S')
@@ -217,7 +216,7 @@ class Category extends \XoopsObject
     /**
      * Returns the meta_description of the category
      *
-     * @param  string $format format to use for the output
+     * @param string $format format to use for the output
      * @return string meta_description of the category
      */
     public function meta_description($format = 'S')
@@ -264,7 +263,7 @@ class Category extends \XoopsObject
      * This method stores the category as well as the current translation informations for the
      * category
      *
-     * @param  bool $force
+     * @param bool $force
      * @return bool true if successfully stored false if an error occured
      *
      * @see Smartmedia\CategoryHandler::insert()
@@ -284,7 +283,7 @@ class Category extends \XoopsObject
     /**
      * Get all the translations created for this category
      *
-     * @param  bool $exceptDefault to determine if the default language should be returned or not
+     * @param bool $exceptDefault to determine if the default language should be returned or not
      * @return array array of {@link Smartmedia\CategoryText}
      */
     public function getAllLanguages($exceptDefault = false)
@@ -308,7 +307,7 @@ class Category extends \XoopsObject
      */
     public function getCreatedLanguages()
     {
-        if (null != $this->_created_languages) {
+        if (null !== $this->_created_languages) {
             return $this->_created_languages;
         }
         global $smartmediaCategoryTextHandler;
@@ -329,7 +328,7 @@ class Category extends \XoopsObject
      */
     public function canAddLanguage()
     {
-        if (null != $this->_canAddLanguage) {
+        if (null !== $this->_canAddLanguage) {
             return $this->_canAddLanguage;
         }
 
@@ -337,7 +336,7 @@ class Category extends \XoopsObject
         $languageList     = \XoopsLists::getLangList();
         $createdLanguages = $this->getCreatedLanguages();
 
-        $this->_canAddLanguage = (count($languageList) > count($createdLanguages));
+        $this->_canAddLanguage = (\count($languageList) > \count($createdLanguages));
 
         return $this->_canAddLanguage;
     }
@@ -360,13 +359,13 @@ class Category extends \XoopsObject
 
         if ($is_smartmedia_admin) {
             $ret = '';
-            $ret .= '<a href="' . SMARTMEDIA_URL . 'admin/category.php?op=mod&categoryid=' . $this->categoryid() . '"><img src="' . $pathIcon16 . '/edit.png' . '"   alt="' . _MD_SMARTMEDIA_CATEGORY_EDIT . '" title="' . _MD_SMARTMEDIA_CATEGORY_EDIT . '"/></a>';
-            $ret .= '<a href="' . SMARTMEDIA_URL . 'admin/category.php?op=del&categoryid=' . $this->categoryid() . '"><img src="' . $pathIcon16 . '/delete.png' . '"   alt="' . _MD_SMARTMEDIA_CATEGORY_DELETE . '" title="' . _MD_SMARTMEDIA_CATEGORY_DELETE . '"/></a>';
+            $ret .= '<a href="' . SMARTMEDIA_URL . 'admin/category.php?op=mod&categoryid=' . $this->categoryid() . '"><img src="' . $pathIcon16 . '/edit.png' . '"   alt="' . \_MD_SMARTMEDIA_CATEGORY_EDIT . '" title="' . \_MD_SMARTMEDIA_CATEGORY_EDIT . '"></a>';
+            $ret .= '<a href="' . SMARTMEDIA_URL . 'admin/category.php?op=del&categoryid=' . $this->categoryid() . '"><img src="' . $pathIcon16 . '/delete.png' . '"   alt="' . \_MD_SMARTMEDIA_CATEGORY_DELETE . '" title="' . \_MD_SMARTMEDIA_CATEGORY_DELETE . '"></a>';
 
             return $ret;
-        } else {
-            return '';
         }
+
+        return '';
     }
 
     /**
@@ -385,11 +384,11 @@ class Category extends \XoopsObject
         $category['parentid']   = $this->parentid();
         $category['weight']     = $this->weight();
         if ('blank.png' !== $this->getVar('image')) {
-            $category['image_path'] = smartmedia_getImageDir('category', false) . $this->image();
+            $category['image_path'] = Utility::getImageDir('category', false) . $this->image();
         } else {
             $category['image_path'] = false;
         }
-        $smartConfig                  = smartmedia_getModuleConfig();
+        $smartConfig                  = Utility::getModuleConfig();
         $category['main_image_width'] = $smartConfig['main_image_width'];
         $category['list_image_width'] = $smartConfig['list_image_width'];
         $category['adminLinks']       = $this->adminLinks();
@@ -403,7 +402,7 @@ class Category extends \XoopsObject
         $highlight = true;
         if ($highlight && isset($_GET['keywords'])) {
             $myts                    = \MyTextSanitizer::getInstance();
-            $keywords                = $myts->htmlSpecialChars(trim(urldecode($_GET['keywords'])));
+            $keywords                = $myts->htmlSpecialChars(\trim(\urldecode($_GET['keywords'])));
             $h                       = new KeyHighlighter($keywords, true, 'smartmedia_highlighter');
             $category['title']       = $h->highlight($category['title']);
             $category['description'] = $h->highlight($category['description']);
@@ -420,12 +419,12 @@ class Category extends \XoopsObject
      */
     public function hasChild()
     {
-        $smartmediaFolderHandler = Smartmedia\Helper::getInstance()->getHandler('Folder');
-        $count                   = $smartmediaFolderHandler->getCountsByParent($this->categoryid());
+        $folderHandler = Helper::getInstance()->getHandler('Folder');
+        $count         = $folderHandler->getCountsByParent($this->categoryid());
         if (isset($count[$this->categoryid()]) && ($count[$this->categoryid()] > 0)) {
             return true;
-        } else {
-            return false;
         }
+
+        return false;
     }
 }

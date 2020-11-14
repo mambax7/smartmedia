@@ -7,7 +7,6 @@
  * @param $item_id
  * @param $total_num
  */
-
 function smartmedia_com_update($item_id, $total_num)
 {
     $db  = \XoopsDatabaseFactory::getDatabaseConnection();

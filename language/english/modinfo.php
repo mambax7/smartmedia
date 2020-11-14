@@ -78,21 +78,30 @@ define('_MI_SMARTMEDIA_VERSION_HISTORY', 'Version History');
 define('_MI_SMARTMEDIA_BY', 'By');
 
 // Beta
-define('_MI_SMARTMEDIA_WARNING_BETA', 'This module comes as is, without any guarantees whatsoever.
+define(
+    '_MI_SMARTMEDIA_WARNING_BETA',
+    'This module comes as is, without any guarantees whatsoever.
 This module is BETA, meaning it is still under active development. This release is meant for
 <b>testing purposes only</b> and we <b>strongly</b> recommend that you do not use it on a live
-website or in a production environment.');
+website or in a production environment.'
+);
 
 // RC
-define('_MI_SMARTMEDIA_WARNING_RC', 'This module comes as is, without any guarantees whatsoever. This module
+define(
+    '_MI_SMARTMEDIA_WARNING_RC',
+    'This module comes as is, without any guarantees whatsoever. This module
 is a Release Candidate and should not be used on a production web site. The module is still under
-active development and its use is under your own responsibility, which means the author is not responsible.');
+active development and its use is under your own responsibility, which means the author is not responsible.'
+);
 
 // Final
-define('_MI_SMARTMEDIA_WARNING_FINAL', 'This module comes as is, without any guarantees whatsoever. Although this
+define(
+    '_MI_SMARTMEDIA_WARNING_FINAL',
+    'This module comes as is, without any guarantees whatsoever. Although this
 module is not beta, it is still under active development. This release can be used in a live website
 or a production environment, but its use is under your own responsibility, which means the author
-is not responsible.');
+is not responsible.'
+);
 
 // The name of this module
 define('_MI_SMARTMEDIA_DIRNAME', basename(dirname(dirname(__DIR__))));
@@ -110,4 +119,3 @@ define('_MI_SMARTMEDIA_OVERVIEW', 'Overview');
 
 define('_MI_SMARTMEDIA_SHOW_SAMPLE_BUTTON', 'Show Sample Button?');
 define('_MI_SMARTMEDIA_SHOW_SAMPLE_BUTTON_DESC', 'If yes, the "Add Sample Data" button will be visible to the Admin. It is Yes as a default for first installation.');
-

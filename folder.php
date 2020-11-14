@@ -11,9 +11,9 @@
 
 /**
  * @copyright    XOOPS Project https://xoops.org/
- * @license      GNU GPL 2 or later (http://www.gnu.org/licenses/gpl-2.0.html)
+ * @license      GNU GPL 2 or later (https://www.gnu.org/licenses/gpl-2.0.html)
  * @package
- * @author     XOOPS Development Team
+ * @author       XOOPS Development Team
  */
 
 /**
@@ -22,31 +22,35 @@
  * Licence: GNU
  */
 
-use XoopsModules\Smartmedia;
+use XoopsModules\Smartmedia\{
+    Helper,
+    Utility,
+    Metagen
+};
+/** @var Helper $helper */
 
 require_once __DIR__ . '/header.php';
 
-/** @var Smartmedia\Helper $helper */
-$helper = Smartmedia\Helper::getInstance();
+$helper =Helper::getInstance();
 
-global $smartmediaFolderHandler, $smartmediaClipHandler;
+global $folderHandler, $smartmediaClipHandler;
 
 $folderid = \Xmf\Request::getInt('folderid', 0, 'GET');
 
 // Creating the folder object for the selected folder
-$folderObj = $smartmediaFolderHandler->get($folderid);
+$folderObj = $folderHandler->get($folderid);
 
 // If the selected folder was not found, exit
 if (!$folderObj) {
-    redirect_header('javascript:history.go(-1)', 1, _MD_SMARTMEDIA_FOLDER_NOT_SELECTED);
+    redirect_header('<script>javascript:history.go(-1)</script>', 1, _MD_SMARTMEDIA_FOLDER_NOT_SELECTED);
     exit();
 }
 
-$totalItem = $smartmediaFolderHandler->onlineClipsCount($folderid);
+$totalItem = $folderHandler->onlineClipsCount($folderid);
 
 // If there is no Item under this categories or the sub-categories, exit
 if (!isset($totalItem[$folderid]) || 0 == $totalItem[$folderid]) {
-    redirect_header('javascript:history.go(-1)', 3, _MD_SMARTMEDIA_NO_CLIP);
+    redirect_header('<script>javascript:history.go(-1)</script>', 3, _MD_SMARTMEDIA_NO_CLIP);
     exit;
 }
 
@@ -71,7 +75,7 @@ $xoopsTpl->assign('categoryPath', $parentObj->getItemLink() . ' &gt; ' . $folder
 // At which record shall we start
 $start = \Xmf\Request::getInt('start', 0, 'GET');
 
-$clipsObj = $smartmediaClipHandler->getclips($helper->getConfig('clips_per_folder'), $start, $folderid, 'weight', 'ASC', false);
+$clipsObj = $smartmediaClipHandler->getClips($helper->getConfig('clips_per_folder'), $start, $folderid, 'weight', 'ASC', false);
 
 $clips = [];
 $i     = 1;
@@ -85,7 +89,7 @@ foreach ($clipsObj as $clipObj) {
 
 $xoopsTpl->assign('clips', $clips);
 
-$xoopsTpl->assign('module_home', smartmedia_module_home());
+$xoopsTpl->assign('module_home', Utility::module_home());
 
 // The Navigation Bar
 require_once XOOPS_ROOT_PATH . '/class/pagenav.php';
@@ -98,6 +102,6 @@ if (0 != $helper->getConfig('clips_per_folder')) {
     }
 }
 // MetaTag Generator
-smartmedia_createMetaTags($folderObj->title(), $parentObj->title(), $folderObj->description());
+Metagen::createMetaTags($folderObj->title(), $parentObj->title(), $folderObj->description());
 
 require_once XOOPS_ROOT_PATH . '/footer.php';

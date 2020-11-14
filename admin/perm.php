@@ -11,16 +11,13 @@
 
 /**
  * @copyright    XOOPS Project https://xoops.org/
- * @license      GNU GPL 2 or later (http://www.gnu.org/licenses/gpl-2.0.html)
+ * @license      GNU GPL 2 or later (https://www.gnu.org/licenses/gpl-2.0.html)
  * @package
- * @author     XOOPS Development Team
+ * @author       XOOPS Development Team
  */
-
-use  XoopsModules\Rwbanner;
-
 require_once __DIR__ . '/admin_header.php';
 // Функции модуля
-include  dirname(__DIR__) . '/include/functions.php';
+require_once dirname(__DIR__) . '/include/functions.php';
 
 // Admin Gui
 $adminObject = \Xmf\Module\Admin::getInstance();
@@ -39,7 +36,6 @@ $permission = instr_CleanVars($_REQUEST, 'permission', 1, 'int');
 $selected                  = ['', '', ''];
 $selected[$permission - 1] = ' selected';
 
-//
 $xoopsTpl->assign('insSelected', $selected);
 
 $moduleId = $xoopsModule->getVar('mid');
@@ -78,7 +74,7 @@ if ($result) {
 
 //echo $permissionsForm->render();
 $xoopsTpl->assign('insFormPerm', $permissionsForm->render());
-//
+
 unset($permissionsForm);
 
 // Выводим шаблон

@@ -1,4 +1,6 @@
-<?php namespace XoopsModules\Smartmedia;
+<?php
+
+namespace XoopsModules\Smartmedia;
 
 /**
  * Contains the classes for managing clips formats
@@ -12,8 +14,6 @@
  */
 
 use XoopsModules\Smartmedia;
-
-defined('XOOPS_ROOT_PATH') || die('XOOPS root path not defined');
 
 /**
  * Format handler class.
@@ -32,7 +32,6 @@ class FormatHandler extends \XoopsObjectHandler
      * @access    private
      */
     public $db;
-
     /**
      * Name of child class
      *
@@ -40,7 +39,6 @@ class FormatHandler extends \XoopsObjectHandler
      * @access    private
      */
     public $classname = Format::class;
-
     /**
      * db table name
      *
@@ -48,7 +46,6 @@ class FormatHandler extends \XoopsObjectHandler
      * @access private
      */
     public $dbtable = 'smartmedia_formats';
-
     /**
      * key field name
      *
@@ -56,7 +53,6 @@ class FormatHandler extends \XoopsObjectHandler
      * @access private
      */
     public $_key_field = 'formatid';
-
     /**
      * caption field name
      *
@@ -68,9 +64,9 @@ class FormatHandler extends \XoopsObjectHandler
     /**
      * Constructor
      *
-     * @param \XoopsDatabase $db reference to a xoops_db object
+     * @param \XoopsDatabase|null $db reference to a xoops_db object
      */
-    public function __construct(\XoopsDatabase $db)
+    public function __construct(\XoopsDatabase $db = null)
     {
         $this->db = $db;
     }
@@ -78,7 +74,7 @@ class FormatHandler extends \XoopsObjectHandler
     /**
      * Singleton - prevent multiple instances of this class
      *
-     * @param  \XoopsDatabase $db {@link XoopsHandlerFactory}
+     * @param \XoopsDatabase $db {@link XoopsHandlerFactory}
      * @return FormatHandler {@link Smartmedia\FormatHandler}
      * @access public
      */
@@ -93,12 +89,12 @@ class FormatHandler extends \XoopsObjectHandler
     }
 
     /**
-     * @param  bool $isNew
+     * @param bool $isNew
      * @return mixed
      */
     public function create($isNew = true)
     {
-        $obj = new $this->classname;
+        $obj = new $this->classname();
         if ($isNew) {
             $obj->setNew();
         }
@@ -109,10 +105,10 @@ class FormatHandler extends \XoopsObjectHandler
     /**
      * retrieve a Format
      *
-     * @param  int $id format id
+     * @param int $id format id
      * @return mixed reference to the {@link Smartmedia\Format} object, FALSE if failed
      */
-    public function &get($id)
+    public function get($id)
     {
         if ((int)$id > 0) {
             $sql = 'SELECT * FROM ' . $this->db->prefix($this->dbtable) . ' WHERE ' . $this->_key_field . '=' . $id;
@@ -122,7 +118,7 @@ class FormatHandler extends \XoopsObjectHandler
 
             $numrows = $this->db->getRowsNum($result);
             if (1 == $numrows) {
-                $obj = new $this->classname;
+                $obj = new $this->classname();
                 $obj->assignVars($this->db->fetchArray($result));
 
                 return $obj;
@@ -136,12 +132,12 @@ class FormatHandler extends \XoopsObjectHandler
      * insert a new format in the database
      *
      * @param \XoopsObject $object
-     * @param  bool        $force
+     * @param bool         $force
      * @return bool   FALSE if failed, TRUE if already present and unchanged or successful
      */
     public function insert(\XoopsObject $object, $force = false)
     {
-        if (!is_a($object, $this->classname)) {
+        if (!\is_a($object, $this->classname)) {
             return false;
         }
 
@@ -158,10 +154,10 @@ class FormatHandler extends \XoopsObjectHandler
         }
 
         if ($object->isNew()) {
-            $sql = sprintf('INSERT INTO `%s` (' . $this->_key_field . ", template, FORMAT, ext) VALUES ('', %s, %s, %s)", $this->db->prefix($this->dbtable), $this->db->quoteString($template), $this->db->quoteString($format), $this->db->quoteString($ext));
+            $sql = \sprintf('INSERT INTO `%s` (' . $this->_key_field . ", template, FORMAT, ext) VALUES ('', %s, %s, %s)", $this->db->prefix($this->dbtable), $this->db->quoteString($template), $this->db->quoteString($format), $this->db->quoteString($ext));
         } else {
             $id  = $formatid;
-            $sql = sprintf('UPDATE `%s` SET template = %s, FORMAT = %s, ext = %s WHERE ' . $this->_key_field . ' = %u', $this->db->prefix($this->dbtable), $this->db->quoteString($template), $this->db->quoteString($format), $this->db->quoteString($ext), $id);
+            $sql = \sprintf('UPDATE `%s` SET template = %s, FORMAT = %s, ext = %s WHERE ' . $this->_key_field . ' = %u', $this->db->prefix($this->dbtable), $this->db->quoteString($template), $this->db->quoteString($format), $this->db->quoteString($ext), $id);
         }
 
         //echo "<br>" . $sql . "<br>";
@@ -186,16 +182,16 @@ class FormatHandler extends \XoopsObjectHandler
      * delete a Format from the database
      *
      * @param \XoopsObject $object
-     * @param  bool        $force
+     * @param bool         $force
      * @return bool   FALSE if failed.
      */
     public function delete(\XoopsObject $object, $force = false)
     {
-        if (get_class($object) != $this->classname) {
+        if (\get_class($object) != $this->classname) {
             return false;
         }
 
-        $sql = sprintf('DELETE FROM `%s` WHERE ' . $this->_key_field . ' = %u', $this->db->prefix($this->dbtable), $object->formatid());
+        $sql = \sprintf('DELETE FROM `%s` WHERE ' . $this->_key_field . ' = %u', $this->db->prefix($this->dbtable), $object->formatid());
 
         //echo "<br>$sql<br>";
 
@@ -214,8 +210,8 @@ class FormatHandler extends \XoopsObjectHandler
     /**
      * retrieve Format from the database
      *
-     * @param  \CriteriaElement $criteria  {@link \CriteriaElement} conditions to be met
-     * @param  bool   $id_as_key use the formatid as key for the array?
+     * @param \CriteriaElement $criteria  {@link \CriteriaElement} conditions to be met
+     * @param bool             $id_as_key use the formatid as key for the array?
      * @return array  array of {@link Smartmedia\Format} objects
      */
     public function &getObjects($criteria = null, $id_as_key = false)
@@ -224,7 +220,7 @@ class FormatHandler extends \XoopsObjectHandler
         $limit = $start = 0;
         $sql   = 'SELECT * FROM ' . $this->db->prefix($this->dbtable);
 
-        if (isset($criteria) && is_subclass_of($criteria, 'CriteriaElement')) {
+        if (isset($criteria) && $criteria instanceof \CriteriaElement) {
             $whereClause = $criteria->renderWhere();
 
             if ('WHERE ()' !== $whereClause) {
@@ -244,16 +240,16 @@ class FormatHandler extends \XoopsObjectHandler
             return $ret;
         }
 
-//        if (!is_array($result) || 0 == count($result)) {
+        //        if (!is_array($result) || 0 == count($result)) {
 
         if ((!$result) || (0 === $result->num_rows)) {
             return $ret;
         }
 
         while (false !== ($myrow = $this->db->fetchArray($result))) {
-            $obj = new $this->classname;
-//            $temp = '\\XoopsModules\\Smartmedia\\' . $this->classname;
-//            $obj = new $temp;
+            $obj = new $this->classname();
+            //            $temp = '\\XoopsModules\\Smartmedia\\' . $this->classname;
+            //            $obj = new $temp;
 
             $obj->assignVars($myrow);
 
@@ -269,8 +265,8 @@ class FormatHandler extends \XoopsObjectHandler
     }
 
     /**
-     * @param  string $sort
-     * @param  string $order
+     * @param string $sort
+     * @param string $order
      * @return array
      */
     public function getFormats($sort = 'format', $order = 'ASC')
@@ -286,13 +282,13 @@ class FormatHandler extends \XoopsObjectHandler
     /**
      * count Formats matching a condition
      *
-     * @param  \CriteriaElement $criteria {@link \CriteriaElement} to match
+     * @param \CriteriaElement $criteria {@link \CriteriaElement} to match
      * @return int    count of clients
      */
     public function getCount(\CriteriaElement $criteria = null)
     {
         $sql = 'SELECT COUNT(*) FROM ' . $this->db->prefix($this->dbtable);
-        if (isset($criteria) && is_subclass_of($criteria, 'CriteriaElement')) {
+        if (isset($criteria) && $criteria instanceof \CriteriaElement) {
             $whereClause = $criteria->renderWhere();
             if ('WHERE ()' !== $whereClause) {
                 $sql .= ' ' . $criteria->renderWhere();
@@ -305,7 +301,7 @@ class FormatHandler extends \XoopsObjectHandler
         if (!$result) {
             return 0;
         }
-        list($count) = $this->db->fetchRow($result);
+        [$count] = $this->db->fetchRow($result);
 
         return $count;
     }
@@ -321,9 +317,9 @@ class FormatHandler extends \XoopsObjectHandler
      **/
     public function updateAll($fieldname, $fieldvalue, $criteria = null)
     {
-        $set_clause = is_numeric($fieldvalue) ? $fieldname . ' = ' . $fieldvalue : $fieldname . ' = ' . $this->db->quoteString($fieldvalue);
+        $set_clause = \is_numeric($fieldvalue) ? $fieldname . ' = ' . $fieldvalue : $fieldname . ' = ' . $this->db->quoteString($fieldvalue);
         $sql        = 'UPDATE ' . $this->db->prefix($this->dbtable) . ' SET ' . $set_clause;
-        if (isset($criteria) && is_subclass_of($criteria, 'CriteriaElement')) {
+        if (isset($criteria) && $criteria instanceof \CriteriaElement) {
             $sql .= ' ' . $criteria->renderWhere();
         }
 

@@ -3,7 +3,7 @@
 //  ------------------------------------------------------------------------ //
 //                XOOPS - PHP Content Management System                      //
 //                    Copyright (c) 2000 XOOPS.org                           //
-//                       <https://xoops.org/>                             //
+//                       <https://xoops.org>                             //
 //  ------------------------------------------------------------------------ //
 //  This program is free software; you can redistribute it and/or modify     //
 //  it under the terms of the GNU General Public License as published by     //
@@ -37,11 +37,11 @@ require_once XOOPS_ROOT_PATH . '/modules/system/admin/blocksadmin/blocksadmin.ph
 $op = 'list';
 if (isset($_POST)) {
     foreach ($_POST as $k => $v) {
-        $$k = $v;
+        ${$k} = $v;
     }
 }
 
-if (isset($_GET['op'])) {
+if (\Xmf\Request::hasVar('op', 'GET')) {
     if ('edit' === $_GET['op'] || 'delete' === $_GET['op'] || 'delete_ok' === $_GET['op'] || 'clone' === $_GET['op'] || 'previewpopup' === $_GET['op']) {
         $op  = $_GET['op'];
         $bid = \Xmf\Request::getInt('bid', 0, 'GET');
@@ -51,8 +51,8 @@ if (isset($_GET['op'])) {
 if (isset($previewblock)) {
     xoops_cp_header();
     require_once XOOPS_ROOT_PATH . '/class/template.php';
-    $xoopsTpl = new \XoopsTpl();
-    $xoopsTpl->xoops_setCaching(0);
+    $xoopsTpl          = new \XoopsTpl();
+    $xoopsTpl->caching = 0;
     if (isset($bid)) {
         $block['bid']        = $bid;
         $block['form_title'] = _AM_EDITBLOCK;
@@ -68,21 +68,11 @@ if (isset($previewblock)) {
         $myblock->setVar('block_type', 'C');
     }
     $myts = \MyTextSanitizer::getInstance();
-    $myblock->setVar('title', $myts->stripSlashesGPC($btitle));
-    $myblock->setVar('content', $myts->stripSlashesGPC($bcontent));
-    $dummyhtml = '<html><head><meta http-equiv="content-type" content="text/html; charset='
-                 . _CHARSET
-                 . '" /><meta http-equiv="content-language" content="'
-                 . _LANGCODE
-                 . '" /><title>'
-                 . $xoopsConfig['sitename']
-                 . '</title><link rel="stylesheet" type="text/css" media="all" href="'
-                 . getcss($xoopsConfig['theme_set'])
-                 . '" /></head><body><table><tr><th>'
-                 . $myblock->getVar('title')
-                 . '</th></tr><tr><td>'
-                 . $myblock->getContent('S', $bctype)
-                 . '</td></tr></table></body></html>';
+    $myblock->setVar('title', ($btitle));
+    $myblock->setVar('content', ($bcontent));
+    $dummyhtml = '<html><head><meta http-equiv="content-type" content="text/html; charset=' . _CHARSET . '"><meta http-equiv="content-language" content="' . _LANGCODE . '"><title>' . $xoopsConfig['sitename'] . '</title><link rel="stylesheet" type="text/css" media="all" href="' . getcss(
+            $xoopsConfig['theme_set']
+        ) . '"></head><body><table><tr><th>' . $myblock->getVar('title') . '</th></tr><tr><td>' . $myblock->getContent('S', $bctype) . '</td></tr></table></body></html>';
 
     $dummyfile = '_dummyfile_' . time() . '.tpl';
     $fp        = fopen(XOOPS_CACHE_PATH . '/' . $dummyfile, 'w');
@@ -96,7 +86,7 @@ if (isset($previewblock)) {
     $block['visible']   = $bvisible;
     $block['title']     = $myblock->getVar('title', 'E');
     $block['content']   = $myblock->getVar('content', 'E');
-    $block['modules']   =& $bmodule;
+    $block['modules']   = &$bmodule;
     $block['ctype']     = isset($bctype) ? $bctype : $myblock->getVar('c_type');
     $block['is_custom'] = true;
     $block['cachetime'] = (int)$bcachetime;
@@ -215,7 +205,7 @@ function myblocksadmin_update_block($bid, $bside, $bweight, $bvisible, $btitle, 
     $myblock->setVar('bcachetime', $bcachetime);
 
     // Hack by marcan to enabled array type options
-    for ($i = 0; $i < count($options); ++$i) {
+    for ($i = 0, $iMax = count($options); $i < $iMax; ++$i) {
         if (is_array($options[$i])) {
             $options[$i] = implode(',', $options[$i]);
         }
@@ -255,8 +245,8 @@ function myblocksadmin_update_block($bid, $bside, $bweight, $bvisible, $btitle, 
             $db->query($sql);
         }
         require_once XOOPS_ROOT_PATH . '/class/template.php';
-        $xoopsTpl = new \XoopsTpl();
-        $xoopsTpl->xoops_setCaching(2);
+        $xoopsTpl          = new \XoopsTpl();
+        $xoopsTpl->caching = 2;
         if ('' != $myblock->getVar('template')) {
             if ($xoopsTpl->is_cached('db:' . $myblock->getVar('template'))) {
                 if (!$xoopsTpl->clear_cache('db:' . $myblock->getVar('template'))) {

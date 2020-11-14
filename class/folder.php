@@ -1,4 +1,6 @@
-<?php namespace XoopsModules\Smartmedia;
+<?php
+
+namespace XoopsModules\Smartmedia;
 
 /**
  * Contains the classes for managing folders
@@ -34,21 +36,18 @@ class Folder extends \XoopsObject
      * @var string
      */
     public $languageid;
-
     /**
      * {@link Smartmedia\FolderText} object holding the folder's text informations
      * @var object
      * @see Smartmedia\FolderText
      */
     public $folder_text = null;
-
     /**
      * List of all the translations already created for this folder
      * @var array
      * @see getCreatedLanguages
      */
     public $_created_languages = null;
-
     /**
      * Flag indicating wheter or not a new translation can be added for this folder
      *
@@ -67,25 +66,25 @@ class Folder extends \XoopsObject
      */
     public function __construct($languageid = 'default', $id = null)
     {
-        $smartConfig =& smartmedia_getModuleConfig();
+        $smartConfig = Utility::getModuleConfig();
 
-        $this->initVar('folderid', XOBJ_DTYPE_INT, -1, true);
-        $this->initVar('statusid', XOBJ_DTYPE_INT, _SMARTMEDIA_FOLDER_STATUS_ONLINE, false);
-        $this->initVar('created_uid', XOBJ_DTYPE_INT, 0, false);
-        $this->initVar('created_date', XOBJ_DTYPE_INT, 0, false);
-        $this->initVar('modified_uid', XOBJ_DTYPE_INT, 0, false);
-        $this->initVar('modified_date', XOBJ_DTYPE_INT, 0, false);
-        $this->initVar('weight', XOBJ_DTYPE_INT, 0, false);
-        $this->initVar('image_hr', XOBJ_DTYPE_TXTBOX, null, false, 50);
-        $this->initVar('image_lr', XOBJ_DTYPE_TXTBOX, null, false, 50);
-        $this->initVar('counter', XOBJ_DTYPE_INT, 0, false);
-        $this->initVar('default_languageid', XOBJ_DTYPE_TXTBOX, $smartConfig['default_language'], false, 50);
+        $this->initVar('folderid', \XOBJ_DTYPE_INT, -1, true);
+        $this->initVar('statusid', \XOBJ_DTYPE_INT, \_SMARTMEDIA_FOLDER_STATUS_ONLINE, false);
+        $this->initVar('created_uid', \XOBJ_DTYPE_INT, 0, false);
+        $this->initVar('created_date', \XOBJ_DTYPE_INT, 0, false);
+        $this->initVar('modified_uid', \XOBJ_DTYPE_INT, 0, false);
+        $this->initVar('modified_date', \XOBJ_DTYPE_INT, 0, false);
+        $this->initVar('weight', \XOBJ_DTYPE_INT, 0, false);
+        $this->initVar('image_hr', \XOBJ_DTYPE_TXTBOX, null, false, 50);
+        $this->initVar('image_lr', \XOBJ_DTYPE_TXTBOX, null, false, 50);
+        $this->initVar('counter', \XOBJ_DTYPE_INT, 0, false);
+        $this->initVar('default_languageid', \XOBJ_DTYPE_TXTBOX, $smartConfig['default_language'], false, 50);
 
-        $this->initVar('categoryid', XOBJ_DTYPE_INT, 0, false);
-        $this->initVar('new_category', XOBJ_DTYPE_INT, 0, false);
+        $this->initVar('categoryid', \XOBJ_DTYPE_INT, 0, false);
+        $this->initVar('new_category', \XOBJ_DTYPE_INT, 0, false);
 
         if (isset($id)) {
-            if (is_array($id)) {
+            if (\is_array($id)) {
                 $this->assignVars($id);
             }
         } else {
@@ -121,8 +120,8 @@ class Folder extends \XoopsObject
     {
         $this->languageid = $languageid;
 
-        $smartmediaFolderTextHandler = Smartmedia\Helper::getInstance()->getHandler('FolderText');
-        $this->folder_text           =& $smartmediaFolderTextHandler->get($this->getVar('folderid'), $this->languageid);
+        $smartmediaFolderTextHandler = Helper::getInstance()->getHandler('FolderText');
+        $this->folder_text           = $smartmediaFolderTextHandler->get($this->getVar('folderid'), $this->languageid);
 
         if (!$this->folder_text) {
             $this->folder_text = new Smartmedia\FolderText();
@@ -172,7 +171,7 @@ class Folder extends \XoopsObject
     public function created_date($dateFormat = 'none', $format = 'S')
     {
         if ('none' === $dateFormat) {
-            $smartConfig =& smartmedia_getModuleConfig();
+            $smartConfig = Utility::getModuleConfig();
             if (isset($smartConfig['dateformat'])) {
                 $dateFormat = $smartConfig['dateformat'];
             } else {
@@ -180,7 +179,7 @@ class Folder extends \XoopsObject
             }
         }
 
-        return formatTimestamp($this->getVar('created_date', $format), $dateFormat);
+        return \formatTimestamp($this->getVar('created_date', $format), $dateFormat);
     }
 
     /**
@@ -202,7 +201,7 @@ class Folder extends \XoopsObject
     public function modified_date($dateFormat = 'none', $format = 'S')
     {
         if ('none' === $dateFormat) {
-            $smartConfig =& smartmedia_getModuleConfig();
+            $smartConfig = Utility::getModuleConfig();
             if (isset($smartConfig['dateformat'])) {
                 $dateFormat = $smartConfig['dateformat'];
             } else {
@@ -210,7 +209,7 @@ class Folder extends \XoopsObject
             }
         }
 
-        return formatTimestamp($this->getVar('modified_date', $format), $dateFormat);
+        return \formatTimestamp($this->getVar('modified_date', $format), $dateFormat);
     }
 
     /**
@@ -231,8 +230,8 @@ class Folder extends \XoopsObject
 
     /**
      * Returns the categoryid to which this folder belongs
-     * @see Smartmedia\Category
      * @return string parent categoryid of this folder
+     * @see Smartmedia\Category
      */
     public function categoryid()
     {
@@ -245,16 +244,16 @@ class Folder extends \XoopsObject
      * If no image has been set, the function will return blank.png, so a blank image can
      * be displayed
      *
-     * @param  string $format format to use for the output
+     * @param string $format format to use for the output
      * @return string high resolution image of this folder
      */
     public function image_hr($format = 'S')
     {
         if ('' != $this->getVar('image_hr')) {
             return $this->getVar('image_hr', $format);
-        } else {
-            return 'blank.png';
         }
+
+        return 'blank.png';
     }
 
     /**
@@ -263,16 +262,16 @@ class Folder extends \XoopsObject
      * If no image has been set, the function will return blank.png, so a blank image can
      * be displayed
      *
-     * @param  string $format format to use for the output
+     * @param string $format format to use for the output
      * @return string low resolution image of this folder
      */
     public function image_lr($format = 'S')
     {
         if ('' != $this->getVar('image_lr')) {
             return $this->getVar('image_lr', $format);
-        } else {
-            return 'blank.png';
         }
+
+        return 'blank.png';
     }
 
     /**
@@ -304,42 +303,42 @@ class Folder extends \XoopsObject
      * title is likely to be used in the page title meta tag or any other place that requires
      * "html less" text
      *
-     * @param  string $format format to use for the output
+     * @param string $format format to use for the output
      * @return string title of the folder
      */
     public function title($format = 'S')
     {
         $myts = \MyTextSanitizer::getInstance();
-        if (('s' === strtolower($format)) || ('show' === strtolower($format))) {
+        if (('s' === mb_strtolower($format)) || ('show' === mb_strtolower($format))) {
             return $myts->undoHtmlSpecialChars($this->folder_text->getVar('title', 'e'), 1);
-        } elseif ('clean' === strtolower($format)) {
-            return smartmedia_metagen_html2text($myts->undoHtmlSpecialChars($this->folder_text->getVar('title')));
-        } else {
-            return $this->folder_text->getVar('title', $format);
+        } elseif ('clean' === mb_strtolower($format)) {
+            return Utility::metagen_html2text($myts->undoHtmlSpecialChars($this->folder_text->getVar('title')));
         }
+
+        return $this->folder_text->getVar('title', $format);
     }
 
     /**
      * Returns the short title of the folder
      *
-     * @param  string $format format to use for the output
+     * @param string $format format to use for the output
      * @return string short title of the folder
      */
     public function short_title($format = 'S')
     {
-        if (('s' === strtolower($format)) || ('show' === strtolower($format))) {
+        if (('s' === mb_strtolower($format)) || ('show' === mb_strtolower($format))) {
             $myts = \MyTextSanitizer::getInstance();
 
             return $myts->undoHtmlSpecialChars($this->folder_text->getVar('short_title', 'e'), 1);
-        } else {
-            return $this->folder_text->getVar('short_title', $format);
         }
+
+        return $this->folder_text->getVar('short_title', $format);
     }
 
     /**
      * Returns the summary of the folder
      *
-     * @param  string $format format to use for the output
+     * @param string $format format to use for the output
      * @return string summary of the folder
      */
     public function summary($format = 'S')
@@ -350,7 +349,7 @@ class Folder extends \XoopsObject
     /**
      * Returns the description of the folder
      *
-     * @param  string $format format to use for the output
+     * @param string $format format to use for the output
      * @return string description of the folder
      */
     public function description($format = 'S')
@@ -361,7 +360,7 @@ class Folder extends \XoopsObject
     /**
      * Returns the meta description of the folder
      *
-     * @param  string $format format to use for the output
+     * @param string $format format to use for the output
      * @return string meta description of the folder
      */
     public function meta_description($format = 'S')
@@ -408,7 +407,7 @@ class Folder extends \XoopsObject
      * This method stores the folder as well as the current translation informations for the
      * folder
      *
-     * @param  bool $force
+     * @param bool $force
      * @return bool true if successfully stored false if an error occured
      *
      * @see Smartmedia\FolderHandler::insert()
@@ -416,8 +415,8 @@ class Folder extends \XoopsObject
      */
     public function store($force = true)
     {
-        global $smartmediaFolderHandler;
-        if (!$smartmediaFolderHandler->insert($this, $force)) {
+        global $folderHandler;
+        if (!$folderHandler->insert($this, $force)) {
             return false;
         }
         $this->folder_text->setVar('folderid', $this->folderid());
@@ -431,7 +430,7 @@ class Folder extends \XoopsObject
     /**
      * Get all the translations created for this folder
      *
-     * @param  bool $exceptDefault to determine if the default language should be returned or not
+     * @param bool $exceptDefault to determine if the default language should be returned or not
      * @return array array of {@link Smartmedia\FolderText}
      */
     public function getAllLanguages($exceptDefault = false)
@@ -455,7 +454,7 @@ class Folder extends \XoopsObject
      */
     public function getCreatedLanguages()
     {
-        if (null != $this->_created_languages) {
+        if (null !== $this->_created_languages) {
             return $this->_created_languages;
         }
         global $smartmediaFolderTextHandler;
@@ -476,7 +475,7 @@ class Folder extends \XoopsObject
      */
     public function canAddLanguage()
     {
-        if (null != $this->_canAddLanguage) {
+        if (null !== $this->_canAddLanguage) {
             return $this->_canAddLanguage;
         }
 
@@ -484,7 +483,7 @@ class Folder extends \XoopsObject
         $languageList     = \XoopsLists::getLangList();
         $createdLanguages = $this->getCreatedLanguages();
 
-        $this->_canAddLanguage = (count($languageList) > count($createdLanguages));
+        $this->_canAddLanguage = (\count($languageList) > \count($createdLanguages));
 
         return $this->_canAddLanguage;
     }
@@ -492,7 +491,7 @@ class Folder extends \XoopsObject
     /**
      * Link the folder to a category
      *
-     * @param  int $parentid id of the category to link to
+     * @param int $parentid id of the category to link to
      * @return string hypertext links to edit and delete the clip
      * @see Smartmedia\FolderHandler::linkToParent()
      */
@@ -502,9 +501,9 @@ class Folder extends \XoopsObject
             return true;
         }
 
-        global $smartmediaFolderHandler;
+        global $folderHandler;
 
-        return $smartmediaFolderHandler->linkToParent($parentid, $this->folderid(), $this->getVar('new_category'));
+        return $folderHandler->linkToParent($parentid, $this->folderid(), $this->getVar('new_category'));
     }
 
     /**
@@ -523,13 +522,13 @@ class Folder extends \XoopsObject
         $pathIcon16 = \Xmf\Module\Admin::iconUrl('', 16);
         if ($is_smartmedia_admin) {
             $ret = '';
-            $ret .= '<a href="' . SMARTMEDIA_URL . 'admin/folder.php?op=mod&folderid=' . $this->folderid() . '&categoryid=' . $this->categoryid() . '"><img src="' . $pathIcon16 . '/edit.png' . '"   alt="' . _MD_SMARTMEDIA_FOLDER_EDIT . '" title="' . _MD_SMARTMEDIA_FOLDER_EDIT . '"/></a>';
-            $ret .= '<a href="' . SMARTMEDIA_URL . 'admin/folder.php?op=del&folderid=' . $this->folderid() . '&categoryid=' . $this->categoryid() . '"><img src="' . $pathIcon16 . '/delete.png' . '"  alt="' . _MD_SMARTMEDIA_FOLDER_DELETE . '" title="' . _MD_SMARTMEDIA_FOLDER_DELETE . '"/></a>';
+            $ret .= '<a href="' . SMARTMEDIA_URL . 'admin/folder.php?op=mod&folderid=' . $this->folderid() . '&categoryid=' . $this->categoryid() . '"><img src="' . $pathIcon16 . '/edit.png' . '"   alt="' . \_MD_SMARTMEDIA_FOLDER_EDIT . '" title="' . \_MD_SMARTMEDIA_FOLDER_EDIT . '"></a>';
+            $ret .= '<a href="' . SMARTMEDIA_URL . 'admin/folder.php?op=del&folderid=' . $this->folderid() . '&categoryid=' . $this->categoryid() . '"><img src="' . $pathIcon16 . '/delete.png' . '"  alt="' . \_MD_SMARTMEDIA_FOLDER_DELETE . '" title="' . \_MD_SMARTMEDIA_FOLDER_DELETE . '"></a>';
 
             return $ret;
-        } else {
-            return '';
         }
+
+        return '';
     }
 
     /**
@@ -549,15 +548,15 @@ class Folder extends \XoopsObject
         $folder['weight']     = $this->weight();
 
         if ('blank.png' !== $this->getVar('image_hr')) {
-            $folder['image_hr_path'] = smartmedia_getImageDir('folder', false) . $this->image_hr();
+            $folder['image_hr_path'] = Utility::getImageDir('folder', false) . $this->image_hr();
         } else {
             $folder['image_hr_path'] = false;
         }
 
-        $smartConfig                =& smartmedia_getModuleConfig();
+        $smartConfig                = Utility::getModuleConfig();
         $folder['main_image_width'] = $smartConfig['main_image_width'];
         $folder['list_image_width'] = $smartConfig['list_image_width'];
-        $folder['image_lr_path']    = smartmedia_getImageDir('folder', false) . $this->image_lr();
+        $folder['image_lr_path']    = Utility::getImageDir('folder', false) . $this->image_lr();
         $folder['counter']          = $this->counter();
         $folder['adminLinks']       = $this->adminLinks();
 
@@ -572,7 +571,7 @@ class Folder extends \XoopsObject
         $highlight = true;
         if ($highlight && isset($_GET['keywords'])) {
             $myts                  = \MyTextSanitizer::getInstance();
-            $keywords              = $myts->htmlSpecialChars(trim(urldecode($_GET['keywords'])));
+            $keywords              = $myts->htmlSpecialChars(\trim(\urldecode($_GET['keywords'])));
             $h                     = new KeyHighlighter($keywords, true, 'smartmedia_highlighter');
             $folder['title']       = $h->highlight($folder['title']);
             $folder['summary']     = $h->highlight($folder['summary']);
@@ -590,13 +589,13 @@ class Folder extends \XoopsObject
      */
     public function hasChild()
     {
-        $smartmediaFolderHandler = Smartmedia\Helper::getInstance()->getHandler('Folder');
-        $count                   = $smartmediaFolderHandler->clipsCount($this->folderid());
+        $folderHandler = Helper::getInstance()->getHandler('Folder');
+        $count         = $folderHandler->clipsCount($this->folderid());
         if (isset($count[$this->folderid()]) && ($count[$this->folderid()] > 0)) {
             return true;
-        } else {
-            return false;
         }
+
+        return false;
     }
 
     /**

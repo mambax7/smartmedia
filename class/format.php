@@ -1,4 +1,6 @@
-<?php namespace XoopsModules\Smartmedia;
+<?php
+
+namespace XoopsModules\Smartmedia;
 
 /**
  * Contains the classes for managing clips formats
@@ -12,8 +14,6 @@
  */
 
 use XoopsModules\Smartmedia;
-
-defined('XOOPS_ROOT_PATH') || die('XOOPS root path not defined');
 
 /**
  * SmartMedia Format class
@@ -34,10 +34,10 @@ class Format extends \XoopsObject
     public function __construct($id = null)
     {
         $this->db = \XoopsDatabaseFactory::getDatabaseConnection();
-        $this->initVar('formatid', XOBJ_DTYPE_INT, 0, false);
-        $this->initVar('template', XOBJ_DTYPE_TXTBOX, null, false);
-        $this->initVar('format', XOBJ_DTYPE_TXTBOX, null, false);
-        $this->initVar('ext', XOBJ_DTYPE_TXTBOX, null, false);
+        $this->initVar('formatid', \XOBJ_DTYPE_INT, 0, false);
+        $this->initVar('template', \XOBJ_DTYPE_TXTBOX, null, false);
+        $this->initVar('format', \XOBJ_DTYPE_TXTBOX, null, false);
+        $this->initVar('ext', \XOBJ_DTYPE_TXTBOX, null, false);
 
         if (isset($id)) {
             $objHandler = new Smartmedia\FormatHandler($this->db);
@@ -85,7 +85,7 @@ class Format extends \XoopsObject
     /**
      * Stores the format of the clip in the database
      *
-     * @param  bool $force
+     * @param bool $force
      * @return bool true if successfully stored false if an error occured
      *
      * @see Smartmedia\FormatHandler::insert()
@@ -103,21 +103,21 @@ class Format extends \XoopsObject
      * This method returns the redirection messages upon success of delete of addition,
      * edition or deletion of a format
      *
-     * @param  string $action action related to the messages : new, edit or delete
+     * @param string $action action related to the messages : new, edit or delete
      * @return array  containing the messages
      */
     public function getRedirectMsg($action)
     {
         $ret = [];
         if ('new' === $action) {
-            $ret['error']   = _AM_SMARTMEDIA_FORMAT_CREATE_ERROR;
-            $ret['success'] = _AM_SMARTMEDIA_FORMAT_CREATE_SUCCESS;
+            $ret['error']   = \_AM_SMARTMEDIA_FORMAT_CREATE_ERROR;
+            $ret['success'] = \_AM_SMARTMEDIA_FORMAT_CREATE_SUCCESS;
         } elseif ('edit' === $action) {
-            $ret['error']   = _AM_SMARTMEDIA_FORMAT_EDIT_ERROR;
-            $ret['success'] = _AM_SMARTMEDIA_FORMAT_EDIT_SUCCESS;
+            $ret['error']   = \_AM_SMARTMEDIA_FORMAT_EDIT_ERROR;
+            $ret['success'] = \_AM_SMARTMEDIA_FORMAT_EDIT_SUCCESS;
         } elseif ('delete' === $action) {
-            $ret['error']   = _AM_SMARTMEDIA_FORMAT_DELETE_ERROR;
-            $ret['success'] = _AM_SMARTMEDIA_FORMAT_DELETE_SUCCESS;
+            $ret['error']   = \_AM_SMARTMEDIA_FORMAT_DELETE_ERROR;
+            $ret['success'] = \_AM_SMARTMEDIA_FORMAT_DELETE_SUCCESS;
         }
 
         return $ret;
@@ -128,17 +128,17 @@ class Format extends \XoopsObject
      *
      * This methods renders the template ans replace different tags by the real values of the clip
      *
-     * @param  object $clipObj {@link Smartmedia\Clip} object
+     * @param object $clipObj {@link Smartmedia\Clip} object
      * @return string containing the template
      */
     public function render($clipObj)
     {
         $temp = $this->template();
 
-        $temp = str_replace('{CLIP_URL}', $clipObj->file_lr(), $temp);
-        $temp = str_replace('{CLIP_WIDTH}', $clipObj->width(), $temp);
-        $temp = str_replace('{CLIP_HEIGHT}', $clipObj->height(), $temp);
-        $temp = str_replace('{CLIP_URL}', $clipObj->autostart(), $temp);
+        $temp = \str_replace('{CLIP_URL}', $clipObj->file_lr(), $temp);
+        $temp = \str_replace('{CLIP_WIDTH}', $clipObj->width(), $temp);
+        $temp = \str_replace('{CLIP_HEIGHT}', $clipObj->height(), $temp);
+        $temp = \str_replace('{CLIP_URL}', $clipObj->autostart(), $temp);
 
         return $temp;
     }

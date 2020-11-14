@@ -11,22 +11,25 @@
  */
 
 use Xmf\Request;
-use XoopsModules\Smartmedia;
-
-/** @var Smartmedia\Helper $helper */
-$helper = Smartmedia\Helper::getInstance();
+use XoopsModules\Smartmedia\{
+    Helper,
+    Utility,
+    Tree
+};
+/** @var Helper $helper */
 
 /**
  * Module: SmartMedia
  * Author: The SmartFactory <www.smartfactory.ca>
  * Licence: GNU
  */
-
 require_once __DIR__ . '/admin_header.php';
 
-global $smartmediaFolderHandler;
+global $folderHandler;
 
-$op    = \Xmf\Request::getCmd('op', '');
+$helper = Helper::getInstance();
+
+$op = Request::getCmd('op', '');
 
 /* Possible $op :
  mod : Displaying the form to edit or add a folder
@@ -45,10 +48,10 @@ $startfolder = Request::getInt('startfolder', 0, 'GET');
  */
 function displayFolder_text($folder_textObj)
 {
-    global $xoopsModule, $smartmediaFolderHandler, $pathIcon16;
+    global $xoopsModule, $folderHandler, $pathIcon16;
 
-    $modify = "<a href='folder.php?op=modtext&folderid=" . $folder_textObj->folderid() . '&languageid=' . $folder_textObj->languageid() . "'><img src='" . $pathIcon16 . '/edit.png' . "' title='" . _AM_SMARTMEDIA_FOLDER_EDIT . "' alt='" . _AM_SMARTMEDIA_FOLDER_EDIT . "' /></a>";
-    $delete = "<a href='folder.php?op=deltext&folderid=" . $folder_textObj->folderid() . '&languageid=' . $folder_textObj->languageid() . "'><img src='" . $pathIcon16 . '/delete.png' . "' title='" . _AM_SMARTMEDIA_FOLDER_DELETE . "' alt='" . _AM_SMARTMEDIA_FOLDER_DELETE . "' /></a>";
+    $modify = "<a href='folder.php?op=modtext&folderid=" . $folder_textObj->folderid() . '&languageid=' . $folder_textObj->languageid() . "'><img src='" . $pathIcon16 . '/edit.png' . "' title='" . _AM_SMARTMEDIA_FOLDER_EDIT . "' alt='" . _AM_SMARTMEDIA_FOLDER_EDIT . "'></a>";
+    $delete = "<a href='folder.php?op=deltext&folderid=" . $folder_textObj->folderid() . '&languageid=' . $folder_textObj->languageid() . "'><img src='" . $pathIcon16 . '/delete.png' . "' title='" . _AM_SMARTMEDIA_FOLDER_DELETE . "' alt='" . _AM_SMARTMEDIA_FOLDER_DELETE . "'></a>";
     echo '<tr>';
     echo "<td class='even' align='left'>" . $folder_textObj->languageid() . '</td>';
     echo "<td class='even' align='left'> " . $folder_textObj->title() . ' </td>';
@@ -62,31 +65,30 @@ function displayFolder_text($folder_textObj)
  */
 function addFolder($language_text = false)
 {
-    global $xoopsUser, $xoopsConfig, $xoopsModule, $myts, $smartmediaFolderHandler;
-    /** @var Smartmedia\Helper $helper */
-    $helper = Smartmedia\Helper::getInstance();
+    global $xoopsUser, $xoopsConfig, $xoopsModule, $myts, $folderHandler;
+    $helper = Helper::getInstance();
     require_once XOOPS_ROOT_PATH . '/class/uploader.php';
 
     $max_size          = 10000000;
     $max_imgwidth      = 1000;
     $max_imgheight     = 1000;
-    $allowed_mimetypes = smartmedia_getAllowedMimeTypes();
+    $allowed_mimetypes = Utility::getAllowedMimeTypes();
     $upload_msgs       = [];
 
     $folderid = Request::getInt('folderid', 0, 'POST');
 
-    if (isset($_POST['languageid'])) {
+    if (\Xmf\Request::hasVar('languageid', 'POST')) {
         $languageid = $_POST['languageid'];
-    } elseif (isset($_POST['default_languageid'])) {
+    } elseif (\Xmf\Request::hasVar('default_languageid', 'POST')) {
         $languageid = $_POST['default_languageid'];
     } else {
         $languageid = $helper->getConfig('default_language');
     }
 
     if (0 != $folderid) {
-        $folderObj = $smartmediaFolderHandler->get($folderid, $languageid);
+        $folderObj = $folderHandler->get($folderid, $languageid);
     } else {
-        $folderObj = $smartmediaFolderHandler->create();
+        $folderObj = $folderHandler->create();
     }
 
     if (!$language_text) {
@@ -98,7 +100,7 @@ function addFolder($language_text = false)
          if ( $_FILES[$filename]['tmp_name'] == "" || ! is_readable( $_FILES[$filename]['tmp_name'] ) ) {
          $upload_msgs[_AM_SMARTMEDIA_FILEUPLOAD_ERROR];
          } else {
-         $uploader = new \XoopsMediaUploader(smartmedia_getImageDir('folder'), $allowed_mimetypes, $max_size, $max_imgwidth, $max_imgheight);
+         $uploader = new \XoopsMediaUploader(Utility::getImageDir('folder'), $allowed_mimetypes, $max_size, $max_imgwidth, $max_imgheight);
 
          if ( $uploader->fetchMedia( $filename ) && $uploader->upload() ) {
          $folderObj->setVar('image_lr', $uploader->getSavedFileName());
@@ -118,7 +120,7 @@ function addFolder($language_text = false)
                 if ('' == $_FILES[$filename]['tmp_name'] || !is_readable($_FILES[$filename]['tmp_name'])) {
                     $upload_msgs[_AM_SMARTMEDIA_FILEUPLOAD_ERROR];
                 } else {
-                    $uploader = new \XoopsMediaUploader(smartmedia_getImageDir('folder'), $allowed_mimetypes, $max_size, $max_imgwidth, $max_imgheight);
+                    $uploader = new \XoopsMediaUploader(Utility::getImageDir('folder'), $allowed_mimetypes, $max_size, $max_imgwidth, $max_imgheight);
 
                     if ($uploader->fetchMedia($filename) && $uploader->upload()) {
                         $folderObj->setVar('image_hr', $uploader->getSavedFileName());
@@ -161,7 +163,7 @@ function addFolder($language_text = false)
     }
 
     if (!$folderObj->store()) {
-        redirect_header('javascript:history.go(-1)', 3, _AM_SMARTMEDIA_FOLDER_SAVE_ERROR . smartmedia_formatErrors($folderObj->getErrors()));
+        redirect_header('<script>javascript:history.go(-1)</script>', 3, _AM_SMARTMEDIA_FOLDER_SAVE_ERROR . Utility::formatErrors($folderObj->getErrors()));
         exit;
     }
 
@@ -178,9 +180,8 @@ function addFolder($language_text = false)
  */
 function editfolder($showmenu = false, $folderid = 0, $categoryid = 0)
 {
-    global $xoopsDB, $smartmediaFolderHandler, $xoopsUser, $myts, $xoopsConfig, $xoopsModule;
-    /** @var Smartmedia\Helper $helper */
-    $helper = Smartmedia\Helper::getInstance();
+    global $xoopsDB, $folderHandler, $xoopsUser, $myts, $xoopsConfig, $xoopsModule;
+    $helper =Helper::getInstance();
     require_once XOOPS_ROOT_PATH . '/class/xoopsformloader.php';
 
     // if $folderid == 0 then we are adding a new folder
@@ -198,7 +199,7 @@ function editfolder($showmenu = false, $folderid = 0, $categoryid = 0)
         // We are editing a folder
 
         // Creating the folder object for the selected folder
-        $folderObj = $smartmediaFolderHandler->get($folderid);
+        $folderObj = $folderHandler->get($folderid);
         $cat_sel   = '&folderid=' . $folderObj->folderid();
         $folderObj->loadLanguage($folderObj->default_languageid());
 
@@ -210,20 +211,20 @@ function editfolder($showmenu = false, $folderid = 0, $categoryid = 0)
             redirect_header('folder.php', 1, _AM_SMARTMEDIA_NOFOLDERTOEDIT);
             exit();
         }
-        smartmedia_collapsableBar('bottomtable', 'bottomtableicon');
-        echo "<img id='bottomtableicon' src=" . XOOPS_URL . '/modules/' . $xoopsModule->dirname() . "/assets/images/icon/close12.gif alt='' /></a>&nbsp;" . _AM_SMARTMEDIA_FOLDER_EDIT . '</h3>';
+        Utility::collapsableBar('bottomtable', 'bottomtableicon');
+        echo "<img id='bottomtableicon' src=" . XOOPS_URL . '/modules/' . $xoopsModule->dirname() . "/assets/images/icon/close12.gif alt=''></a>&nbsp;" . _AM_SMARTMEDIA_FOLDER_EDIT . '</h3>';
         echo "<div id='bottomtable'>";
         echo '<span style="color: #567; margin: 3px 0 18px 0; font-size: small; display: block; ">' . _AM_SMARTMEDIA_FOLDER_EDIT_INFO . '</span>';
     } else {
         // We are creating a new folder
 
-        $folderObj = $smartmediaFolderHandler->create();
+        $folderObj = $folderHandler->create();
         if ($showmenu) {
             //smartmedia_adminMenu(2, _AM_SMARTMEDIA_FOLDERS . " > " . _AM_SMARTMEDIA_CREATINGNEW);
         }
         echo "<br>\n";
-        smartmedia_collapsableBar('bottomtable', 'bottomtableicon');
-        echo "<img id='bottomtableicon' src=" . XOOPS_URL . '/modules/' . $xoopsModule->dirname() . "/assets/images/icon/close12.gif alt='' /></a>&nbsp;" . _AM_SMARTMEDIA_FOLDER_CREATE . '</h3>';
+        Utility::collapsableBar('bottomtable', 'bottomtableicon');
+        echo "<img id='bottomtableicon' src=" . XOOPS_URL . '/modules/' . $xoopsModule->dirname() . "/assets/images/icon/close12.gif alt=''></a>&nbsp;" . _AM_SMARTMEDIA_FOLDER_CREATE . '</h3>';
         echo "<div id='bottomtable'>";
         echo '<span style="color: #567; margin: 3px 0 18px 0; font-size: small; display: block; ">' . _AM_SMARTMEDIA_FOLDER_CREATE_INFO . '</span>';
     }
@@ -258,12 +259,12 @@ function editfolder($showmenu = false, $folderid = 0, $categoryid = 0)
             echo '</tr>';
         }
 
-        echo "</table>\n<br/>";
+        echo "</table>\n<br>";
     }
 
     // Start folder form
 
-    $sform = new \XoopsThemeForm(_AM_SMARTMEDIA_FOLDER, 'op', xoops_getenv('PHP_SELF'));
+    $sform = new \XoopsThemeForm(_AM_SMARTMEDIA_FOLDER, 'op', xoops_getenv('SCRIPT_NAME'));
     $sform->setExtra('enctype="multipart/form-data"');
     $sform->addElement(new XoopsFormHidden('folderid', $folderid));
 
@@ -313,7 +314,7 @@ function editfolder($showmenu = false, $folderid = 0, $categoryid = 0)
     }
 
     //    require_once SMARTMEDIA_ROOT_PATH . "class/smarttree.php";
-    $mySmartTree = new Smartmedia\Tree($xoopsDB->prefix('smartmedia_categories'), 'categoryid', 'parentid');
+    $mySmartTree = new Tree($xoopsDB->prefix('smartmedia_categories'), 'categoryid', 'parentid');
     ob_start();
     $mySmartTree->makeMySelBox('title', 'weight', $categoryid, 0, 'categoryid', '');
 
@@ -329,14 +330,14 @@ function editfolder($showmenu = false, $folderid = 0, $categoryid = 0)
     $sform->addElement($status_select);
 
     /*  // LR IMAGE
-     $lr_image_array = & XoopsLists :: getImgListAsArray( smartmedia_getImageDir('folder') );
+     $lr_image_array = & XoopsLists :: getImgListAsArray(Utility::getImageDir('folder') );
      $lr_image_select = new \XoopsFormSelect( '', 'image_lr', $folderObj->image_lr() );
      $lr_image_select -> addOption ('-1', '---------------');
      $lr_image_select -> addOptionArray( $lr_image_array );
      $lr_image_select -> setExtra( "onchange='showImgSelected(\"the_image_lr\", \"image_lr\", \"" . 'uploads/smartmedia/images/folder' . "\", \"\", \"" . XOOPS_URL . "\")'" );
      $lr_image_tray = new \XoopsFormElementTray( _AM_SMARTMEDIA_FOLDER_IMAGE_LR, '&nbsp;' );
      $lr_image_tray -> addElement( $lr_image_select );
-     $lr_image_tray -> addElement( new \XoopsFormLabel( '', "<br><br><img src='" . smartmedia_getImageDir('folder', false) .$folderObj->image_lr() . "' name='the_image_lr' id='the_image_lr' alt='' />" ) );
+     $lr_image_tray -> addElement( new \XoopsFormLabel( '', "<br><br><img src='" . Utility::getImageDir('folder', false) .$folderObj->image_lr() . "' name='the_image_lr' id='the_image_lr' alt=''>" ) );
      $lr_image_tray->setDescription(_AM_SMARTMEDIA_FOLDER_IMAGE_LR_DSC);
      $sform -> addElement( $lr_image_tray );
 
@@ -348,14 +349,14 @@ function editfolder($showmenu = false, $folderid = 0, $categoryid = 0)
      $sform->addElement($lr_file_box);
      */
     // HR IMAGE
-    $hr_image_array  = \XoopsLists:: getImgListAsArray(smartmedia_getImageDir('folder'));
+    $hr_image_array  = \XoopsLists:: getImgListAsArray(Utility::getImageDir('folder'));
     $hr_image_select = new \XoopsFormSelect('', 'image_hr', $folderObj->image_hr());
     $hr_image_select->addOption('-1', '---------------');
     $hr_image_select->addOptionArray($hr_image_array);
     $hr_image_select->setExtra("onchange='showImgSelected(\"the_image_hr\", \"image_hr\", \"" . 'uploads/smartmedia/images/folder' . '", "", "' . XOOPS_URL . "\")'");
     $hr_image_tray = new \XoopsFormElementTray(_AM_SMARTMEDIA_FOLDER_IMAGE_HR, '&nbsp;');
     $hr_image_tray->addElement($hr_image_select);
-    $hr_image_tray->addElement(new XoopsFormLabel('', "<br><br><img src='" . smartmedia_getImageDir('folder', false) . $folderObj->image_hr() . "' name='the_image_hr' id='the_image_hr' alt='' />"));
+    $hr_image_tray->addElement(new XoopsFormLabel('', "<br><br><img src='" . Utility::getImageDir('folder', false) . $folderObj->image_hr() . "' name='the_image_hr' id='the_image_hr' alt=''>"));
     $hr_image_tray->setDescription(sprintf(_AM_SMARTMEDIA_FOLDER_IMAGE_HR_DSC, $helper->getConfig('main_image_width')));
     $sform->addElement($hr_image_tray);
 
@@ -372,37 +373,36 @@ function editfolder($showmenu = false, $folderid = 0, $categoryid = 0)
     $sform->addElement(new XoopsFormHidden('itemType', 'item'));
 
     // Action buttons tray
-    $button_tray = new \XoopsFormElementTray('', '');
+    $buttonTray = new \XoopsFormElementTray('', '');
 
     $hidden = new \XoopsFormHidden('op', 'addfolder');
-    $button_tray->addElement($hidden);
+    $buttonTray->addElement($hidden);
 
     if ($newFolder) {
         // We are creating a new folder
 
         $butt_create = new \XoopsFormButton('', '', _AM_SMARTMEDIA_CREATE, 'submit');
         $butt_create->setExtra('onclick="this.form.elements.op.value=\'addfolder\'"');
-        $button_tray->addElement($butt_create);
+        $buttonTray->addElement($butt_create);
 
         $butt_clear = new \XoopsFormButton('', '', _AM_SMARTMEDIA_CLEAR, 'reset');
-        $button_tray->addElement($butt_clear);
+        $buttonTray->addElement($butt_clear);
 
         $butt_cancel = new \XoopsFormButton('', '', _AM_SMARTMEDIA_CANCEL, 'button');
         $butt_cancel->setExtra('onclick="history.go(-1)"');
-        $button_tray->addElement($butt_cancel);
+        $buttonTray->addElement($butt_cancel);
     } else {
-
         // We are editing a folder
         $butt_create = new \XoopsFormButton('', '', _AM_SMARTMEDIA_MODIFY, 'submit');
         $butt_create->setExtra('onclick="this.form.elements.op.value=\'addfolder\'"');
-        $button_tray->addElement($butt_create);
+        $buttonTray->addElement($butt_create);
 
         $butt_cancel = new \XoopsFormButton('', '', _AM_SMARTMEDIA_CANCEL, 'button');
         $butt_cancel->setExtra('onclick="history.go(-1)"');
-        $button_tray->addElement($butt_cancel);
+        $buttonTray->addElement($butt_cancel);
     }
 
-    $sform->addElement($button_tray);
+    $sform->addElement($buttonTray);
     $sform->display();
     echo '</div>';
     unset($hidden);
@@ -414,11 +414,10 @@ function editfolder($showmenu = false, $folderid = 0, $categoryid = 0)
  * @param      $folderid
  * @param      $languageid
  */
-function editfolder_text($showmenu = false, $folderid, $languageid)
+function editfolder_text($showmenu, $folderid, $languageid)
 {
-    global $xoopsDB, $smartmediaFolderHandler, $xoopsUser, $myts, $xoopsConfig, $xoopsModule;
-    /** @var Smartmedia\Helper $helper */
-    $helper = Smartmedia\Helper::getInstance();
+    global $xoopsDB, $folderHandler, $xoopsUser, $myts, $xoopsConfig, $xoopsModule;
+    $helper =Helper::getInstance();
 
     require_once XOOPS_ROOT_PATH . '/class/xoopsformloader.php';
 
@@ -431,7 +430,7 @@ function editfolder_text($showmenu = false, $folderid, $languageid)
 
     $cat_sel = '';
 
-    $folderObj = $smartmediaFolderHandler->get($folderid, $languageid);
+    $folderObj = $folderHandler->get($folderid, $languageid);
 
     if ('new' === $languageid) {
         $bread_lang = _AM_SMARTMEDIA_CREATE;
@@ -443,13 +442,13 @@ function editfolder_text($showmenu = false, $folderid, $languageid)
         //smartmedia_adminMenu(2, _AM_SMARTMEDIA_FOLDERS . " > " . _AM_SMARTMEDIA_LANGUAGE_INFO . " > " . $bread_lang);
     }
     echo "<br>\n";
-    smartmedia_collapsableBar('bottomtable', 'bottomtableicon');
-    echo "<img id='bottomtableicon' src=" . XOOPS_URL . '/modules/' . $xoopsModule->dirname() . "/assets/images/icon/close12.gif alt='' /></a>&nbsp;" . _AM_SMARTMEDIA_FOLDER_LANGUAGE_INFO_EDITING . '</h3>';
+    Utility::collapsableBar('bottomtable', 'bottomtableicon');
+    echo "<img id='bottomtableicon' src=" . XOOPS_URL . '/modules/' . $xoopsModule->dirname() . "/assets/images/icon/close12.gif alt=''></a>&nbsp;" . _AM_SMARTMEDIA_FOLDER_LANGUAGE_INFO_EDITING . '</h3>';
     echo "<div id='bottomtable'>";
     echo '<span style="color: #567; margin: 3px 0 18px 0; font-size: small; display: block; ">' . _AM_SMARTMEDIA_FOLDER_LANGUAGE_INFO_EDITING_INFO . '</span>';
 
     // Start folder form
-    $sform = new \XoopsThemeForm(_AM_SMARTMEDIA_FOLDER, 'op', xoops_getenv('PHP_SELF'));
+    $sform = new \XoopsThemeForm(_AM_SMARTMEDIA_FOLDER, 'op', xoops_getenv('SCRIPT_NAME'));
     $sform->setExtra('enctype="multipart/form-data"');
     $sform->addElement(new XoopsFormHidden('folderid', $folderid));
 
@@ -497,36 +496,36 @@ function editfolder_text($showmenu = false, $folderid, $languageid)
     $sform->addElement(new XoopsFormHidden('itemType', 'item_text'));
 
     // Action buttons tray
-    $button_tray = new \XoopsFormElementTray('', '');
+    $buttonTray = new \XoopsFormElementTray('', '');
 
     $hidden = new \XoopsFormHidden('op', 'addfolder_text');
-    $button_tray->addElement($hidden);
+    $buttonTray->addElement($hidden);
 
     if ('new' === $languageid) {
         // We are creating a new folder language info
 
         $butt_create = new \XoopsFormButton('', '', _AM_SMARTMEDIA_CREATE, 'submit');
         $butt_create->setExtra('onclick="this.form.elements.op.value=\'addfolder_text\'"');
-        $button_tray->addElement($butt_create);
+        $buttonTray->addElement($butt_create);
 
         $butt_clear = new \XoopsFormButton('', '', _AM_SMARTMEDIA_CLEAR, 'reset');
-        $button_tray->addElement($butt_clear);
+        $buttonTray->addElement($butt_clear);
 
         $butt_cancel = new \XoopsFormButton('', '', _AM_SMARTMEDIA_CANCEL, 'button');
         $butt_cancel->setExtra('onclick="history.go(-1)"');
-        $button_tray->addElement($butt_cancel);
+        $buttonTray->addElement($butt_cancel);
     } else {
         // We are editing a folder language info
 
         $butt_create = new \XoopsFormButton('', '', _AM_SMARTMEDIA_MODIFY, 'submit');
         $butt_create->setExtra('onclick="this.form.elements.op.value=\'addfolder_text\'"');
-        $button_tray->addElement($butt_create);
+        $buttonTray->addElement($butt_create);
 
         $butt_cancel = new \XoopsFormButton('', '', _AM_SMARTMEDIA_CANCEL, 'button');
         $butt_cancel->setExtra('onclick="history.go(-1)"');
-        $button_tray->addElement($butt_cancel);
+        $buttonTray->addElement($butt_cancel);
     }
-    $sform->addElement($button_tray);
+    $sform->addElement($buttonTray);
     $sform->display();
     echo '</div>';
     unset($hidden);
@@ -540,7 +539,6 @@ switch ($op) {
         xoops_cp_header();
         editfolder(true, $folderid, $categoryid);
         break;
-
     // Displaying the form to edit a folder language info
     case 'modtext':
         $folderid   = Request::getInt('folderid', 0, 'GET');
@@ -549,22 +547,20 @@ switch ($op) {
         xoops_cp_header();
         editfolder_text(true, $folderid, $languageid);
         break;
-
     // Adding or editing a folder in the db
     case 'addfolder':
         addFolder(false);
         break;
-
     // Adding or editing a folder language info in the db
     case 'addfolder_text':
         addFolder(true);
         break;
-
     // deleting a folder
     case 'del':
-        global $smartmediaFolderHandler, $xoopsUser, $xoopsUser, $xoopsConfig, $xoopsDB, $_GET;
+        global $folderHandler, $xoopsUser, $xoopsUser, $xoopsConfig, $xoopsDB, $_GET;
 
-        $module_id        = $xoopsModule->getVar('mid');
+        $module_id = $xoopsModule->getVar('mid');
+        /** @var \XoopsGroupPermHandler $grouppermHandler */
         $grouppermHandler = xoops_getHandler('groupperm');
 
         $folderid   = Request::getInt('folderid', 0, 'POST');
@@ -572,7 +568,7 @@ switch ($op) {
         $categoryid = Request::getInt('categoryid', 0, 'POST');
         $categoryid = Request::getInt('categoryid', $categoryid, 'GET');
 
-        $folderObj = $smartmediaFolderHandler->get($folderid);
+        $folderObj = $folderHandler->get($folderid);
 
         // Check to see if this item has children
         if ($folderObj->hasChild()) {
@@ -580,30 +576,29 @@ switch ($op) {
             exit();
         }
 
-        $confirm = Request::getInt('confirm', 0, POST);
+        $confirm = Request::getInt('confirm', 0, 'POST');
         $name    = Request::getString('name', '', 'POST');
 
         if ($confirm) {
-            if (!$smartmediaFolderHandler->deleteParentLink($folderObj, $categoryid)) {
+            if (!$folderHandler->deleteParentLink($folderObj, $categoryid)) {
                 redirect_header('folder.php', 1, _AM_SMARTMEDIA_FOLDER_DELETE_ERROR);
                 exit;
             }
 
             redirect_header('folder.php', 1, sprintf(_AM_SMARTMEDIA_FOLDER_DELETE_SUCCESS, $name));
             exit();
-        } else {
-            // no confirm: show deletion condition
-            xoops_cp_header();
-            xoops_confirm(['op' => 'del', 'categoryid' => $categoryid, 'folderid' => $folderObj->folderid(), 'confirm' => 1, 'name' => $folderObj->title()], 'folder.php', _AM_SMARTMEDIA_FOLDER_DELETE . " '" . $folderObj->title() . "' ?", _AM_SMARTMEDIA_DELETE);
-            xoops_cp_footer();
         }
+        // no confirm: show deletion condition
+        xoops_cp_header();
+        xoops_confirm(['op' => 'del', 'categoryid' => $categoryid, 'folderid' => $folderObj->folderid(), 'confirm' => 1, 'name' => $folderObj->title()], 'folder.php', _AM_SMARTMEDIA_FOLDER_DELETE . " '" . $folderObj->title() . "' ?", _AM_SMARTMEDIA_DELETE);
+        xoops_cp_footer();
+
         exit();
         break;
-
     case 'deltext':
         global $xoopsUser, $xoopsUser, $xoopsConfig, $xoopsDB, $_GET;
 
-        $smartsection_folder_textHandler = Smartmedia\Helper::getInstance()->getHandler('FolderText');
+        $foldertextHandler = Helper::getInstance()->getHandler('FolderText');
 
         $module_id = $xoopsModule->getVar('mid');
 
@@ -613,31 +608,34 @@ switch ($op) {
         $languageid = isset($_POST['languageid']) ? $_POST['languageid'] : null;
         $languageid = isset($_GET['languageid']) ? $_GET['languageid'] : $languageid;
 
-        $folder_textObj = $smartsection_folder_textHandler->get($folderid, $languageid);
+        $folder_textObj = $foldertextHandler->get($folderid, $languageid);
 
-        $confirm = Request::getInt('confirm', 0, POST);
+        $confirm = Request::getInt('confirm', 0, 'POST');
         $name    = Request::getString('name', '', 'POST');
 
         if ($confirm) {
-            if (!$smartsection_folder_textHandler->delete($folder_textObj)) {
+            if (!$foldertextHandler->delete($folder_textObj)) {
                 redirect_header('folder.php?op=mod&folderid=' . $folder_textObj->folderid(), 1, _AM_SMARTMEDIA_FOLDER_TEXT_DELETE_ERROR);
                 exit;
             }
 
             redirect_header('folder.php?op=mod&folderid=' . $folder_textObj->folderid(), 1, sprintf(_AM_SMARTMEDIA_FOLDER_TEXT_DELETE_SUCCESS, $name));
             exit();
-        } else {
-            // no confirm: show deletion condition
-            $folderid   = Request::getInt('folderid', 0, 'GET');
-            $languageid = isset($_GET['languageid']) ? $_GET['languageid'] : null;
-            xoops_cp_header();
-            xoops_confirm(['op' => 'deltext', 'folderid' => $folder_textObj->folderid(), 'languageid' => $folder_textObj->languageid(), 'confirm' => 1, 'name' => $folder_textObj->languageid()], 'folder.php?op=mod&folderid=' . $folder_textObj->folderid(), _AM_SMARTMEDIA_FOLDER_TEXT_DELETE,
-                          _AM_SMARTMEDIA_DELETE);
-            xoops_cp_footer();
         }
+        // no confirm: show deletion condition
+        $folderid   = Request::getInt('folderid', 0, 'GET');
+        $languageid = isset($_GET['languageid']) ? $_GET['languageid'] : null;
+        xoops_cp_header();
+        xoops_confirm(
+            ['op' => 'deltext', 'folderid' => $folder_textObj->folderid(), 'languageid' => $folder_textObj->languageid(), 'confirm' => 1, 'name' => $folder_textObj->languageid()],
+            'folder.php?op=mod&folderid=' . $folder_textObj->folderid(),
+            _AM_SMARTMEDIA_FOLDER_TEXT_DELETE,
+            _AM_SMARTMEDIA_DELETE
+        );
+        xoops_cp_footer();
+
         exit();
         break;
-
     case 'cancel':
         redirect_header('folder.php', 1, sprintf(_AM_SMARTMEDIA_BACK2IDX, ''));
         exit();
@@ -646,7 +644,8 @@ switch ($op) {
     default:
 
         xoops_cp_header();
-        $adminObject = Module\Admin::getInstance();
+        /** @var \Xmf\Module\Admin $adminObject */
+        $adminObject = \Xmf\Module\Admin::getInstance();
         $adminObject->displayNavigation('folder.php');
 
         $adminObject->addItemButton(_AM_SMARTMEDIA_FOLDER_CREATE, 'folder.php?op=mod', 'add', '');
@@ -656,7 +655,7 @@ switch ($op) {
         echo "<br>\n";
 
         // Creating the objects for folders
-        $foldersCategoriesObj = $smartmediaFolderHandler->getFolders(0, 0, 0);
+        $foldersCategoriesObj = $folderHandler->getFolders(0, 0, 0);
         $array_keys           = array_keys($foldersCategoriesObj);
         $criteria_id          = new \CriteriaCompo();
         foreach ($array_keys as $key) {
@@ -669,8 +668,8 @@ switch ($op) {
         $criteria->add($criteria_id);
         $criteria->add($criteria_parent);
 
-        smartmedia_collapsableBar('toptable', 'toptableicon');
-        echo "<img id='toptableicon' src=" . XOOPS_URL . '/modules/' . $xoopsModule->dirname() . "/assets/images/icon/close12.gif alt='' /></a>&nbsp;" . _AM_SMARTMEDIA_FOLDERS_TITLE . '</h3>';
+        Utility::collapsableBar('toptable', 'toptableicon');
+        echo "<img id='toptableicon' src=" . XOOPS_URL . '/modules/' . $xoopsModule->dirname() . "/assets/images/icon/close12.gif alt=''></a>&nbsp;" . _AM_SMARTMEDIA_FOLDERS_TITLE . '</h3>';
         echo "<div id='toptable'>";
         echo '<span style="color: #567; margin: 3px 0 12px 0; font-size: small; display: block; ">' . _AM_SMARTMEDIA_FOLDERS_DSC . '</span>';
 
@@ -691,7 +690,7 @@ switch ($op) {
         $categoriesObj = $smartmediaCategoryHandler->getObjects($criteria, true);
         if (count($categoriesObj) > 0) {
             foreach ($categoriesObj as $categoryObj) {
-                displayCategory($categoryObj, 0, true, $foldersCategoriesObj);
+                Utility::displayCategory($categoryObj, 0, true, $foldersCategoriesObj);
             }
         } else {
             echo '<tr>';

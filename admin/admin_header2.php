@@ -15,9 +15,9 @@
  * Licence: GNU
  */
 
-require_once  dirname(dirname(dirname(__DIR__))) . '/mainfile.php';
-require_once  dirname(dirname(dirname(__DIR__))) . '/include/cp_header.php';
-require_once XOOPS_ROOT_PATH . '/kernel/module.php';
+require_once dirname(dirname(dirname(__DIR__))) . '/include/cp_header.php';
+require dirname(__DIR__) . '/preloads/autoloader.php';
+
 require_once XOOPS_ROOT_PATH . '/class/xoopstree.php';
 require_once XOOPS_ROOT_PATH . '/class/xoopslists.php';
 require_once XOOPS_ROOT_PATH . '/class/pagenav.php';

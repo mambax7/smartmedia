@@ -1,19 +1,21 @@
 <?php
 
-use XoopsModules\Smartmedia;
+use Xmf\Module\Admin;
+use XoopsModules\Smartmedia\{Helper,
+    Utility
+};
 
-include  dirname(__DIR__) . '/preloads/autoloader.php';
+require_once dirname(__DIR__) . '/preloads/autoloader.php';
 
-$moduleDirName = basename(dirname(__DIR__));
-$moduleDirNameUpper   = strtoupper($moduleDirName); //$capsDirName
-
+$moduleDirName      = basename(dirname(__DIR__));
+$moduleDirNameUpper = mb_strtoupper($moduleDirName); //$capsDirName
 
 /** @var \XoopsDatabase $db */
-/** @var \XoopsModules\Smartmedia\Helper $helper */
-/** @var \XoopsModules\Smartmedia\Utility $utility */
+/** @var Helper $helper */
+/** @var Utility $utility */
 $db      = \XoopsDatabaseFactory::getDatabaseConnection();
-$helper  = \XoopsModules\Smartmedia\Helper::getInstance();
-$utility = new \XoopsModules\Smartmedia\Utility();
+$helper  = Helper::getInstance();
+$utility = new Utility();
 //$configurator = new Smartmedia\Common\Configurator();
 
 $helper->loadLanguage('common');
@@ -38,8 +40,6 @@ if (!defined($moduleDirNameUpper . '_CONSTANTS_DEFINED')) {
     define($moduleDirNameUpper . '_CONSTANTS_DEFINED', 1);
 }
 
-
-
 //
 //if (!defined('SMARTMEDIA_DIRNAME')) {
 //    define('SMARTMEDIA_DIRNAME', 'smartmedia');
@@ -59,15 +59,15 @@ if (!defined($moduleDirNameUpper . '_CONSTANTS_DEFINED')) {
 require_once SMARTMEDIA_ROOT_PATH . 'include/functions.php';
 
 // Creating the SmartModule object
-//$smartModule           = smartmedia_getModuleInfo();
+//$smartModule           = Utility::getModuleInfo();
 $smartModule = $helper->getModule();
-$myts                  = \MyTextSanitizer::getInstance();
+$myts        = \MyTextSanitizer::getInstance();
 //mb $smartmedia_moduleName = $myts->displayTarea($smartModule->getVar('name'));
 
-//mb $is_smartmedia_admin = smartmedia_userIsAdmin();
+$is_smartmedia_admin = Utility::userIsAdmin();
 
 // Creating the SmartModule config Object
-$smartConfig = smartmedia_getModuleConfig();
+$smartConfig = Utility::getModuleConfig();
 
 //require_once SMARTMEDIA_ROOT_PATH . "class/permission.php";
 //require_once SMARTMEDIA_ROOT_PATH . "class/category.php";
@@ -82,34 +82,31 @@ $smartConfig = smartmedia_getModuleConfig();
 //require_once SMARTMEDIA_ROOT_PATH . "class/keyhighlighter.class.php";
 
 // Creating the permission handler object
-$smartmediaPermissionHandler = Smartmedia\Helper::getInstance()->getHandler('Permission');
+$smartmediaPermissionHandler = Helper::getInstance()->getHandler('Permission');
 
 // Creating the category handler object
-$smartmediaCategoryHandler = Smartmedia\Helper::getInstance()->getHandler('Category');
+$smartmediaCategoryHandler = Helper::getInstance()->getHandler('Category');
 
 // Creating the category_text handler object
-$smartmediaCategoryTextHandler = Smartmedia\Helper::getInstance()->getHandler('CategoryText');
+$smartmediaCategoryTextHandler = Helper::getInstance()->getHandler('CategoryText');
 
 // Creating the folder handler object
-$smartmediaFolderHandler = Smartmedia\Helper::getInstance()->getHandler('Folder');
+$folderHandler = Helper::getInstance()->getHandler('Folder');
 
 // Creating the doler_text handler object
-$smartmediaFolderTextHandler = Smartmedia\Helper::getInstance()->getHandler('FolderText');
+$smartmediaFolderTextHandler = Helper::getInstance()->getHandler('FolderText');
 
 // Creating the clip handler object
-$smartmediaClipHandler = Smartmedia\Helper::getInstance()->getHandler('Clip');
+$smartmediaClipHandler = Helper::getInstance()->getHandler('Clip');
 
 // Creating the clip_text handler object
-$smartmediaClipTextHandler = Smartmedia\Helper::getInstance()->getHandler('ClipText');
+$smartmediaClipTextHandler = Helper::getInstance()->getHandler('ClipText');
 
 // Creating the clip_text handler object
-$smartmediaFormatHandler = Smartmedia\Helper::getInstance()->getHandler('Format');
+$smartmediaFormatHandler = Helper::getInstance()->getHandler('Format');
 
-
-
-
-$pathIcon16    = \Xmf\Module\Admin::iconUrl('', 16);
-$pathIcon32    = \Xmf\Module\Admin::iconUrl('', 32);
+$pathIcon16 = \Xmf\Module\Admin::iconUrl('', 16);
+$pathIcon32 = \Xmf\Module\Admin::iconUrl('', 32);
 //$pathModIcon16 = $helper->getModule()->getInfo('modicons16');
 //$pathModIcon32 = $helper->getModule()->getInfo('modicons32');
 

@@ -1,4 +1,6 @@
-<?php namespace XoopsModules\Smartmedia;
+<?php
+
+namespace XoopsModules\Smartmedia;
 
 use XoopsModules\Smartmedia;
 
@@ -20,7 +22,6 @@ class ContentHandler extends \XoopsObjectHandler
      * @access    private
      */
     public $db;
-
     /**
      * Name of child class
      *
@@ -28,7 +29,6 @@ class ContentHandler extends \XoopsObjectHandler
      * @access    private
      */
     public $classname = Content::class;
-
     /**
      * DB table name
      *
@@ -36,7 +36,6 @@ class ContentHandler extends \XoopsObjectHandler
      * @access private
      */
     public $dbtable = 'smartmedia_categories';
-
     /**
      * key field name
      *
@@ -44,7 +43,6 @@ class ContentHandler extends \XoopsObjectHandler
      * @access private
      */
     public $_key_field = 'contentid';
-
     /**
      * caption field name
      *
@@ -52,7 +50,6 @@ class ContentHandler extends \XoopsObjectHandler
      * @access private
      */
     public $_caption_field = 'title';
-
     /**
      * Module id
      *
@@ -66,7 +63,7 @@ class ContentHandler extends \XoopsObjectHandler
      *
      * @param object $db reference to a xoopsDB object
      */
-    public function __construct($db)
+    public function __construct(\XoopsDatabase $db)
     {
         $this->db = $db;
     }
@@ -74,7 +71,7 @@ class ContentHandler extends \XoopsObjectHandler
     /**
      * Singleton - prevent multiple instances of this class
      *
-     * @param  objecs &$db {@link XoopsHandlerFactory}
+     * @param objecs &$db {@link XoopsHandlerFactory}
      * @return Smartmedia\ContentHandler {@link Smartmedia\ContentHandler}
      * @access public
      */
@@ -100,18 +97,18 @@ class ContentHandler extends \XoopsObjectHandler
 
     /**
      * retrieve a content object from the database
-     * @param  int   $id ID of content
+     * @param int    $id ID of content
      * @param string $languageid
      * @return bool <a href='psi_element://Smartmedia\Content'>Smartmedia\Content</a>
      * @access public
      */
-    public function &get($id, $languageid = 'current')
+    public function get($id, $languageid = 'current')
     {
         $id = (int)$id;
         if ($id > 0) {
             $sql = $this->_selectQuery(new \Criteria('contentid', $id));
 
-            //echo "<br>$sql<br/>";
+            //echo "<br>$sql<br>";
 
             if (!$result = $this->db->query($sql)) {
                 return false;
@@ -133,14 +130,14 @@ class ContentHandler extends \XoopsObjectHandler
 
     /**
      * Create a "select" SQL query
-     * @param  object $criteria {@link \CriteriaElement} to match
+     * @param object $criteria {@link \CriteriaElement} to match
      * @return string SQL query
      * @access    private
      */
     public function _selectQuery($criteria = null)
     {
-        $sql = sprintf('SELECT * FROM `%s`', $this->db->prefix($this->dbtable));
-        if (isset($criteria) && is_subclass_of($criteria, 'CriteriaElement')) {
+        $sql = \sprintf('SELECT * FROM `%s`', $this->db->prefix($this->dbtable));
+        if (isset($criteria) && $criteria instanceof \CriteriaElement) {
             $sql .= ' ' . $criteria->renderWhere();
             if ('' != $criteria->getSort()) {
                 $sql .= ' ORDER BY ' . $criteria->getSort() . '
@@ -154,29 +151,29 @@ class ContentHandler extends \XoopsObjectHandler
     /**
      * count objects matching a criteria
      *
-     * @param  object $criteria {@link \CriteriaElement} to match
+     * @param object $criteria {@link \CriteriaElement} to match
      * @return int    count of objects
      * @access    public
      */
     public function getCount($criteria = null)
     {
         $sql = 'SELECT COUNT(*) FROM ' . $this->db->prefix($this->dbtable);
-        if (isset($criteria) && is_subclass_of($criteria, 'CriteriaElement')) {
+        if (isset($criteria) && $criteria instanceof \CriteriaElement) {
             $sql .= ' ' . $criteria->renderWhere();
         }
 
-        //echo "<br>$sql<br/>";
+        //echo "<br>$sql<br>";
 
         if (!$result = $this->db->query($sql)) {
             return 0;
         }
-        list($count) = $this->db->fetchRow($result);
+        [$count] = $this->db->fetchRow($result);
 
         return $count;
     }
 
     /**
-     * @param  int $parentid
+     * @param int $parentid
      * @return int
      */
     public function getCategoriesCount($parentid = 0)
@@ -195,8 +192,8 @@ class ContentHandler extends \XoopsObjectHandler
     /**
      * retrieve objects from the database
      *
-     * @param  object $criteria  {@link \CriteriaElement} conditions to be met
-     * @param  bool   $id_as_key Should the content ID be used as array key
+     * @param object $criteria  {@link \CriteriaElement} conditions to be met
+     * @param bool   $id_as_key Should the content ID be used as array key
      * @return array  array of {@link Smartmedia\Content} objects
      * @access    public
      */
@@ -225,9 +222,9 @@ class ContentHandler extends \XoopsObjectHandler
         while (false !== ($myrow = $this->db->fetchArray($result))) {
             $obj = new $this->classname($xoopsConfig['language'], $myrow);
             if (!$id_as_key) {
-                $ret[] =& $obj;
+                $ret[] = &$obj;
             } else {
-                $ret[$obj->getVar('contentid')] =& $obj;
+                $ret[$obj->getVar('contentid')] = &$obj;
             }
             unset($obj);
         }
@@ -236,11 +233,11 @@ class ContentHandler extends \XoopsObjectHandler
     }
 
     /**
-     * @param  array  $queryarray
-     * @param  string $andor
-     * @param  int    $limit
-     * @param  int    $offset
-     * @param  int    $userid
+     * @param array  $queryarray
+     * @param string $andor
+     * @param int    $limit
+     * @param int    $offset
+     * @param int    $userid
      * @return array
      */
     public function &getObjectsForSearch($queryarray = [], $andor = 'AND', $limit = 0, $offset = 0, $userid = 0)
@@ -255,7 +252,7 @@ class ContentHandler extends \XoopsObjectHandler
 
         if (!empty($queryarray)) {
             $criteriaKeywords = new \CriteriaCompo();
-            for ($i = 0; $i < count($queryarray); ++$i) {
+            for ($i = 0, $iMax = \count($queryarray); $i < $iMax; ++$i) {
                 $criteriaKeyword = new \CriteriaCompo();
                 $criteriaKeyword->add(new \Criteria('itemtext.title', '%' . $queryarray[$i] . '%', 'LIKE'), 'OR');
                 $criteriaKeyword->add(new \Criteria('itemtext.description', '%' . $queryarray[$i] . '%', 'LIKE'), 'OR');
@@ -286,7 +283,7 @@ class ContentHandler extends \XoopsObjectHandler
         $criteria->setSort('item.weight');
         $criteria->setOrder('ASC');
 
-        if (isset($criteria) && is_subclass_of($criteria, 'CriteriaElement')) {
+        if (isset($criteria) && $criteria instanceof \CriteriaElement) {
             $sql .= ' ' . $criteria->renderWhere();
             if ('' != $criteria->getSort()) {
                 $sql .= ' ORDER BY ' . $criteria->getSort() . '
@@ -314,12 +311,12 @@ class ContentHandler extends \XoopsObjectHandler
     }
 
     /**
-     * @param  int    $limit
-     * @param  int    $start
-     * @param  int    $parentid
-     * @param  string $sort
-     * @param  string $order
-     * @param  bool   $id_as_key
+     * @param int    $limit
+     * @param int    $start
+     * @param int    $parentid
+     * @param string $sort
+     * @param string $order
+     * @param bool   $id_as_key
      * @return array
      */
     public function &getCategories($limit = 0, $start = 0, $parentid = 0, $sort = 'weight', $order = 'ASC', $id_as_key = true)
@@ -343,14 +340,14 @@ class ContentHandler extends \XoopsObjectHandler
      * store a content in the database
      *
      * @param \XoopsObject $object
-     * @param  bool        $force
+     * @param bool         $force
      * @return bool   FALSE if failed, TRUE if already present and unchanged or successful
      * @access    public
      */
     public function insert(\XoopsObject $object, $force = false)
     {
         // Make sure object is of correct type
-        if (!is_a($object, $this->classname)) {
+        if (!\is_a($object, $this->classname)) {
             return false;
         }
 
@@ -373,7 +370,8 @@ class ContentHandler extends \XoopsObjectHandler
         if ($object->isNew()) {
             // Determine next auto-gen ID for table
             $contentid = $this->db->genId($this->db->prefix($this->dbtable) . '_uid_seq');
-            $sql       = sprintf('INSERT INTO `%s` (
+            $sql       = \sprintf(
+                'INSERT INTO `%s` (
             contentid,
             parentid,
             weight,
@@ -384,14 +382,29 @@ class ContentHandler extends \XoopsObjectHandler
             %u,
             %u,
             %s,
-            %s)', $this->db->prefix($this->dbtable), $contentid, $parentid, $weight, $this->db->quoteString($image), $this->db->quoteString($default_languageid));
+            %s)',
+                $this->db->prefix($this->dbtable),
+                $contentid,
+                $parentid,
+                $weight,
+                $this->db->quoteString($image),
+                $this->db->quoteString($default_languageid)
+            );
         } else {
-            $sql = sprintf('UPDATE `%s` SET
+            $sql = \sprintf(
+                'UPDATE `%s` SET
             parentid = %u,
             weight = %u,
             image = %s,
             default_languageid = %s
-            WHERE contentid = %u', $this->db->prefix($this->dbtable), $parentid, $weight, $this->db->quoteString($image), $this->db->quoteString($default_languageid), $contentid);
+            WHERE contentid = %u',
+                $this->db->prefix($this->dbtable),
+                $parentid,
+                $weight,
+                $this->db->quoteString($image),
+                $this->db->quoteString($default_languageid),
+                $contentid
+            );
         }
 
         //echo "<br>" . $sql . "<br>";
@@ -419,25 +432,25 @@ class ContentHandler extends \XoopsObjectHandler
      * delete a Content from the database
      *
      * @param \XoopsObject $object
-     * @param  bool        $force
+     * @param bool         $force
      * @return bool   FALSE if failed.
      * @access public
      */
     public function delete(\XoopsObject $object, $force = false)
     {
-        if (strtolower(get_class($obj)) != $this->classname) {
+        if (mb_strtolower(\get_class($obj)) != $this->classname) {
             return false;
         }
 
         // Delete all language info for this content
-        $smartmedia_content_textHandler = Smartmedia\Helper::getInstance()->getHandler('ContentText');
+        $contenttextHandler = Helper::getInstance()->getHandler('ContentText');
         $criteria                       = new \CriteriaCompo(new \Criteria('contentid', $obj->contentid()));
-        if (!$smartmedia_content_textHandler->deleteAll($criteria)) {
+        if (!$contenttextHandler->deleteAll($criteria)) {
             return false;
         }
-        $sql = sprintf('DELETE FROM `%s` WHERE contentid = %u', $this->db->prefix($this->dbtable), $obj->getVar('contentid'));
+        $sql = \sprintf('DELETE FROM `%s` WHERE contentid = %u', $this->db->prefix($this->dbtable), $obj->getVar('contentid'));
 
-        //echo "<br>$sql</br />";
+        //echo "<br>$sql</br>";
 
         if (false !== $force) {
             $result = $this->db->queryF($sql);
@@ -454,14 +467,14 @@ class ContentHandler extends \XoopsObjectHandler
     /**
      * delete department matching a set of conditions
      *
-     * @param  object $criteria {@link \CriteriaElement}
+     * @param object $criteria {@link \CriteriaElement}
      * @return bool   FALSE if deletion failed
      * @access    public
      */
     public function deleteAll($criteria = null)
     {
         $sql = 'DELETE FROM ' . $this->db->prefix($this->dbtable);
-        if (isset($criteria) && is_subclass_of($criteria, 'CriteriaElement')) {
+        if (isset($criteria) && $criteria instanceof \CriteriaElement) {
             $sql .= ' ' . $criteria->renderWhere();
         }
         if (!$result = $this->db->query($sql)) {
@@ -472,23 +485,23 @@ class ContentHandler extends \XoopsObjectHandler
     }
 
     /**
-     * @param  int $cat_id
+     * @param int $cat_id
      * @return mixed
      */
     public function onlineFoldersCount($cat_id = 0)
     {
-        return $this->foldersCount($cat_id, _SMARTMEDIA_FOLDER_STATUS_ONLINE);
+        return $this->foldersCount($cat_id, \_SMARTMEDIA_FOLDER_STATUS_ONLINE);
     }
 
     /**
-     * @param  int    $cat_id
-     * @param  string $status
+     * @param int    $cat_id
+     * @param string $status
      * @return mixed
      */
     public function foldersCount($cat_id = 0, $status = '')
     {
-        $smartmediaFolderHandler = Smartmedia\Helper::getInstance()->getHandler('Folder');
+        $folderHandler = Helper::getInstance()->getHandler('Folder');
 
-        return $smartmediaFolderHandler->getCountsByParent($cat_id, $status);
+        return $folderHandler->getCountsByParent($cat_id, $status);
     }
 }

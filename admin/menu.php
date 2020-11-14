@@ -12,9 +12,9 @@
 
 /**
  * @copyright    XOOPS Project https://xoops.org/
- * @license      GNU GPL 2 or later (http://www.gnu.org/licenses/gpl-2.0.html)
+ * @license      GNU GPL 2 or later (https://www.gnu.org/licenses/gpl-2.0.html)
  * @package
- * @author     XOOPS Development Team
+ * @author       XOOPS Development Team
  */
 
 /**
@@ -23,15 +23,22 @@
  * Licence: GNU
  */
 
-use XoopsModules\Smartmedia;
+use XoopsModules\Smartmedia\{
+    Helper,
+    Utility
+};
+/** @var Helper $helper */
 
-include  dirname(__DIR__) . '/preloads/autoloader.php';
+require_once dirname(__DIR__) . '/preloads/autoloader.php';
 
-//defined('XOOPS_ROOT_PATH') || die('XOOPS root path not defined');
+$helper = Helper::getInstance();
+$helper->loadLanguage('common');
+$helper->loadLanguage('feedback');
 
-$helper = Smartmedia\Helper::getInstance();
 $pathIcon32 = \Xmf\Module\Admin::menuIconPath('');
-$pathModIcon32 = $helper->getModule()->getInfo('modicons32');
+if (is_object($helper->getModule())) {
+    $pathModIcon32 = $helper->getModule()->getInfo('modicons32');
+}
 
 $adminmenu = [];
 

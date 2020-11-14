@@ -49,3 +49,4 @@ define('_MD_SMARTMEDIA_THIS_ITEM', 'this article');
 define('_MD_SMARTMEDIA_THIS_ITEM_CAP', 'This article');
 define('_MD_SMARTMEDIA_TOTAL_ITEMS', "Total d'articles");
 define('_MD_SMARTMEDIA_YES', 'Yes');
+define('_MD_SMARTMEDIA_DBUPDATED', 'Database updated');

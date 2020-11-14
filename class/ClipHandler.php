@@ -1,4 +1,6 @@
-<?php namespace XoopsModules\Smartmedia;
+<?php
+
+namespace XoopsModules\Smartmedia;
 
 /**
  * Contains the classes for managing clips
@@ -14,10 +16,9 @@
 use XoopsModules\Smartmedia;
 
 /** Status of an offline clip */
-define('_SMARTMEDIA_CLIP_STATUS_OFFLINE', 1);
+\define('_SMARTMEDIA_CLIP_STATUS_OFFLINE', 1);
 /** Status of an online clip */
-define('_SMARTMEDIA_CLIP_STATUS_ONLINE', 2);
-
+\define('_SMARTMEDIA_CLIP_STATUS_ONLINE', 2);
 
 /**
  * Smartmedia Clip Handler class
@@ -36,42 +37,36 @@ class ClipHandler extends \XoopsObjectHandler
      * @var object
      */
     public $db;
-
     /**
      * Name of child class
      *
      * @var string
      */
     public $classname = Clip::class;
-
     /**
      * Related table name
      *
      * @var string
      */
     public $dbtable = 'smartmedia_clips';
-
     /**
      * DB parent table name
      *
      * @var string
      */
     public $dbtable_parent = 'smartmedia_folders_categories';
-
     /**
      * Related parent field name
      *
      * @var string
      */
     public $_parent_field = 'folderid';
-
     /**
      * Key field name
      *
      * @var string
      */
     public $_key_field = 'clipid';
-
     /**
      * Caption field name
      *
@@ -84,7 +79,7 @@ class ClipHandler extends \XoopsObjectHandler
      *
      * @param object $db reference to a xoopsDB object
      */
-    public function __construct($db)
+    public function __construct(\XoopsDatabase $db)
     {
         $this->db = $db;
     }
@@ -92,7 +87,7 @@ class ClipHandler extends \XoopsObjectHandler
     /**
      * Singleton - prevent multiple instances of this class
      *
-     * @param  object &$db {@link XoopsHandlerFactory}
+     * @param object &$db {@link XoopsHandlerFactory}
      * @return object SmartmediaClipHandler
      */
     public static function getInstance($db)
@@ -113,9 +108,9 @@ class ClipHandler extends \XoopsObjectHandler
     public function create()
     {
         return new $this->classname();
-//        $temp = '\\XoopsModules\\Smartmedia\\' . $this->classname;
-//        $clip = new $temp;
-//        return $clip;
+        //        $temp = '\\XoopsModules\\Smartmedia\\' . $this->classname;
+        //        $clip = new $temp;
+        //        return $clip;
     }
 
     /**
@@ -124,17 +119,17 @@ class ClipHandler extends \XoopsObjectHandler
      * If no languageid is specified, the method will load the translation related to the current
      * language selected by the user
      *
-     * @param  int    $id         id of the clip
-     * @param  string $languageid language of the translation to load
+     * @param int    $id         id of the clip
+     * @param string $languageid language of the translation to load
      * @return mixed  reference to the {@link Smartmedia\Clip} object, FALSE if failed
      */
-    public function &get($id, $languageid = 'current')
+    public function get($id, $languageid = 'current')
     {
         $id = (int)$id;
         if ($id > 0) {
             $sql = $this->_selectQuery(new \Criteria('clipid', $id));
 
-            //echo "<br>$sql<br/>";
+            //echo "<br>$sql<br>";
 
             if (!$result = $this->db->query($sql)) {
                 return false;
@@ -157,13 +152,13 @@ class ClipHandler extends \XoopsObjectHandler
     /**
      * Create a "SELECY" SQL query
      *
-     * @param  object $criteria {@link \CriteriaElement} to match
+     * @param object $criteria {@link \CriteriaElement} to match
      * @return string SQL query
      */
     public function _selectQuery($criteria = null)
     {
-        $sql = sprintf('SELECT * FROM `%s`', $this->db->prefix($this->dbtable));
-        if (isset($criteria) && is_subclass_of($criteria, 'CriteriaElement')) {
+        $sql = \sprintf('SELECT * FROM `%s`', $this->db->prefix($this->dbtable));
+        if (isset($criteria) && $criteria instanceof \CriteriaElement) {
             $sql .= ' ' . $criteria->renderWhere();
             if ('' != $criteria->getSort()) {
                 $sql .= ' ORDER BY ' . $criteria->getSort() . '
@@ -177,19 +172,19 @@ class ClipHandler extends \XoopsObjectHandler
     /**
      * Count objects matching a criteria
      *
-     * @param  object $criteria {@link \CriteriaElement} to match
+     * @param object $criteria {@link \CriteriaElement} to match
      * @return int    count of objects
      */
     public function getCount($criteria = null)
     {
         $sql = 'SELECT COUNT(*) FROM ' . $this->db->prefix($this->dbtable);
-        if (isset($criteria) && is_subclass_of($criteria, 'CriteriaElement')) {
+        if (isset($criteria) && $criteria instanceof \CriteriaElement) {
             $sql .= ' ' . $criteria->renderWhere();
         }
         if (!$result = $this->db->query($sql)) {
             return 0;
         }
-        list($count) = $this->db->fetchRow($result);
+        [$count] = $this->db->fetchRow($result);
 
         return $count;
     }
@@ -199,7 +194,7 @@ class ClipHandler extends \XoopsObjectHandler
      *
      * If no categoryid is specified, the method will count all clips in the module
      *
-     * @param  int $categoryid category in which to count clips
+     * @param int $categoryid category in which to count clips
      * @return int count of objects
      */
     public function getclipsCount($categoryid = 0)
@@ -209,22 +204,22 @@ class ClipHandler extends \XoopsObjectHandler
             $criteria->add(new \Criteria('categoryid', $categoryid));
 
             return $this->getCount($criteria);
-        } else {
-            return $this->getCount();
         }
+
+        return $this->getCount();
     }
 
     /**
      * Retrieve objects from the database
      *
-     * @param  object $criteria {@link \CriteriaElement} conditions to be met
-     * @param bool    $category_id_as_key
+     * @param object $criteria {@link \CriteriaElement} conditions to be met
+     * @param bool   $category_id_as_key
      * @return array  array of {@link Smartmedia\Clip} objects
      */
     public function &getObjects($criteria = null, $category_id_as_key = false)
     {
         global $xoopsConfig;
-        $smartConfig =& smartmedia_getModuleConfig();
+        $smartConfig = Utility::getModuleConfig();
 
         $ret   = [];
         $limit = $start = 0;
@@ -247,9 +242,9 @@ class ClipHandler extends \XoopsObjectHandler
         while (false !== ($myrow = $this->db->fetchArray($result))) {
             $obj = new $this->classname($xoopsConfig['language'], $myrow);
             if (!$category_id_as_key) {
-                $ret[$obj->getVar('clipid')] =& $obj;
+                $ret[$obj->getVar('clipid')] = &$obj;
             } else {
-                $ret[$myrow['folderid']][$obj->getVar('clipid')] =& $obj;
+                $ret[$myrow['folderid']][$obj->getVar('clipid')] = &$obj;
             }
             unset($obj);
         }
@@ -286,7 +281,7 @@ class ClipHandler extends \XoopsObjectHandler
 
         if (!empty($queryarray)) {
             $criteriaKeywords = new \CriteriaCompo();
-            for ($i = 0; $i < count($queryarray); ++$i) {
+            for ($i = 0, $iMax = \count($queryarray); $i < $iMax; ++$i) {
                 $criteriaKeyword = new \CriteriaCompo();
                 $criteriaKeyword->add(new \Criteria('itemtext.title', '%' . $queryarray[$i] . '%', 'LIKE'), 'OR');
                 $criteriaKeyword->add(new \Criteria('itemtext.description', '%' . $queryarray[$i] . '%', 'LIKE'), 'OR');
@@ -323,7 +318,7 @@ class ClipHandler extends \XoopsObjectHandler
         $criteria->setSort('item.weight');
         $criteria->setOrder('ASC');
 
-        if (isset($criteria) && is_subclass_of($criteria, 'CriteriaElement')) {
+        if (isset($criteria) && $criteria instanceof \CriteriaElement) {
             $sql .= ' ' . $criteria->renderWhere();
             if ('' != $criteria->getSort()) {
                 $sql .= ' ORDER BY ' . $criteria->getSort() . '
@@ -393,7 +388,7 @@ class ClipHandler extends \XoopsObjectHandler
      *
      * @return array array of {@link Smartmedia\Clip}
      */
-    public function &getClipsFromAdmin($start = 0, $limit = 0, $sort = 'clipid', $order = 'ASC', $languagesel)
+    public function &getClipsFromAdmin($start, $limit, $sort, $order, $languagesel)
     {
         if ('all' !== $languagesel) {
             $where = "WHERE clips_text.languageid = '" . $languagesel . "'";
@@ -401,7 +396,7 @@ class ClipHandler extends \XoopsObjectHandler
             $where = '';
         }
         global $xoopsConfig, $xoopsDB;
-        $smartConfig =& smartmedia_getModuleConfig();
+        $smartConfig = Utility::getModuleConfig();
         $ret         = [];
         $sql         = 'SELECT DISTINCT clips.clipid, clips.weight, clips_text.title, folders.folderid, folders_text.title AS foldertitle, categories.categoryid
                     FROM (
@@ -448,10 +443,10 @@ class ClipHandler extends \XoopsObjectHandler
      *
      * @return int count of clips
      */
-    public function &getClipsCountFromAdmin($languagesel)
+    public function getClipsCountFromAdmin($languagesel)
     {
         global $xoopsConfig, $xoopsDB;
-        $smartConfig =& smartmedia_getModuleConfig();
+        $smartConfig = Utility::getModuleConfig();
 
         if ('all' === $languagesel) {
             $where = '';
@@ -475,7 +470,7 @@ class ClipHandler extends \XoopsObjectHandler
         if (!$result = $this->db->query($sql)) {
             return 0;
         }
-        list($count) = $this->db->fetchRow($result);
+        [$count] = $this->db->fetchRow($result);
 
         return $count;
     }
@@ -515,13 +510,13 @@ class ClipHandler extends \XoopsObjectHandler
      * Stores a clip in the database
      *
      * @param \XoopsObject $object
-     * @param  bool        $force
+     * @param bool         $force
      * @return bool   FALSE if failed, TRUE if already present and unchanged or successful
      */
     public function insert(\XoopsObject $object, $force = false)
     {
         // Make sure object is of correct type
-        if (!is_a($object, $this->classname)) {
+        if (!\is_a($object, $this->classname)) {
             return false;
         }
 
@@ -544,7 +539,7 @@ class ClipHandler extends \XoopsObjectHandler
         if ($object->isNew()) {
             // Determine next auto-gen ID for table
             $clipid = $this->db->genId($this->db->prefix($this->dbtable) . '_uid_seq');
-            $sql    = sprintf(
+            $sql    = \sprintf(
                 'INSERT INTO `%s` (
             clipid,
             folderid,
@@ -591,9 +586,9 @@ class ClipHandler extends \XoopsObjectHandler
                 $clipid,
                 $folderid,
                 $statusid,
-                time(),
+                \time(),
                 $created_uid,
-                time(),
+                \time(),
                 $modified_uid,
                 $this->db->quoteString($languageid),
                 $duration,
@@ -603,14 +598,14 @@ class ClipHandler extends \XoopsObjectHandler
                 $counter,
                 $autostart,
                 $this->db->quoteString($image_lr),
-                              $this->db->quoteString($image_hr),
+                $this->db->quoteString($image_hr),
                 $this->db->quoteString($file_lr),
                 $this->db->quoteString($file_hr),
                 $weight,
                 $this->db->quoteString($default_languageid)
             );
         } else {
-            $sql = sprintf(
+            $sql = \sprintf(
                 'UPDATE `%s` SET
             folderid = %u,
             statusid = %u,
@@ -637,7 +632,7 @@ class ClipHandler extends \XoopsObjectHandler
                 $statusid,
                 $created_date,
                 $created_uid,
-                time(),
+                \time(),
                 $modified_uid,
                 $this->db->quoteString($languageid),
                 $duration,
@@ -647,7 +642,7 @@ class ClipHandler extends \XoopsObjectHandler
                 $counter,
                 $autostart,
                 $this->db->quoteString($image_lr),
-                           $this->db->quoteString($image_hr),
+                $this->db->quoteString($image_hr),
                 $this->db->quoteString($file_lr),
                 $this->db->quoteString($file_hr),
                 $weight,
@@ -682,23 +677,23 @@ class ClipHandler extends \XoopsObjectHandler
      * Deletes a clip from the database
      *
      * @param \XoopsObject $object
-     * @param  bool        $force
+     * @param bool         $force
      * @return bool   FALSE if failed.
      */
     public function delete(\XoopsObject $object, $force = false)
     {
-        if (strtolower(get_class($obj)) != $this->classname) {
+        if (mb_strtolower(\get_class($obj)) != $this->classname) {
             return false;
         }
 
-        $smartmediaClipTextHandler = Smartmedia\Helper::getInstance()->getHandler('ClipText');
+        $smartmediaClipTextHandler = Helper::getInstance()->getHandler('ClipText');
         $criteria                  = new \CriteriaCompo(new \Criteria('clipid', $obj->clipid()));
         if (!$smartmediaClipTextHandler->deleteAll($criteria)) {
             return false;
         }
-        $sql = sprintf('DELETE FROM `%s` WHERE clipid = %u', $this->db->prefix($this->dbtable), $obj->getVar('clipid'));
+        $sql = \sprintf('DELETE FROM `%s` WHERE clipid = %u', $this->db->prefix($this->dbtable), $obj->getVar('clipid'));
 
-        //echo "<br>$sql</br />";
+        //echo "<br>$sql</br>";
 
         if (false !== $force) {
             $result = $this->db->queryF($sql);
@@ -715,13 +710,13 @@ class ClipHandler extends \XoopsObjectHandler
     /**
      * Deletes clips matching a set of conditions
      *
-     * @param  object $criteria {@link \CriteriaElement}
+     * @param object $criteria {@link \CriteriaElement}
      * @return bool   FALSE if deletion failed
      */
     public function deleteAll($criteria = null)
     {
         $sql = 'DELETE FROM ' . $this->db->prefix($this->dbtable);
-        if (isset($criteria) && is_subclass_of($criteria, 'CriteriaElement')) {
+        if (isset($criteria) && $criteria instanceof \CriteriaElement) {
             $sql .= ' ' . $criteria->renderWhere();
         }
         if (!$result = $this->db->query($sql)) {
@@ -734,14 +729,14 @@ class ClipHandler extends \XoopsObjectHandler
     /**
      * @param       $fieldname
      * @param       $fieldvalue
-     * @param  null $criteria
+     * @param null  $criteria
      * @return bool
      */
     public function updateAll($fieldname, $fieldvalue, $criteria = null)
     {
-        $set_clause = is_numeric($fieldvalue) ? $fieldname . ' = ' . $fieldvalue : $fieldname . ' = ' . $this->db->quoteString($fieldvalue);
+        $set_clause = \is_numeric($fieldvalue) ? $fieldname . ' = ' . $fieldvalue : $fieldname . ' = ' . $this->db->quoteString($fieldvalue);
         $sql        = 'UPDATE ' . $this->db->prefix('smartmedia_clips') . ' SET ' . $set_clause;
-        if (isset($criteria) && is_subclass_of($criteria, 'CriteriaElement')) {
+        if (isset($criteria) && $criteria instanceof \CriteriaElement) {
             $sql .= ' ' . $criteria->renderWhere();
         }
         if (!$result = $this->db->queryF($sql)) {

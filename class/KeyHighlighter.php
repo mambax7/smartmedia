@@ -1,4 +1,6 @@
-<?php namespace XoopsModules\Smartmedia;
+<?php
+
+namespace XoopsModules\Smartmedia;
 
 /**
  * This file contains the keyhighlighter class that highlight the chosen keyword in the current output buffer.
@@ -43,9 +45,7 @@ class KeyHighlighter
      * @access private
      */
     public $replace_callback = null;
-
     public $content;
-
     /**
      * Main constructor
      *
@@ -56,7 +56,7 @@ class KeyHighlighter
      * @param callback $replace_callback a custom callback for keyword highlight.
      *                                   <code>
      *                                   <?php
-     *                                   require ('keyhighlighter.class.php');
+     *                                   require_once ('keyhighlighter.class.php');
      *
      * function my_highlighter ($matches) {
      *    return '<span style="font-weight: bolder; color: #FF0000;">' . $matches[0] . '</span>';
@@ -84,7 +84,7 @@ class KeyHighlighter
     {
         $patterns = [];
         if ($this->singlewords) {
-            $keywords = explode(' ', $this->preg_keywords);
+            $keywords = \explode(' ', $this->preg_keywords);
             foreach ($keywords as $keyword) {
                 $patterns[] = '/(?' . '>' . $keyword . '+)/si';
             }
@@ -96,9 +96,9 @@ class KeyHighlighter
 
         foreach ($patterns as $pattern) {
             if (null !== $this->replace_callback) {
-                $result = preg_replace_callback($pattern, $this->replace_callback, $result);
+                $result = \preg_replace_callback($pattern, $this->replace_callback, $result);
             } else {
-                $result = preg_replace($pattern, '<span class="highlightedkey">\\0</span>', $result);
+                $result = \preg_replace($pattern, '<span class="highlightedkey">\\0</span>', $result);
             }
         }
 
@@ -113,9 +113,9 @@ class KeyHighlighter
     public function highlight($buffer)
     {
         $buffer              = '>' . $buffer . '<';
-        $this->preg_keywords = preg_replace('/[^\w ]/si', '', $this->keywords);
-        $buffer              = preg_replace_callback("/(\>(((?" . ">[^><]+)|(?R))*)\<)/is", [&$this, 'replace'], $buffer);
-        $buffer              = substr($buffer, 1, -1);
+        $this->preg_keywords = \preg_replace('/[^\w ]/si', '', $this->keywords);
+        $buffer              = \preg_replace_callback("/(\>(((?" . ">[^><]+)|(?R))*)\<)/is", [&$this, 'replace'], $buffer);
+        $buffer              = mb_substr($buffer, 1, -1);
 
         return $buffer;
     }

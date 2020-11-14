@@ -11,9 +11,9 @@
 
 /**
  * @copyright    XOOPS Project https://xoops.org/
- * @license      GNU GPL 2 or later (http://www.gnu.org/licenses/gpl-2.0.html)
+ * @license      GNU GPL 2 or later (https://www.gnu.org/licenses/gpl-2.0.html)
  * @package
- * @author     XOOPS Development Team
+ * @author       XOOPS Development Team
  */
 
 /**
@@ -21,7 +21,6 @@
  * Author: The SmartFactory <www.smartfactory.ca>
  * Licence: GNU
  */
-
 global $xoopsModule, $xoopsModuleConfig;
 
 require_once XOOPS_ROOT_PATH . '/modules/smartmedia/include/functions.php';
@@ -33,7 +32,9 @@ $xoopsTpl->assign('isAdmin', $is_smartmedia_admin);
 $xoopsTpl->assign('smartmedia_url', SMARTMEDIA_URL);
 $xoopsTpl->assign('smartmedia_images_url', SMARTMEDIA_IMAGE_URL);
 
-$xoopsTpl->assign('xoops_module_header', ">
+$xoopsTpl->assign(
+    'xoops_module_header',
+    ">
 <!--
 function show(object)
 {
@@ -54,6 +55,7 @@ function hide(object)
          document.all[object].style.display = 'none'; } //-->
 
 </script>
-\"");
+\""
+);
 
 $xoopsTpl->assign('ref_smartfactory', 'SmartMedia is developed by The SmartFactory (http://www.smartfactory.ca), a division of InBox Solutions (http://www.inboxsolutions.net)');

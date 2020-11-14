@@ -5,7 +5,7 @@
 <{/if}>
 
 <table class="category_list">
-<div align="right"><{$navbar}></div>
+<div align="right"><{$navbar|default:false}></div>
   <tr>
     <{foreach item=category from=$categories}>
     <td class="category_item">
@@ -14,7 +14,7 @@
         <tr>
           <td class="category_description">
             <{if $category.image_path}>
-              <a href="<{$category.itemurl}>"><img class="list_image" src="<{$category.image_path}>" align="left" alt="<{$category.title}>" width="<{$category.list_image_width}>" /></a>
+              <a href="<{$category.itemurl}>"><img class="list_image" src="<{$category.image_path}>" align="left" alt="<{$category.title}>" width="<{$category.list_image_width}>" ></a>
             <{/if}>
             <{$category.description}>
             <{if $category.adminLinks}>
@@ -24,7 +24,7 @@
        </tr>
       </table>
     </td>
-    <{if $category.id is div by 2}>
+    <{if $category.id % 2 == 0}>
       </tr>
       <tr>
     <{/if}>
@@ -33,7 +33,7 @@
   </tr>
 
 </table>
-<{if $navbarbottom==1}>
+<{if $navbarbottom|default:0==1}>
       <div align="right"><{$navbar}></div>
  <{/if}>
 

@@ -12,9 +12,9 @@
 
 /**
  * @copyright    XOOPS Project https://xoops.org/
- * @license      GNU GPL 2 or later (http://www.gnu.org/licenses/gpl-2.0.html)
+ * @license      GNU GPL 2 or later (https://www.gnu.org/licenses/gpl-2.0.html)
  * @package
- * @author     XOOPS Development Team
+ * @author       XOOPS Development Team
  */
 
 /**
@@ -22,20 +22,21 @@
  *
  * @category        Module
  * @package         smartmedia
- * @author          XOOPS Development Team <name@site.com> - <https://xoops.org>
+ * @author          XOOPS Development Team <https://xoops.org>
  * @copyright       {@link https://xoops.org/ XOOPS Project}
  * @license         GPL 2.0 or later
  * @link            https://xoops.org/
  * @since           1.0.0
  */
+
 use Xmf\Module\Admin;
 use Xmf\Request;
 
 require_once __DIR__ . '/admin_header.php';
 xoops_cp_header();
-require_once XOOPS_ROOT_PATH.'/class/xoopsform/grouppermform.php';
+require_once XOOPS_ROOT_PATH . '/class/xoopsform/grouppermform.php';
 if ('' != Request::getString('submit', '')) {
-    redirect_header(XOOPS_URL.'/modules/'.$GLOBALS['xoopsModule']->dirname().'/admin/permissions.php', 1, AM_SMARTMEDIA_PERMISSIONS__GPERMUPDATED);
+    redirect_header(XOOPS_URL . '/modules/' . $GLOBALS['xoopsModule']->dirname() . '/admin/permissions.php', 1, AM_SMARTMEDIA_PERMISSIONS__GPERMUPDATED);
 }
 // Check admin have access to this page
 /*$group = $GLOBALS['xoopsUser']->getGroups ();
@@ -45,9 +46,9 @@ if (count ( array_intersect ( $group, $groups ) ) <= 0) {
 }*/
 $adminObject->displayNavigation(basename(__FILE__));
 
-$permission = Request::getInt('permission', 1, 'POST');
-$selected = ['', '', '', ''];
-$selected[$permission-1] = ' selected';
+$permission                = Request::getInt('permission', 1, 'POST');
+$selected                  = ['', '', '', ''];
+$selected[$permission - 1] = ' selected';
 
 echo "
 <form method='post' name='fselperm' action='permissions.php'>
@@ -55,10 +56,10 @@ echo "
         <tr>
             <td>
                 <select name='permission' onChange='document.fselperm.submit()'>
-                    <option value='1'".$selected[0].'>'.AM_SMARTMEDIA_PERMISSIONS_GLOBAL."</option>
-                    <option value='2'".$selected[1].'>'.AM_SMARTMEDIA_PERMISSIONS_APPROVE."</option>
-                    <option value='3'".$selected[2].'>'.AM_SMARTMEDIA_PERMISSIONS_SUBMIT."</option>
-                    <option value='4'".$selected[3].'>'.AM_SMARTMEDIA_PERMISSIONS_VIEW.'</option>
+                    <option value='1'" . $selected[0] . '>' . AM_SMARTMEDIA_PERMISSIONS_GLOBAL . "</option>
+                    <option value='2'" . $selected[1] . '>' . AM_SMARTMEDIA_PERMISSIONS_APPROVE . "</option>
+                    <option value='3'" . $selected[2] . '>' . AM_SMARTMEDIA_PERMISSIONS_SUBMIT . "</option>
+                    <option value='4'" . $selected[3] . '>' . AM_SMARTMEDIA_PERMISSIONS_VIEW . '</option>
                 </select>
             </td>
         </tr>
@@ -68,27 +69,29 @@ echo "
 $module_id = $GLOBALS['xoopsModule']->getVar('mid');
 switch ($permission) {
     case 1:
-        $formTitle = AM_SMARTMEDIA_PERMISSIONS_GLOBAL;
-        $permName = 'smartmedia_ac';
-        $permDesc = AM_SMARTMEDIA_PERMISSIONS_GLOBAL_DESC;
-        $globalPerms = [    '4' => AM_SMARTMEDIA_PERMISSIONS_GLOBAL_4,
-                                '8' => AM_SMARTMEDIA_PERMISSIONS_GLOBAL_8,
-                                '16' => AM_SMARTMEDIA_PERMISSIONS_GLOBAL_16 ];
+        $formTitle   = AM_SMARTMEDIA_PERMISSIONS_GLOBAL;
+        $permName    = 'smartmedia_ac';
+        $permDesc    = AM_SMARTMEDIA_PERMISSIONS_GLOBAL_DESC;
+        $globalPerms = [
+            '4'  => AM_SMARTMEDIA_PERMISSIONS_GLOBAL_4,
+            '8'  => AM_SMARTMEDIA_PERMISSIONS_GLOBAL_8,
+            '16' => AM_SMARTMEDIA_PERMISSIONS_GLOBAL_16,
+        ];
         break;
     case 2:
         $formTitle = AM_SMARTMEDIA_PERMISSIONS_APPROVE;
-        $permName = 'smartmedia_approve';
-        $permDesc = AM_SMARTMEDIA_PERMISSIONS_APPROVE_DESC;
+        $permName  = 'smartmedia_approve';
+        $permDesc  = AM_SMARTMEDIA_PERMISSIONS_APPROVE_DESC;
         break;
     case 3:
         $formTitle = AM_SMARTMEDIA_PERMISSIONS_SUBMIT;
-        $permName = 'smartmedia_submit';
-        $permDesc = AM_SMARTMEDIA_PERMISSIONS_SUBMIT_DESC;
+        $permName  = 'smartmedia_submit';
+        $permDesc  = AM_SMARTMEDIA_PERMISSIONS_SUBMIT_DESC;
         break;
     case 4:
         $formTitle = AM_SMARTMEDIA_PERMISSIONS_VIEW;
-        $permName = 'smartmedia_view';
-        $permDesc = AM_SMARTMEDIA_PERMISSIONS_VIEW_DESC;
+        $permName  = 'smartmedia_view';
+        $permDesc  = AM_SMARTMEDIA_PERMISSIONS_VIEW_DESC;
         break;
 }
 
@@ -104,7 +107,7 @@ if (1 == $permission) {
     $criteria->setSort('categoryid');
     $criteria->setOrder('ASC');
     $categories_count = $categoriesHandler->getCount($criteria);
-    $categoriesArray = $categoriesHandler->getObjects($criteria);
+    $categoriesArray  = $categoriesHandler->getObjects($criteria);
     unset($criteria);
     foreach (array_keys($categoriesArray) as $i) {
         $permform->addItem($categoriesArray[$i]->getVar('categoryid'), $categoriesArray[$i]->getVar('categoryid'));

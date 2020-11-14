@@ -1,4 +1,6 @@
-<?php namespace XoopsModules\Smartmedia;
+<?php
+
+namespace XoopsModules\Smartmedia;
 
 /**
  * Contains the classes for managing categories translations
@@ -30,14 +32,12 @@ class CategoryTextHandler extends \XoopsObjectHandler
      * @var object
      */
     public $db;
-
     /**
      * Name of child class
      *
      * @var string
      */
     public $classname = CategoryText::class;
-
     /**
      * Related table name
      *
@@ -50,7 +50,7 @@ class CategoryTextHandler extends \XoopsObjectHandler
      *
      * @param object $db reference to a xoopsDB object
      */
-    public function __construct($db)
+    public function __construct(\XoopsDatabase $db)
     {
         $this->db = $db;
     }
@@ -58,7 +58,7 @@ class CategoryTextHandler extends \XoopsObjectHandler
     /**
      * Singleton - prevent multiple instances of this class
      *
-     * @param  object &$db {@link XoopsHandlerFactory}
+     * @param object &$db {@link XoopsHandlerFactory}
      * @return object Smartmedia\CategoryTextHandler
      */
     public static function getInstance($db)
@@ -78,8 +78,8 @@ class CategoryTextHandler extends \XoopsObjectHandler
     public function create()
     {
         return new $this->classname();
-//        $temp = '\\XoopsModules\\Smartmedia\\' . $this->classname;
-//        return new $temp;
+        //        $temp = '\\XoopsModules\\Smartmedia\\' . $this->classname;
+        //        return new $temp;
     }
 
     /**
@@ -89,13 +89,13 @@ class CategoryTextHandler extends \XoopsObjectHandler
      * will be used
      *
      * @param         $categoryid
-     * @param  string $languageid language of the translation to retreive
+     * @param string  $languageid language of the translation to retreive
      * @return bool Smartmedia\CategoryText
      */
     public function get($categoryid, $languageid = 'none')
     {
         if ('none' === $languageid) {
-            $smartConfig =& smartmedia_getModuleConfig();
+            $smartConfig = Utility::getModuleConfig();
             $languageid  = $smartConfig['default_language'];
         }
         $categoryid = (int)$categoryid;
@@ -123,13 +123,13 @@ class CategoryTextHandler extends \XoopsObjectHandler
 
     /**
      * Create a "select" SQL query
-     * @param  object $criteria {@link \CriteriaElement} to match
+     * @param object $criteria {@link \CriteriaElement} to match
      * @return string SQL query
      */
     public function _selectQuery($criteria = null)
     {
-        $sql = sprintf('SELECT * FROM `%s`', $this->db->prefix($this->dbtable));
-        if (isset($criteria) && is_subclass_of($criteria, 'CriteriaElement')) {
+        $sql = \sprintf('SELECT * FROM `%s`', $this->db->prefix($this->dbtable));
+        if (isset($criteria) && $criteria instanceof \CriteriaElement) {
             $sql .= ' ' . $criteria->renderWhere();
             if ('' != $criteria->getSort()) {
                 $sql .= ' ORDER BY ' . $criteria->getSort() . '
@@ -143,19 +143,19 @@ class CategoryTextHandler extends \XoopsObjectHandler
     /**
      * Count objects matching a criteria
      *
-     * @param  object $criteria {@link \CriteriaElement} to match
+     * @param object $criteria {@link \CriteriaElement} to match
      * @return int    count of objects
      */
     public function getCount($criteria = null)
     {
         $sql = 'SELECT COUNT(*) FROM ' . $this->db->prefix($this->dbtable);
-        if (isset($criteria) && is_subclass_of($criteria, 'CriteriaElement')) {
+        if (isset($criteria) && $criteria instanceof \CriteriaElement) {
             $sql .= ' ' . $criteria->renderWhere();
         }
         if (!$result = $this->db->query($sql)) {
             return 0;
         }
-        list($count) = $this->db->fetchRow($result);
+        [$count] = $this->db->fetchRow($result);
 
         return $count;
     }
@@ -163,8 +163,8 @@ class CategoryTextHandler extends \XoopsObjectHandler
     /**
      * Retrieve objects from the database
      *
-     * @param  object $criteria  {@link \CriteriaElement} conditions to be met
-     * @param  bool   $id_as_key Should the category ID be used as array key
+     * @param object $criteria  {@link \CriteriaElement} conditions to be met
+     * @param bool   $id_as_key Should the category ID be used as array key
      * @return array  array of {@link Smartmedia\CategoryText} objects
      */
     public function &getObjects($criteria = null, $id_as_key = false)
@@ -187,9 +187,9 @@ class CategoryTextHandler extends \XoopsObjectHandler
         while (false !== ($myrow = $this->db->fetchArray($result))) {
             $obj = new $this->classname($myrow);
             if (!$id_as_key) {
-                $ret[] =& $obj;
+                $ret[] = &$obj;
             } else {
-                $ret[$obj->getVar('id')] =& $obj;
+                $ret[$obj->getVar('id')] = &$obj;
             }
             unset($obj);
         }
@@ -207,7 +207,7 @@ class CategoryTextHandler extends \XoopsObjectHandler
     public function getCreatedLanguages($categoryid)
     {
         $ret = [];
-        $sql = sprintf('SELECT languageid FROM `%s`', $this->db->prefix($this->dbtable));
+        $sql = \sprintf('SELECT languageid FROM `%s`', $this->db->prefix($this->dbtable));
         $sql .= " WHERE categoryid = $categoryid";
 
         //  echo "<br>$sql<br>";
@@ -220,7 +220,7 @@ class CategoryTextHandler extends \XoopsObjectHandler
 
         // Add each returned record to the result array
         while (false !== ($myrow = $this->db->fetchArray($result))) {
-            $ret[] =& $myrow['languageid'];
+            $ret[] = &$myrow['languageid'];
         }
 
         return $ret;
@@ -230,13 +230,13 @@ class CategoryTextHandler extends \XoopsObjectHandler
      * Stores a category in the database
      *
      * @param \XoopsObject $object
-     * @param  bool        $force
+     * @param bool         $force
      * @return bool   FALSE if failed, TRUE if already present and unchanged or successful
      */
     public function insert(\XoopsObject $object, $force = false)
     {
         // Make sure object is of correct type
-        if (!is_a($object, $this->classname)) {
+        if (!\is_a($object, $this->classname)) {
             return false;
         }
 
@@ -257,7 +257,8 @@ class CategoryTextHandler extends \XoopsObjectHandler
 
         // Create query for DB update
         if ($object->isNew()) {
-            $sql = sprintf('INSERT INTO `%s` (
+            $sql = \sprintf(
+                'INSERT INTO `%s` (
             categoryid,
             languageid,
             title,
@@ -268,13 +269,28 @@ class CategoryTextHandler extends \XoopsObjectHandler
             %s,
             %s,
             %s,
-            %s)', $this->db->prefix($this->dbtable), $categoryid, $this->db->quoteString($languageid), $this->db->quoteString($title), $this->db->quoteString($description), $this->db->quoteString($meta_description));
+            %s)',
+                $this->db->prefix($this->dbtable),
+                $categoryid,
+                $this->db->quoteString($languageid),
+                $this->db->quoteString($title),
+                $this->db->quoteString($description),
+                $this->db->quoteString($meta_description)
+            );
         } else {
-            $sql = sprintf('UPDATE `%s` SET
+            $sql = \sprintf(
+                'UPDATE `%s` SET
             title = %s,
             description = %s,
             meta_description = %s
-            WHERE categoryid = %u AND languageid = %s', $this->db->prefix($this->dbtable), $this->db->quoteString($title), $this->db->quoteString($description), $this->db->quoteString($meta_description), $categoryid, $this->db->quoteString($languageid));
+            WHERE categoryid = %u AND languageid = %s',
+                $this->db->prefix($this->dbtable),
+                $this->db->quoteString($title),
+                $this->db->quoteString($description),
+                $this->db->quoteString($meta_description),
+                $categoryid,
+                $this->db->quoteString($languageid)
+            );
         }
 
         //echo "<br>$sql<br>";
@@ -297,16 +313,16 @@ class CategoryTextHandler extends \XoopsObjectHandler
      * Deletes a category translation from the database
      *
      * @param \XoopsObject $object
-     * @param  bool        $force
+     * @param bool         $force
      * @return bool   FALSE if failed.
      */
     public function delete(\XoopsObject $object, $force = true)
     {
-        if (strtolower(get_class($obj)) != $this->classname) {
+        if (mb_strtolower(\get_class($obj)) != $this->classname) {
             return false;
         }
 
-        $sql = sprintf('DELETE FROM `%s` WHERE categoryid = %u AND languageid = %s', $this->db->prefix($this->dbtable), $obj->getVar('categoryid'), $this->db->quoteString($obj->getVar('languageid')));
+        $sql = \sprintf('DELETE FROM `%s` WHERE categoryid = %u AND languageid = %s', $this->db->prefix($this->dbtable), $obj->getVar('categoryid'), $this->db->quoteString($obj->getVar('languageid')));
 
         //echo "<br>" . $sql . "<br>";
 
@@ -325,13 +341,13 @@ class CategoryTextHandler extends \XoopsObjectHandler
     /**
      * Delete categories translations matching a set of conditions
      *
-     * @param  object $criteria {@link \CriteriaElement}
+     * @param object $criteria {@link \CriteriaElement}
      * @return bool   FALSE if deletion failed
      */
     public function deleteAll($criteria = null)
     {
         $sql = 'DELETE FROM ' . $this->db->prefix($this->dbtable);
-        if (isset($criteria) && is_subclass_of($criteria, 'CriteriaElement')) {
+        if (isset($criteria) && $criteria instanceof \CriteriaElement) {
             $sql .= ' ' . $criteria->renderWhere();
         }
         if (!$result = $this->db->query($sql)) {

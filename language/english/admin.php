@@ -5,10 +5,9 @@
  * Author: The SmartFactory <www.smartfactory.ca>
  * Licence: GNU
  */
-
 $moduleDirName = basename(dirname(dirname(__DIR__)));
-$modinfoLang   = '_MI_' . strtoupper($moduleDirName);
-$adminLang     = '_AM_' . strtoupper($moduleDirName);
+$modinfoLang   = '_MI_' . mb_strtoupper($moduleDirName);
+$adminLang     = '_AM_' . mb_strtoupper($moduleDirName);
 
 define('_AM_SMARTMEDIA_ABOUT', 'About');
 define('_AM_SMARTMEDIA_ACTION', 'Action');
@@ -31,7 +30,7 @@ define('_AM_SMARTMEDIA_CATEGORIES_DSC', 'Here is a list of all the categories of
 define('_AM_SMARTMEDIA_CATEGORIES_TITLE', 'Created categories');
 define('_AM_SMARTMEDIA_CATEGORY', 'Category');
 define('_AM_SMARTMEDIA_CATEGORY_ADD', 'Add this folder to');
-define('_AM_SMARTMEDIA_CATEGORY_CANNOT_DELETE_HAS_CHILD', 'At least one folder is linked to this category.<br/>Please delete all linked folders before deleting this category.');
+define('_AM_SMARTMEDIA_CATEGORY_CANNOT_DELETE_HAS_CHILD', 'At least one folder is linked to this category.<br>Please delete all linked folders before deleting this category.');
 define('_AM_SMARTMEDIA_CATEGORY_CHANGE', "Change this folder's category to");
 define('_AM_SMARTMEDIA_CATEGORY_CREATE', 'Create a category');
 define('_AM_SMARTMEDIA_CATEGORY_CREATE_INFO', 'Fill the following form in order to create a new category.');
@@ -175,7 +174,7 @@ define('_AM_SMARTMEDIA_EDIT', 'Edit');
 // Folders
 
 define('_AM_SMARTMEDIA_FOLDER', 'Folder');
-define('_AM_SMARTMEDIA_FOLDER_CANNOT_DELETE_HAS_CHILD', 'At least one clip is linked this folder.<br/>Please delete all linked clips before deleting this folder.');
+define('_AM_SMARTMEDIA_FOLDER_CANNOT_DELETE_HAS_CHILD', 'At least one clip is linked this folder.<br>Please delete all linked clips before deleting this folder.');
 define('_AM_SMARTMEDIA_FOLDER_CLIP', 'Folder -> Clip');
 define('_AM_SMARTMEDIA_FOLDER_CREATE', 'Create a folder');
 define('_AM_SMARTMEDIA_FOLDER_CREATED', 'The folder has been successfully created.');
@@ -240,7 +239,6 @@ define('_AM_SMARTMEDIA_FORMATS', 'Clip Formats');
 define('_AM_SMARTMEDIA_FORMATS_TITLE', 'Clip Formats');
 define('_AM_SMARTMEDIA_FORMATS_TITLE_INFO', 'Here is all the clip formats available in the module. You can add, edit or delete clip formats.');
 define('_AM_SMARTMEDIA_FORMATS_NONE', 'No formats');
-
 
 define('_AM_SMARTMEDIA_DEFAULT_LANGUAGE', 'Default language');
 define('_AM_SMARTMEDIA_DEFAULT_LANGUAGE_DSC', 'This is the default language of this item');

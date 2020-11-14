@@ -1,4 +1,6 @@
-<?php namespace XoopsModules\Smartmedia;
+<?php
+
+namespace XoopsModules\Smartmedia;
 
 /**
  * Contains the classes for updating database tables
@@ -24,9 +26,6 @@ use XoopsModules\Smartmedia;
  */
 class Dbupdater
 {
-    /**
-     *
-     */
     public function __construct()
     {
     }
@@ -39,7 +38,6 @@ class Dbupdater
      * @param string $badmsg  message displayed on error
      *
      * @return bool true if success, false if an error occured
-     *
      */
     public function runQuery($query, $goodmsg, $badmsg)
     {
@@ -49,11 +47,10 @@ class Dbupdater
             echo "<li class='err'>$badmsg</li>";
 
             return false;
-        } else {
-            echo "<li class='ok'>$goodmsg</li>";
-
-            return true;
         }
+        echo "<li class='ok'>$goodmsg</li>";
+
+        return true;
     }
 
     /**
@@ -71,17 +68,16 @@ class Dbupdater
         $from = $xoopsDB->prefix($from);
         $to   = $xoopsDB->prefix($to);
 
-        $query = sprintf('ALTER TABLE %s RENAME %s', $from, $to);
+        $query = \sprintf('ALTER TABLE %s RENAME %s', $from, $to);
         $ret   = $xoopsDB->query($query);
         if (!$ret) {
-            echo "<li class='err'>" . sprintf(_AM_SMARTMEDIA_DB_MSG_RENAME_TABLE_ERR, $from) . '</li>';
+            echo "<li class='err'>" . \sprintf(\_AM_SMARTMEDIA_DB_MSG_RENAME_TABLE_ERR, $from) . '</li>';
 
             return false;
-        } else {
-            echo "<li class='ok'>" . sprintf(_AM_SMARTMEDIA_DB_MSG_RENAME_TABLE, $from, $to) . '</li>';
-
-            return true;
         }
+        echo "<li class='ok'>" . \sprintf(\_AM_SMARTMEDIA_DB_MSG_RENAME_TABLE, $from, $to) . '</li>';
+
+        return true;
     }
 
     /**
@@ -89,9 +85,9 @@ class Dbupdater
      *
      * @param object $table {@link Smartmedia\Table} that will be updated
      *
+     * @return bool true if success, false if an error occured
      * @see Smartmedia\Table
      *
-     * @return bool true if success, false if an error occured
      */
     public function updateTable($table)
     {

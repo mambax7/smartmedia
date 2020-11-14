@@ -5,7 +5,6 @@
  * Author: The SmartFactory <www.smartfactory.ca>
  * Licence: GNU
  */
-
 require_once XOOPS_ROOT_PATH . '/modules/smartmedia/include/functions.php';
 require_once XOOPS_ROOT_PATH . '/class/xoopstree.php';
 require_once XOOPS_ROOT_PATH . '/class/xoopslists.php';
@@ -18,11 +17,11 @@ $fileid = \Xmf\Request::getInt('fileid', 0, 'GET');
 if (0 != $fileid) {
     $fileObj = new ssFile($fileid);
 } else {
-    $fileObj =& $smartmedia_fileHandler->create();
+    $fileObj = &$smartmedia_fileHandler->create();
 }
 
 // FILES UPLOAD FORM
-$files_form = new \XoopsThemeForm(_MD_SMARTMEDIA_UPLOAD_FILE, 'files_form', xoops_getenv('PHP_SELF'));
+$files_form = new \XoopsThemeForm(_MD_SMARTMEDIA_UPLOAD_FILE, 'files_form', xoops_getenv('SCRIPT_NAME'));
 $files_form->setExtra("enctype='multipart/form-data'");
 
 // NAME
