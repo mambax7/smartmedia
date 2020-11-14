@@ -72,7 +72,6 @@ class Metagen
     public static function createMetaTags($title, $categoryPath = '', $description = '', $minChar = 4)
     {
         global $xoopsTpl, $xoopsModule;
-        /** @var Smartmedia\Helper $helper */
         $helper =Helper::getInstance();
         $myts   = \MyTextSanitizer::getInstance();
 

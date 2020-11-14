@@ -34,7 +34,6 @@ function xoops_module_pre_install_smartmedia(\XoopsModule $module)
 {
     //    require_once dirname(__DIR__) . '/preloads/autoloader.php';
     require_once __DIR__ . '/common.php';
-    /** @var Utility $utility */
     $utility = new Utility();
     //check for minimum XOOPS version
     $xoopsSuccess = $utility::checkVerXoops($module);
